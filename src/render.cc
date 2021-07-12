@@ -9,21 +9,9 @@
 
 #include "font-atlas.hh"
 
-static void error_callback(int error, const char* description) {
-    std::cerr << "glfw error: " << description << std::endl;
-}
-
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
-    }
-    if (key == GLFW_KEY_F && action == GLFW_PRESS) {
-        if (glfwGetWindowMonitor(window)) {
-            glfwSetWindowMonitor(window, NULL, 0, 0, 800, 600, 60);
-        } else {
-            const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, 60);
-        }
     }
 }
 
@@ -40,56 +28,74 @@ std::string load(std::string filename) {
     return buffer;
 }
 
-int main() {
-    //setup glfw, window
-    glfwSetErrorCallback(error_callback);
-    if (!glfwInit()) {
-        std::cerr << "glfw error: failed to initialise" << std::endl;
-        return 1;
-    }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "project", NULL, NULL);
-    if (!window) {
-        glfwTerminate();
-        std::cerr << "glfw error: failed to create window" << std::endl;
-        return 1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
-    glfwSetKeyCallback(window, key_callback);
-
-    //create programs
-    std::string error_log(4096, '\0');
-    std::string s_header = load("src/header.glsl");
-    std::string s_vertex = load("src/vertex.glsl");
-    const char* shader_vertex[] = {
-        "#version 450\n",
-        s_header.c_str(),
-        s_vertex.c_str(),
+GLuint create_program(GLenum type, std::string program_text) {
+    const char* s[] = {
+        program_text.c_str(),
     };
-    GLuint program_vertex = glCreateShaderProgramv(GL_VERTEX_SHADER, sizeof(shader_vertex) / sizeof(shader_vertex[0]), shader_vertex);
-    glGetProgramInfoLog(program_vertex, 4096, NULL, error_log.data());
+    GLuint program = glCreateShaderProgramv(type, 1, s);
+    std::string error_log(4096, '\0');
+    glGetProgramInfoLog(program, 4096, NULL, error_log.data());
     if (error_log[0] != 0) {
         std::cerr << "vertex error:" << std::endl << error_log << std::endl;
         return 1;
     }
-    std::string s_fragment = load("src/fragment.glsl");
-    const char* shader_fragment[] = {
-        "#version 450\n",
-        s_header.c_str(),
-        s_fragment.c_str(),
-    };
-    GLuint program_fragment = glCreateShaderProgramv(GL_FRAGMENT_SHADER, sizeof(shader_fragment) / sizeof(shader_fragment[0]), shader_fragment);
-    glGetProgramInfoLog(program_fragment, 4096, NULL, error_log.data());
-    if (error_log[0] != 0) {
-        std::cerr << "fragment error:" << std::endl << error_log << std::endl;
-        return 1;
+    return program;
+}
+
+struct glfw_t {
+    GLFWwindow* window;
+
+    static void error_callback(int error, const char* description) {
+        throw std::runtime_error("glfw error: " + std::string(description));
     }
+
+    glfw_t() {
+        //setup glfw, window
+        glfwSetErrorCallback(error_callback);
+        if (!glfwInit()) {
+            throw std::runtime_error("glfw error: failed to initialise");
+        }
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        window = glfwCreateWindow(mode->width, mode->height, "project", monitor, NULL);
+
+        if (!window) {
+            glfwTerminate();
+            throw std::runtime_error("glfw error: failed to create window");
+        }
+        glfwMakeContextCurrent(window);
+    }
+
+    void tick(){
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    ~glfw_t() {
+        if (window) {
+            glfwDestroyWindow(window);
+        }
+        glfwTerminate();
+    }
+};
+
+int main() {
+    glfw_t glfw;
+
+    glfwSwapInterval(1);
+    glfwSetInputMode(glfw.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(glfw.window, GLFW_STICKY_KEYS, 1);
+    glfwSetKeyCallback(glfw.window, key_callback);
+
+    //create programs
+    GLuint program_vertex = create_program(GL_VERTEX_SHADER, load("src/vertex.glsl"));
+    GLuint program_fragment = create_program(GL_FRAGMENT_SHADER, load("src/fragment.glsl"));
+
     GLuint pipeline_render;
     glGenProgramPipelines(1, &pipeline_render);
     glUseProgramStages(pipeline_render, GL_VERTEX_SHADER_BIT, program_vertex);
@@ -122,21 +128,14 @@ int main() {
     glEnableVertexAttribArray(vao);
 
     glfwSetTime(0);
-    for (uint64_t frame = 0;; frame++) {
-        glfwPollEvents();
-        if (glfwWindowShouldClose(window)) {
-            std::cout << frame / glfwGetTime() << std::endl;
-            glfwDestroyWindow(window);
-            glfwTerminate();
-            return 0;
-        }
-
+    uint64_t frame = 0;
+    for (; !glfwWindowShouldClose(glfw.window); frame++) {
         double mx, my;
-        glfwGetCursorPos(window, &mx, &my);
+        glfwGetCursorPos(glfw.window, &mx, &my);
         inputs.mouse_x += (mx - inputs.mouse_x) * 0.01;
         inputs.mouse_y += (my - inputs.mouse_y) * 0.01;
         int width, height;
-        glfwGetWindowSize(window, &width, &height);
+        glfwGetWindowSize(glfw.window, &width, &height);
         glViewport(0, 0, width, height);
         inputs.resolution_x = width;
         inputs.resolution_y = height;
@@ -146,6 +145,7 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glFinish();
 
-        glfwSwapBuffers(window);
+        glfw.tick();
     }
+    std::cout << frame / glfwGetTime() << std::endl;
 }

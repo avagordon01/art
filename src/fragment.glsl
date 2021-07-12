@@ -1,3 +1,12 @@
+#version 450
+
+layout(std140) uniform inputs {
+    vec2 mouse;
+    vec2 resolution;
+    uint frame;
+};
+layout(binding=0) uniform usampler2DArray font_atlas;
+
 layout(origin_upper_left) in vec4 gl_FragCoord;
 out vec3 colour;
 
@@ -53,5 +62,6 @@ void main() {
     texcoord = texcoord % textureSize(font_atlas, 0);
     float colour_text = texelFetch(font_atlas, texcoord, 0).a;
 
-    colour = vec3(colour_text);
+    //colour = vec3(colour_text);
+    colour = colormap(colour_julia);
 }
