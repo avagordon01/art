@@ -1,0 +1,23 @@
+requirements
+    single-pixel dots
+    single-pixel vertical/horizontal lines
+    aliased diagonal lines
+    bitmap fonts
+    ~100k lines/dots at 60 fps
+
+taichi
+    drawing lines is extremely slow
+    5 fps at 100 lines
+bgfx
+    only debug text drawing??
+cairo
+    opengl backend is experimental
+    does it use GL_LINES?
+cinder
+    not yet evaluated
+openframeworks
+    not yet evaluated
+raw opengl
+    use freetype for fonts
+    high performance
+    but how awkward will it be
