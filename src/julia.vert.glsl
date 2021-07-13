@@ -1,9 +1,8 @@
-#version 450
-
 const vec2 vertices[] = {
     vec2(-1.0, -1.0),
-    vec2(-1.0, 3.0),
-    vec2(3.0, -1.0)
+    vec2(-1.0, 1.0),
+    vec2(1.0, -1.0),
+    vec2(1.0, 1.0)
 };
 
 out gl_PerVertex {

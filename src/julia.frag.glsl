@@ -1,12 +1,3 @@
-#version 450
-
-layout(std140) uniform inputs {
-    vec2 mouse;
-    vec2 resolution;
-    uint frame;
-};
-layout(binding=0) uniform usampler2DArray font_atlas;
-
 layout(origin_upper_left) in vec4 gl_FragCoord;
 out vec3 colour;
 
@@ -33,7 +24,7 @@ vec3 colormap(float x) {
     return vec3(r, g, b);
 }
 
-float julia(vec2 z, vec2 c) {
+vec3 julia(vec2 z, vec2 c) {
     int i;
     int n = 512;
     for (i = 0; i < n; i++) {
@@ -42,9 +33,9 @@ float julia(vec2 z, vec2 c) {
             break;
     }
     if (i == n) {
-        return 0.0;
+        return vec3(0.0);
     } else {
-        return sqrt(float(i) / float(n));
+        return colormap(sqrt(float(i) / float(n)));
     }
 }
 
@@ -55,13 +46,5 @@ void main() {
     vec2 m = (mouse.xy / resolution.xy) - vec2(0.5, 0.5);
     m = (m - vec2(0.25, 0.0)) * vec2(2);
 
-    float colour_julia = julia(t, m);
-
-    ivec2 fc = ivec2(gl_FragCoord.xy) / textureSize(font_atlas, 0).xy;
-    ivec3 texcoord = ivec3(gl_FragCoord.xy, (fc.x) % textureSize(font_atlas, 0).z);
-    texcoord = texcoord % textureSize(font_atlas, 0);
-    float colour_text = texelFetch(font_atlas, texcoord, 0).a;
-
-    //colour = vec3(colour_text);
-    colour = colormap(colour_julia);
+    colour = julia(t, m);
 }
