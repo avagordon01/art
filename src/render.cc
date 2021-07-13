@@ -7,6 +7,9 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <array>
+#include <utility>
+#include <random>
 
 #include "font-atlas.hh"
 #include "layer.hh"
@@ -40,8 +43,7 @@ GLuint create_program(GLenum type, S... program_texts) {
     std::string error_log(4096, '\0');
     glGetProgramInfoLog(program, 4096, NULL, error_log.data());
     if (error_log[0] != 0) {
-        std::cerr << "vertex error:" << std::endl << error_log << std::endl;
-        return 1;
+        throw std::runtime_error("shader error:\n" + error_log);
     }
     return program;
 }
@@ -137,7 +139,6 @@ struct juliaset : layer_t {
     juliaset(S... program_texts) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
-        glEnableVertexAttribArray(vao);
 
         program_vertex = create_program(GL_VERTEX_SHADER, read_file_as_string("src/julia.vert.glsl"));
         program_fragment = create_program(GL_FRAGMENT_SHADER, program_texts..., read_file_as_string("src/julia.frag.glsl"));
@@ -161,7 +162,6 @@ struct text_overlay : layer_t {
     text_overlay(S... program_texts) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
-        glEnableVertexAttribArray(vao);
 
         program_vertex = create_program(GL_VERTEX_SHADER, read_file_as_string("src/text.vert.glsl"));
         program_fragment = create_program(GL_FRAGMENT_SHADER, program_texts..., read_file_as_string("src/text.frag.glsl"));
@@ -180,10 +180,62 @@ struct text_overlay : layer_t {
     }
 };
 
+struct lines_renderer : layer_t {
+    GLuint program_vertex, program_fragment, pipeline_render, vao;
+    std::vector<
+        std::pair<
+            std::array<float, 2>,
+            std::array<float, 2>
+        >
+    > lines;
+
+    lines_renderer() {
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+
+        lines.resize(1000);
+        std::random_device rd{};
+        std::mt19937 gen{rd()};
+        std::uniform_real_distribution<float> d(-1, 1);
+        for (auto& line: lines) {
+            line = {
+                {static_cast<float>(d(gen)), static_cast<float>(d(gen))},
+                {static_cast<float>(d(gen)), static_cast<float>(d(gen))},
+            };
+        }
+
+        GLuint vbo;
+        glGenBuffers(1, &vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(lines.data()), lines.data(), GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(lines.data()), 0);
+
+        program_vertex = create_program(GL_VERTEX_SHADER, read_file_as_string("src/lines.vert.glsl"));
+        program_fragment = create_program(GL_FRAGMENT_SHADER, read_file_as_string("src/lines.frag.glsl"));
+
+        glGenProgramPipelines(1, &pipeline_render);
+        glUseProgramStages(pipeline_render, GL_VERTEX_SHADER_BIT, program_vertex);
+        glUseProgramStages(pipeline_render, GL_FRAGMENT_SHADER_BIT, program_fragment);
+        glBindProgramPipeline(pipeline_render);
+
+        glBindAttribLocation(pipeline_render, 0, "vertex");
+
+        glBindVertexArray(0);
+    }
+    void draw() override {
+        glBindVertexArray(vao);
+        glBindProgramPipeline(pipeline_render);
+        glLineWidth(100);
+        glDrawArrays(GL_LINES, 0, lines.size());
+    }
+};
+
 int main() {
     glfw_t glfw;
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     glfwSetInputMode(glfw.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetInputMode(glfw.window, GLFW_STICKY_KEYS, 1);
     glfwSetKeyCallback(glfw.window, key_callback);
@@ -199,12 +251,14 @@ int main() {
     };
     juliaset j{s.header_shader_text, atlas.header_shader_text};
     text_overlay t{s.header_shader_text, atlas.header_shader_text};
+    lines_renderer l{};
 
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
         s.draw();
         j.draw();
         t.draw();
+        l.draw();
 
         glfw.tick();
     }

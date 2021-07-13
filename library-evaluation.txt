@@ -21,3 +21,5 @@ raw opengl
     use freetype for fonts
     high performance
     but how awkward will it be
+    100k lines at 25 fps
+    40k lines at 60 fps
