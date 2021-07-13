@@ -188,6 +188,9 @@ int main() {
     glfwSetInputMode(glfw.window, GLFW_STICKY_KEYS, 1);
     glfwSetKeyCallback(glfw.window, key_callback);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     shared_uniforms s{glfw};
     monospace_printable_ascii_font_atlas atlas{
         "fonts/gohufont-2.1/gohufont-11.pcf.gz"

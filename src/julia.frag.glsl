@@ -1,5 +1,5 @@
 layout(origin_upper_left) in vec4 gl_FragCoord;
-out vec3 colour;
+out vec4 colour;
 
 vec2 cmul(in vec2 a, in vec2 b) {
     return vec2(a.x * b.x - a.y * b.y, a.y * b.x + a.x * b.y);
@@ -46,5 +46,6 @@ void main() {
     vec2 m = (mouse.xy / resolution.xy) - vec2(0.5, 0.5);
     m = (m - vec2(0.25, 0.0)) * vec2(2);
 
-    colour = julia(t, m);
+    colour.rgb = julia(t, m);
+    colour.a = 1.0f;
 }
