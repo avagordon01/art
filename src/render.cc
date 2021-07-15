@@ -51,6 +51,7 @@ int main() {
 
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (auto& layer: layers) {
             layer->draw();
         }

@@ -44,7 +44,13 @@ layout(std140, binding=)foo" + std::to_string(binding_id) + R"foo() uniform inpu
 
         inputs.projection = glm::perspective(glm::radians(75.0f), inputs.resolution_x / inputs.resolution_y, 0.1f, 100.f);
         inputs.view = glm::identity<glm::mat4>();
-        inputs.view = glm::translate(inputs.view, glm::vec3(0.0f, 0.0f, -2.0f));
+        float angle = M_PI * inputs.frame / 360;
+        float distance = -2.0f;
+        inputs.view = glm::lookAt(
+            glm::vec3(distance * sin(angle), 0.0f, distance * cos(angle)),
+            glm::vec3(),
+            glm::vec3(0, 1, 0)
+        );
 
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(inputs), &inputs);
 
