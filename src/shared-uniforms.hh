@@ -42,10 +42,10 @@ layout(std140, binding=)foo" + std::to_string(binding_id) + R"foo() uniform inpu
         inputs.resolution_x = w;
         inputs.resolution_y = h;
 
-        inputs.projection = glm::perspective(glm::radians(75.0f), inputs.resolution_x / inputs.resolution_y, 0.1f, 100.f);
+        inputs.projection = glm::perspective(glm::radians(75.0f), inputs.resolution_x / inputs.resolution_y, 0.1f, 200.f);
         inputs.view = glm::identity<glm::mat4>();
-        float angle = M_PI * inputs.frame / 360;
-        float distance = -2.0f;
+        float angle = 2 * M_PI * inputs.frame / 60 / 60;
+        float distance = -100.0f;
         inputs.view = glm::lookAt(
             glm::vec3(distance * sin(angle), 0.0f, distance * cos(angle)),
             glm::vec3(),
