@@ -5,26 +5,31 @@ struct lines_renderer : layer_t {
     GLuint program_vertex, program_fragment, pipeline_render, vao;
     std::vector<
         std::pair<
-            std::array<float, 2>,
-            std::array<float, 2>
+            std::array<float, 3>,
+            std::array<float, 3>
         >
     > lines;
 
-    lines_renderer() {
+    template<typename ...S>
+    lines_renderer(S... program_texts) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
 
-        lines.resize(1000);
+        lines.resize(1000000);
         std::random_device rd{};
         std::mt19937 gen{rd()};
         std::uniform_real_distribution<float> d(-1, 1);
         for (auto& line: lines) {
-            line.first = {static_cast<float>(d(gen)), static_cast<float>(d(gen))};
-            if (false) {
-                line.second = {static_cast<float>(d(gen)), static_cast<float>(d(gen))};
-            } else {
-                line.second = {line.first[0] + 0.1f * static_cast<float>(d(gen)), line.first[1] + 0.1f * static_cast<float>(d(gen))};
-            }
+            line.first = {
+                static_cast<float>(d(gen)),
+                static_cast<float>(d(gen)),
+                static_cast<float>(d(gen)),
+            };
+            line.second = {
+                line.first[0] + 0.1f * static_cast<float>(d(gen)),
+                line.first[1] + 0.1f * static_cast<float>(d(gen)),
+                line.first[2] + 0.1f * static_cast<float>(d(gen)),
+            };
         }
 
         GLuint vbo;
@@ -33,10 +38,10 @@ struct lines_renderer : layer_t {
         glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(*lines.data()), lines.data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(*lines.data()) / 2, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(*lines.data()) / 2, 0);
 
         std::string source_vertex = R"foo(
-in vec2 vertex;
+in vec3 vertex;
 
 out gl_PerVertex {
     vec4 gl_Position;
@@ -44,11 +49,11 @@ out gl_PerVertex {
     float gl_ClipDistance[];
 };
 void main() {
-    gl_Position = vec4(vertex, 0.0f, 1.0f);
+    gl_Position = projection * view * vec4(vertex, 1.0f);
 }
 )foo";
         std::string source_fragment = R"foo(
-layout(origin_upper_left) in vec4 gl_FragCoord;
+in vec4 gl_FragCoord;
 out vec4 colour;
 
 void main() {
@@ -56,7 +61,7 @@ void main() {
 }
 )foo";
 
-        program_vertex = create_program(GL_VERTEX_SHADER, source_vertex);
+        program_vertex = create_program(GL_VERTEX_SHADER, program_texts..., source_vertex);
         program_fragment = create_program(GL_FRAGMENT_SHADER, source_fragment);
 
         glGenProgramPipelines(1, &pipeline_render);

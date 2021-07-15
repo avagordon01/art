@@ -45,7 +45,7 @@ int main() {
         //"fonts/tamsyn-font-1.11/Tamsyn6x12r.pcf"
     };
     text_overlay t{s.header_shader_text, atlas.header_shader_text};
-    lines_renderer l{};
+    lines_renderer l{s.header_shader_text};
 
     std::vector<layer_t*> layers {&s, &j, &t, &l};
 

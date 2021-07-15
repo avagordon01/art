@@ -1,5 +1,3 @@
-3D perspective lines/points with 2D overlay text
-    https://learnopengl.com/Getting-started/Camera
 
 X/Y tick lines
 
