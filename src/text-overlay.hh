@@ -36,6 +36,7 @@ void main() {
     texcoord = texcoord % textureSize(font_atlas, 0);
 
     colour = texelFetch(font_atlas, texcoord, 0);
+    colour.a = 0.25f;
 }
 )foo";
 
