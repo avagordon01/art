@@ -8,7 +8,7 @@
 
 #include "glfw.hh"
 #include "shared-uniforms.hh"
-#include "julia.hh"
+#include "ticks.hh"
 #include "text-overlay.hh"
 #include "lines.hh"
 #include "triangles.hh"
@@ -35,7 +35,7 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     shared_uniforms shared{glfw};
-    juliaset julia{shared.header_shader_text};
+    ticks ticks{shared.header_shader_text};
     monospace_printable_ascii_font_atlas atlas{
         "fonts/gohufont-2.1/gohufont-11.pcf.gz"
         //"fonts/artwiz-aleczapka-en-1.3/cure.pcf"
@@ -79,8 +79,8 @@ int main() {
 
     std::vector<layer_t*> layers {
         &shared,
-        //&julia,
         &text,
+        &ticks,
         &lines,
         &triangles,
     };
