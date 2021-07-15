@@ -28,10 +28,10 @@ struct mesh {
             throw std::runtime_error("error! more than one mesh in the file");
         }
         const aiMesh* mesh = scene->mMeshes[0];
-        for (size_t j = 0; j < mesh->mNumFaces; j++) {
-            const aiFace& face = mesh->mFaces[j];
-            for (size_t k = 0; k < face.mNumIndices; k++) {
-                unsigned index = face.mIndices[k];
+        for (size_t i = 0; i < mesh->mNumFaces; i++) {
+            const aiFace& face = mesh->mFaces[i];
+            for (size_t j = 0; j < face.mNumIndices; j++) {
+                unsigned index = face.mIndices[j];
                 indices.push_back(index);
             }
         }
