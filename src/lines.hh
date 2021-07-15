@@ -30,10 +30,10 @@ struct lines_renderer : layer_t {
         GLuint vbo;
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(lines.data()), lines.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(*lines.data()), lines.data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(lines.data()), 0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(*lines.data()) / 2, 0);
 
         std::string source_vertex = R"foo(
 in vec2 vertex;
@@ -72,6 +72,6 @@ void main() {
         glBindVertexArray(vao);
         glBindProgramPipeline(pipeline_render);
         glLineWidth(1);
-        glDrawArrays(GL_LINES, 0, lines.size());
+        glDrawArrays(GL_LINES, 0, lines.size() * 2);
     }
 };
