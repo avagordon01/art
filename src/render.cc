@@ -79,7 +79,7 @@ int main() {
 
     std::vector<layer_t*> layers {
         &shared,
-        &julia,
+        //&julia,
         &text,
         &lines,
         &triangles,

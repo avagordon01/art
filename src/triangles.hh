@@ -67,7 +67,7 @@ void main() {
         glBindVertexArray(vao);
         glBindProgramPipeline(pipeline_render);
         glLineWidth(1);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
