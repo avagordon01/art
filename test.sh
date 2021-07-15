@@ -8,4 +8,4 @@ if [ ! -d out ]; then
 fi
 meson install -C out
 
-./packaged/bin/render
+prime-run ./packaged/bin/render

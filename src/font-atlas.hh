@@ -16,8 +16,9 @@ struct monospace_printable_ascii_font_atlas : layer_t {
     size_t height_ = 0;
     GLuint texture_ = 0;
 
+    GLuint binding_id = 1;
     std::string header_shader_text = R"foo(
-layout(binding=1) uniform usampler2DArray font_atlas;
+layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DArray font_atlas;
 )foo";
 
     monospace_printable_ascii_font_atlas(std::string filename) {
@@ -75,7 +76,7 @@ layout(binding=1) uniform usampler2DArray font_atlas;
         glBindTexture(GL_TEXTURE_2D_ARRAY, texture_);
         glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, width(), height(), num_chars());
         glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width(), height(), num_chars(), GL_RGBA, GL_UNSIGNED_BYTE, texels.data());
-        glBindTextureUnit(1, texture());
+        glBindTextureUnit(binding_id, texture());
     }
 
     void draw() override {

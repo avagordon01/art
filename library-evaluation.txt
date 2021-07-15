@@ -21,5 +21,26 @@ raw opengl
     use freetype for fonts
     high performance
     but how awkward will it be
-    100k lines at 25 fps
-    40k lines at 60 fps
+    mesa intel driver
+        long lines
+            100k at 25 fps
+            40k at 60 fps
+        short lines
+            100k at 130 fps
+            250k at 60 fps
+            25k smooth (16x msaa) at 60 fps
+            TODO smooth (antialiasing shader) at X fps
+
+        points
+            5m 1px at 60 fps
+            1m 4px at 80 fps
+    nvidia driver
+        long lines
+            100k at 140 fps
+            250k at 60 fps
+        short lines
+            1.5m at 60 fps
+            100k smooth (GL_LINE_SMOOTH) at 16 fps
+            250k smooth (16x msaa) at 60 fps
+        points
+            5m 1px at 60 fps
