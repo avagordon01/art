@@ -1,4 +1,4 @@
-project('ade', 'cpp',
+project('render', 'cpp',
   default_options: [
     'prefix=' + meson.source_root() / 'packaged',
     'buildtype=debugoptimized',
@@ -10,15 +10,18 @@ project('ade', 'cpp',
 
 add_project_arguments(
   '-Wno-unused-parameter',
-  '-Wno-missing-field-initializers',
   language: 'cpp',
 )
 
-cc = meson.get_compiler('cpp')
-m_dep = cc.find_library('m', required : false)
-gl_dep = dependency('gl')
-glfw_dep = dependency('glfw3')
-glm_dep = dependency('glm')
-freetype_dep = dependency('freetype2')
-
-executable('render', 'src/render.cc', dependencies: [m_dep, gl_dep, glfw_dep, glm_dep, freetype_dep], install: true)
+executable(
+  'render',
+  'src/render.cc',
+  dependencies: [
+    dependency('gl'),
+    dependency('glfw3'),
+    dependency('glm'),
+    dependency('freetype2'),
+    dependency('assimp'),
+  ],
+  install: true,
+)

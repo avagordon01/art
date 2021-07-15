@@ -2,7 +2,7 @@
 
 set -o errexit
 
-sudo pacman -S glfw freetype2 glm mesa-demos
+sudo pacman -S glfw freetype2 glm assimp mesa-demos
 
 glxinfo | grep OpenGL
 if [ $? -ne 0 ]; then
