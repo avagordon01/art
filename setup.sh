@@ -8,3 +8,6 @@ glxinfo | grep OpenGL
 if [ $? -ne 0 ]; then
     echo "error no opengl driver found"
 fi
+
+./fonts/download.sh
+./data/download.sh
