@@ -38,7 +38,7 @@ struct lines_renderer : layer_t {
         glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(*lines.data()), lines.data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(*lines.data()) / 2, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
         std::string source_vertex = R"foo(
 in vec3 vertex;
