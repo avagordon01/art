@@ -6,34 +6,20 @@
 
 struct lines_renderer : layer_t {
     GLuint program_vertex, program_fragment, pipeline_render, vao;
-    std::vector<
+    using lines_type = std::vector<
         std::pair<
             std::array<float, 3>,
             std::array<float, 3>
         >
-    > lines;
+    >;
+    lines_type lines;
 
     template<typename ...S>
-    lines_renderer(S... program_texts) {
+    lines_renderer(lines_type lines_, S... program_texts):
+        lines(lines_)
+    {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
-
-        lines.resize(1000000);
-        std::random_device rd{};
-        std::mt19937 gen{rd()};
-        std::uniform_real_distribution<float> d(-1, 1);
-        for (auto& line: lines) {
-            line.first = {
-                static_cast<float>(d(gen)),
-                static_cast<float>(d(gen)),
-                static_cast<float>(d(gen)),
-            };
-            line.second = {
-                line.first[0] + 0.1f * static_cast<float>(d(gen)),
-                line.first[1] + 0.1f * static_cast<float>(d(gen)),
-                line.first[2] + 0.1f * static_cast<float>(d(gen)),
-            };
-        }
 
         GLuint vbo;
         glGenBuffers(1, &vbo);

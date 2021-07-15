@@ -42,7 +42,29 @@ int main() {
         //"fonts/tamsyn-font-1.11/Tamsyn6x12r.pcf"
     };
     text_overlay text{shared.header_shader_text, atlas.header_shader_text};
-    lines_renderer lines{shared.header_shader_text};
+
+    std::vector<
+        std::pair<
+            std::array<float, 3>,
+            std::array<float, 3>
+        >
+    > ls(1000000);
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::uniform_real_distribution<float> d(-1, 1);
+    for (auto& line: ls) {
+        line.first = {
+            static_cast<float>(d(gen)),
+            static_cast<float>(d(gen)),
+            static_cast<float>(d(gen)),
+        };
+        line.second = {
+            line.first[0] + 0.1f * static_cast<float>(d(gen)),
+            line.first[1] + 0.1f * static_cast<float>(d(gen)),
+            line.first[2] + 0.1f * static_cast<float>(d(gen)),
+        };
+    }
+    lines_renderer lines{ls, shared.header_shader_text};
     mesh mesh{
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_327680.obj"
     };
