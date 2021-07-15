@@ -1,5 +1,8 @@
+render connected lines/data/graph/plot
+    x/y tick lines
+    https://en.wikibooks.org/wiki/OpenGL_Programming#The_scientific_arc
 
-X/Y tick lines
+advanced/keyframe animation
 
 maybe parent class layer for fullscreen_quad
 
@@ -7,13 +10,6 @@ text based on data
     https://learnopengl.com/In-Practice/Text-Rendering
     https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Text_Rendering_02
     maybe need depth testing for this
-
-load some data
-    https://learnopengl.com/Model-Loading/Assimp
-    http://assimp.sourceforge.net/main_features_formats.html
-
-render connected lines/data/graph/plot
-    https://en.wikibooks.org/wiki/OpenGL_Programming#The_scientific_arc
 
 smooth antialiased diagonal lines
     using a thin rectangle
