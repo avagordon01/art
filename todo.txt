@@ -4,18 +4,13 @@ render connected lines/data/graph/plot
 
 advanced/keyframe animation
 
-maybe parent class layer for fullscreen_quad
+maybe refactor common renderer code
+    class for fullscreen quad
+    class for buffer code
 
 text based on data
     https://learnopengl.com/In-Practice/Text-Rendering
     https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Text_Rendering_02
     maybe need depth testing for this
 
-smooth antialiased diagonal lines
-    using a thin rectangle
-    using a texture rather than distance calculation
-    possibly using a geometry shader
-        https://learnopengl.com/Advanced-OpenGL/Geometry-Shader
-    https://people.freedesktop.org/~idr/OpenGL_tutorials/03-fragment-intro.html#id2827467
-    https://stackoverflow.com/questions/3512456/how-to-draw-smooth-line-in-opengl-with-antialiasing
-    https://vitaliburkov.wordpress.com/2016/09/17/simple-and-fast-high-quality-antialiased-lines-with-opengl/
+synchronised audio
