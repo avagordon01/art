@@ -1,16 +1,10 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GLFW/glfw3.h>
-#include <cstdint>
-#include <cstdbool>
 #include <iostream>
-#include <fstream>
-#include <string>
 #include <vector>
-#include <memory>
 #include <array>
 #include <utility>
 #include <random>
-#include <chrono>
 
 #include "glfw.hh"
 #include "shared-uniforms.hh"

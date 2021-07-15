@@ -1,5 +1,8 @@
 #include "layer.hh"
 #include "util.hh"
+#include <vector>
+#include <array>
+#include <utility>
 
 struct lines_renderer : layer_t {
     GLuint program_vertex, program_fragment, pipeline_render, vao;

@@ -1,3 +1,6 @@
+#include <stdexcept>
+#include <string>
+
 struct glfw_t {
     GLFWwindow* window;
 

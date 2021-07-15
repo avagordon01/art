@@ -1,5 +1,6 @@
 #include "layer.hh"
 #include "util.hh"
+#include <string>
 
 struct text_overlay : layer_t {
     GLuint program_vertex, program_fragment, pipeline_render, vao;

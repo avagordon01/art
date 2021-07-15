@@ -1,5 +1,8 @@
 #include "layer.hh"
 #include "util.hh"
+#include <string>
+#include <vector>
+#include <array>
 
 struct instanced_triangles_renderer : layer_t {
     GLuint program_vertex, program_fragment, pipeline_render, vao;

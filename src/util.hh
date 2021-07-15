@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 template<typename ...S>
 GLuint create_program(GLenum type, S... program_texts) {

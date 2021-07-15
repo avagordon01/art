@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 #define GL_GLEXT_PROTOTYPES
 #include <GLFW/glfw3.h>
