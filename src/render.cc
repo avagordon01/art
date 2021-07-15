@@ -81,6 +81,19 @@ int main() {
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        int w, h;
+        glfwGetWindowSize(glfw.window, &w, &h);
+        shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
+        shared.inputs.view = glm::identity<glm::mat4>();
+        float angle = 2 * M_PI * shared.inputs.frame / 60 / 60;
+        float distance = -100.0f;
+        shared.inputs.view = glm::lookAt(
+            glm::vec3(distance * sin(angle), 0.0f, distance * cos(angle)),
+            glm::vec3(),
+            glm::vec3(0, 1, 0)
+        );
+
         for (auto& layer: layers) {
             layer->draw();
         }

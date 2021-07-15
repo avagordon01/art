@@ -24,6 +24,8 @@ layout(std140, binding=)foo" + std::to_string(binding_id) + R"foo() uniform inpu
         glfw(glfw_)
     {
         inputs.frame = 0;
+        inputs.view = glm::identity<glm::mat4>();
+        inputs.projection = glm::identity<glm::mat4>();
 
         GLuint ubo;
         glGenBuffers(1, &ubo);
@@ -41,16 +43,6 @@ layout(std140, binding=)foo" + std::to_string(binding_id) + R"foo() uniform inpu
         glfwGetWindowSize(glfw.window, &w, &h);
         inputs.resolution_x = w;
         inputs.resolution_y = h;
-
-        inputs.projection = glm::perspective(glm::radians(75.0f), inputs.resolution_x / inputs.resolution_y, 0.1f, 200.f);
-        inputs.view = glm::identity<glm::mat4>();
-        float angle = 2 * M_PI * inputs.frame / 60 / 60;
-        float distance = -100.0f;
-        inputs.view = glm::lookAt(
-            glm::vec3(distance * sin(angle), 0.0f, distance * cos(angle)),
-            glm::vec3(),
-            glm::vec3(0, 1, 0)
-        );
 
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(inputs), &inputs);
 
