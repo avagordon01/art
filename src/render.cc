@@ -9,6 +9,7 @@
 #include "glfw.hh"
 #include "shared-uniforms.hh"
 #include "ticks.hh"
+#include "grid.hh"
 #include "text-overlay.hh"
 #include "lines.hh"
 #include "triangles.hh"
@@ -36,6 +37,7 @@ int main() {
 
     shared_uniforms shared{glfw};
     ticks ticks{shared.header_shader_text};
+    grid grid{shared.header_shader_text};
     monospace_printable_ascii_font_atlas atlas{
         "fonts/gohufont-2.1/gohufont-11.pcf.gz"
         //"fonts/artwiz-aleczapka-en-1.3/cure.pcf"
@@ -80,6 +82,7 @@ int main() {
     std::vector<layer_t*> layers {
         &shared,
         &text,
+        &grid,
         &ticks,
         &lines,
         &triangles,
