@@ -9,3 +9,19 @@ oil & gas
 satellites
 military
 planck / cern surveys
+hud https://www.youtube.com/watch?v=U3mndWmD4B4
+https://en.wikipedia.org/wiki/Astronomical_survey
+https://github.com/awesomedata/awesome-public-datasets
+
+dna
+linux kernel source/binary
+raw memory/disk of current machine
+randomly degrading pixels with video ram
+ebpf reading network/disk stuff
+sorting/glitching pixels
+disintegration loops
+crystal lattices
+surfaces of planets
+rings of jupiter
+gas giants
+satellites
