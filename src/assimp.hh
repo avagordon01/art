@@ -4,12 +4,22 @@
 #include <string>
 #include <vector>
 #include <array>
+#include "cache_vector.hh"
 
 struct mesh {
     std::vector<unsigned> indices;
     std::vector<std::array<float, 3>> vertices;
     mesh(const std::vector<std::string>& filenames) {
         profiler p{};
+        std::string vertices_cache_path = "meshvbufcache";
+        std::string indices_cache_path = "meshibufcache";
+        auto v0 = vector_from_file<std::array<float, 3>>(vertices_cache_path);
+        auto v1 = vector_from_file<unsigned>(indices_cache_path);
+        if (v0 && v1) {
+            vertices = *v0;
+            indices = *v1;
+            return;
+        }
         for (auto& filename: filenames) {
             p.capture("before reading " + filename);
             Assimp::Importer importer;
@@ -46,6 +56,8 @@ struct mesh {
                 vertices.push_back({vertex.x, vertex.y, vertex.z});
             }
             p.capture("writing vertices " + filename);
+            vector_to_file(vertices_cache_path, vertices);
+            vector_to_file(indices_cache_path, indices);
         }
     }
 };
