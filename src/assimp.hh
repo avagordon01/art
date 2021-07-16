@@ -9,7 +9,9 @@ struct mesh {
     std::vector<unsigned> indices;
     std::vector<std::array<float, 3>> vertices;
     mesh(const std::vector<std::string>& filenames) {
+        profiler p{};
         for (auto& filename: filenames) {
+            p.capture("before reading " + filename);
             Assimp::Importer importer;
 
             const aiScene* scene = importer.ReadFile(filename,
@@ -17,6 +19,7 @@ struct mesh {
                 aiProcess_JoinIdenticalVertices |
                 aiProcess_SortByPType
             );
+            p.capture("reading " + filename);
 
             if (!scene) {
                 throw std::runtime_error("assimp failed to load \"" + filename + "\" with error: " + importer.GetErrorString());
@@ -37,10 +40,12 @@ struct mesh {
                     indices.push_back(index + index_offset);
                 }
             }
+            p.capture("writing indices " + filename);
             for (size_t i = 0; i < mesh->mNumVertices; i++) {
                 const aiVector3D& vertex = mesh->mVertices[i];
                 vertices.push_back({vertex.x, vertex.y, vertex.z});
             }
+            p.capture("writing vertices " + filename);
         }
     }
 };
