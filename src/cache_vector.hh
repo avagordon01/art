@@ -2,6 +2,7 @@
 #include <vector>
 #include <type_traits>
 #include <optional>
+#include <filesystem>
 
 template<typename T>
 std::optional<std::vector<T>> vector_from_file(std::string filename) {
@@ -19,6 +20,9 @@ std::optional<std::vector<T>> vector_from_file(std::string filename) {
 
 template<typename T>
 void vector_to_file(std::string filename, std::vector<T>& vector) {
+    std::filesystem::path path(filename);
+    path.remove_filename();
+    std::filesystem::create_directory(path);
     static_assert(std::is_trivially_copyable<T>::value, "vector<T> T must be trivially_copyable");
     std::ofstream file(filename, std::ios::out | std::ofstream::binary);
     size_t size = vector.size();
