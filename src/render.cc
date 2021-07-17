@@ -8,6 +8,7 @@
 
 #include "profiler.hh"
 
+#include "glerror.hh"
 #include "glfw.hh"
 #include "shared-uniforms.hh"
 #include "ticks.hh"
@@ -34,6 +35,8 @@ int main() {
     glfwSetInputMode(glfw.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetInputMode(glfw.window, GLFW_STICKY_KEYS, 1);
     glfwSetKeyCallback(glfw.window, key_callback);
+
+    gl_setup_errors();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
