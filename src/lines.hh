@@ -14,8 +14,7 @@ struct lines_renderer : layer_t {
     >;
     lines_type lines;
 
-    template<typename ...S>
-    lines_renderer(lines_type lines_, S... program_texts):
+    lines_renderer(lines_type lines_, std::string shared_uniforms):
         lines(lines_)
     {
         glGenVertexArrays(1, &vao);
@@ -29,7 +28,7 @@ struct lines_renderer : layer_t {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-        std::string source_vertex = R"foo(
+        std::string source_vertex = shared_uniforms + R"foo(
 in vec3 vertex;
 
 out gl_PerVertex {
@@ -50,7 +49,7 @@ void main() {
 }
 )foo";
 
-        program_vertex = create_program(GL_VERTEX_SHADER, program_texts..., source_vertex);
+        program_vertex = create_program(GL_VERTEX_SHADER, source_vertex);
         program_fragment = create_program(GL_FRAGMENT_SHADER, source_fragment);
 
         glGenProgramPipelines(1, &pipeline_render);

@@ -4,8 +4,7 @@
 
 struct juliaset : layer_t {
     GLuint program_vertex, program_fragment, pipeline_render, vao;
-    template<typename ...S>
-    juliaset(S... program_texts) {
+    juliaset(std::string shared_uniforms) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
 
@@ -27,7 +26,7 @@ void main() {
 }
 )foo";
 
-        std::string source_fragment = R"foo(
+        std::string source_fragment = shared_uniforms + R"foo(
 layout(origin_upper_left) in vec4 gl_FragCoord;
 out vec4 colour;
 
@@ -70,7 +69,7 @@ void main() {
 )foo";
 
         program_vertex = create_program(GL_VERTEX_SHADER, source_vertex);
-        program_fragment = create_program(GL_FRAGMENT_SHADER, program_texts..., source_fragment);
+        program_fragment = create_program(GL_FRAGMENT_SHADER, source_fragment);
 
         glGenProgramPipelines(1, &pipeline_render);
         glUseProgramStages(pipeline_render, GL_VERTEX_SHADER_BIT, program_vertex);

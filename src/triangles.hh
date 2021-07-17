@@ -9,8 +9,7 @@ struct instanced_triangles_renderer : layer_t {
     std::vector<std::array<float, 3>> vertices;
     std::vector<unsigned> indices;
 
-    template<typename ...S>
-    instanced_triangles_renderer(std::vector<std::array<float, 3>> vertices_, std::vector<unsigned> indices_, S... program_texts):
+    instanced_triangles_renderer(std::vector<std::array<float, 3>> vertices_, std::vector<unsigned> indices_, std::string shared_uniforms):
         vertices(vertices_),
         indices(indices_)
     {
@@ -30,7 +29,7 @@ struct instanced_triangles_renderer : layer_t {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(*indices.data()), indices.data(), GL_STATIC_DRAW);
 
-        std::string source_vertex = R"foo(
+        std::string source_vertex = shared_uniforms + R"foo(
 in vec3 vertex;
 out vec4 vertex_position;
 
@@ -44,7 +43,7 @@ void main() {
     vertex_position = projection * view * vec4(vertex, 1.0f);
 }
 )foo";
-        std::string source_fragment = R"foo(
+        std::string source_fragment = shared_uniforms + R"foo(
 in vec4 vertex_position;
 in vec4 gl_FragCoord;
 in int gl_PrimitiveID;
@@ -59,8 +58,8 @@ void main() {
 }
 )foo";
 
-        program_vertex = create_program(GL_VERTEX_SHADER, program_texts..., source_vertex);
-        program_fragment = create_program(GL_FRAGMENT_SHADER, program_texts..., source_fragment);
+        program_vertex = create_program(GL_VERTEX_SHADER, source_vertex);
+        program_fragment = create_program(GL_FRAGMENT_SHADER, source_fragment);
 
         glGenProgramPipelines(1, &pipeline_render);
         glUseProgramStages(pipeline_render, GL_VERTEX_SHADER_BIT, program_vertex);

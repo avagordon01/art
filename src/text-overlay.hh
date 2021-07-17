@@ -4,8 +4,7 @@
 
 struct text_overlay : layer_t {
     GLuint program_vertex, program_fragment, pipeline_render, vao;
-    template<typename ...S>
-    text_overlay(S... program_texts) {
+    text_overlay(std::string shared_uniforms, std::string atlas) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
 
@@ -26,7 +25,7 @@ void main() {
     gl_Position = vec4(vertices[gl_VertexID], 0.0, 1.0);
 }
 )foo";
-        std::string source_fragment = R"foo(
+        std::string source_fragment = shared_uniforms + atlas + R"foo(
 layout(origin_upper_left) in vec4 gl_FragCoord;
 out vec4 colour;
 
@@ -41,7 +40,7 @@ void main() {
 )foo";
 
         program_vertex = create_program(GL_VERTEX_SHADER, source_vertex);
-        program_fragment = create_program(GL_FRAGMENT_SHADER, program_texts..., source_fragment);
+        program_fragment = create_program(GL_FRAGMENT_SHADER, source_fragment);
 
         glGenProgramPipelines(1, &pipeline_render);
         glUseProgramStages(pipeline_render, GL_VERTEX_SHADER_BIT, program_vertex);
