@@ -32,6 +32,7 @@ struct instanced_triangles_renderer : layer_t {
 
         std::string source_vertex = R"foo(
 in vec3 vertex;
+out vec4 vertex_position;
 
 out gl_PerVertex {
     vec4 gl_Position;
@@ -40,19 +41,26 @@ out gl_PerVertex {
 };
 void main() {
     gl_Position = projection * view * vec4(vertex, 1.0f);
+    vertex_position = projection * view * vec4(vertex, 1.0f);
 }
 )foo";
         std::string source_fragment = R"foo(
+in vec4 vertex_position;
 in vec4 gl_FragCoord;
+in int gl_PrimitiveID;
 out vec4 colour;
 
 void main() {
-    colour = vec4(1);
+    if (frame % (60 * 10) <= 60 * 5) {
+        colour = vec4(1) * int(gl_PrimitiveID < frame * 100);
+    } else {
+        colour = vec4(1) * float(int(vertex_position.y - float(frame) * 0.1) % 16 == 0);
+    }
 }
 )foo";
 
         program_vertex = create_program(GL_VERTEX_SHADER, program_texts..., source_vertex);
-        program_fragment = create_program(GL_FRAGMENT_SHADER, source_fragment);
+        program_fragment = create_program(GL_FRAGMENT_SHADER, program_texts..., source_fragment);
 
         glGenProgramPipelines(1, &pipeline_render);
         glUseProgramStages(pipeline_render, GL_VERTEX_SHADER_BIT, program_vertex);
@@ -67,7 +75,7 @@ void main() {
         glBindVertexArray(vao);
         glBindProgramPipeline(pipeline_render);
         glLineWidth(1);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
