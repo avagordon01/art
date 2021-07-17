@@ -1,3 +1,7 @@
+compute shader particle movement/simulation
+
+variable length rects
+
 connected lines
 
 advanced/keyframe animation
