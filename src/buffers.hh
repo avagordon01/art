@@ -22,7 +22,7 @@ struct vertex_buffer {
     T* previous_buffer;
     bool immutable;
     vertex_buffer() {};
-    vertex_buffer(std::vector<T> data_, GLuint vertex_attrib_index, bool immutable_ = true):
+    vertex_buffer(std::vector<T> data_, GLuint index, bool immutable_ = true):
         data(data_),
         immutable(immutable_)
     {
@@ -30,8 +30,11 @@ struct vertex_buffer {
         glBindBuffer(Target, buffer_id);
         glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), immutable ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
         if constexpr (Target == GL_ARRAY_BUFFER) {
-            glVertexAttribPointer(vertex_attrib_index, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-            glEnableVertexAttribArray(vertex_attrib_index);
+            glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+            glEnableVertexAttribArray(index);
+        }
+        if constexpr (Target == GL_SHADER_STORAGE_BUFFER) {
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, buffer_id);
         }
         previous_buffer = data.data();
     }
