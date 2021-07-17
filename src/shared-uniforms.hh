@@ -1,9 +1,8 @@
-#include "layer.hh"
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-struct shared_uniforms : layer_t {
+struct shared_uniforms {
     struct inputs {
         glm::mat4 view, projection;
         float mouse_x, mouse_y;
@@ -33,7 +32,7 @@ layout(std140, binding=)foo" + std::to_string(binding_id) + R"foo() uniform inpu
         glBufferData(GL_UNIFORM_BUFFER, sizeof(inputs), &inputs, GL_DYNAMIC_DRAW);
         glBindBufferBase(GL_UNIFORM_BUFFER, binding_id, ubo);
     }
-    void draw() override {
+    void draw() {
         double mx, my;
         glfwGetCursorPos(glfw.window, &mx, &my);
         inputs.mouse_x = mx;

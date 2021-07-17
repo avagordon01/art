@@ -1,11 +1,10 @@
-#include "layer.hh"
 #include <string>
 #include <vector>
 #include <array>
 #include "buffers.hh"
 #include "shader.hh"
 
-struct instanced_triangles_renderer : layer_t {
+struct instanced_triangles_renderer {
     GLuint vertex_attrib_index = 0;
 
     vertex_array_object vao;
@@ -45,7 +44,7 @@ void main() {
 }
 )foo", vertex_attrib_index)
     {}
-    void draw() override {
+    void draw() {
         vao.draw();
         vbo.draw();
         ibo.draw();

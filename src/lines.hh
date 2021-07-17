@@ -1,11 +1,10 @@
-#include "layer.hh"
 #include <vector>
 #include <array>
 #include <utility>
 #include "buffers.hh"
 #include "shader.hh"
 
-struct lines_renderer : layer_t {
+struct lines_renderer {
     GLuint vertex_attrib_index = 0;
 
     using line_type = std::pair<
@@ -41,7 +40,7 @@ void main() {
 }
 )foo", vertex_attrib_index)
     {}
-    void draw() override {
+    void draw() {
         vao.draw();
         vbo.draw();
         shader.draw();

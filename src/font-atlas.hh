@@ -10,9 +10,7 @@
 #include <freetype/freetype.h>
 #include <GL/gl.h>
 
-#include "layer.hh"
-
-struct monospace_printable_ascii_font_atlas : layer_t {
+struct monospace_printable_ascii_font_atlas {
     size_t width_ = 0;
     size_t height_ = 0;
     GLuint texture_ = 0;
@@ -80,7 +78,7 @@ layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DAr
         glBindTextureUnit(binding_id, texture());
     }
 
-    void draw() override {
+    void draw() {
     }
 
     GLuint texture() {

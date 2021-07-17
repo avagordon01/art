@@ -87,15 +87,6 @@ int main() {
     p.capture("mesh");
     instanced_triangles_renderer triangles{mesh.vertices, mesh.indices, shared.header_shader_text};
 
-    std::vector<layer_t*> layers {
-        &shared,
-        &text,
-        &grid,
-        &ticks,
-        &lines,
-        &triangles,
-    };
-
     glfwSetTime(0);
     p.capture("after mesh");
     while (!glfwWindowShouldClose(glfw.window)) {
@@ -113,9 +104,13 @@ int main() {
             glm::vec3(0, 1, 0)
         );
 
-        for (auto& layer: layers) {
-            layer->draw();
-        }
+        shared.draw();
+        text.draw();
+        grid.draw();
+        ticks.draw();
+        lines.draw();
+        triangles.draw();
+
         glfw.tick();
     }
     std::cout << shared.inputs.frame / glfwGetTime() << " average fps" << std::endl;

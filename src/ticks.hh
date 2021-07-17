@@ -1,10 +1,9 @@
-#include "layer.hh"
 #include <string>
 #include "buffers.hh"
 #include "shader.hh"
 #include "fullscreen-quad.hh"
 
-struct ticks : layer_t {
+struct ticks {
     fullscreen_quad quad;
     vertex_array_object vao;
     shader shader;
@@ -25,7 +24,7 @@ void main() {
 }
 )foo")
     {}
-    void draw() override {
+    void draw() {
         vao.draw();
         shader.draw();
         quad.draw();
