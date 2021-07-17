@@ -28,7 +28,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 int main() {
-    profiler p{};
     glfw_t glfw;
 
     glfwSwapInterval(1);
@@ -56,7 +55,7 @@ int main() {
             std::array<float, 3>,
             std::array<float, 3>
         >
-    > ls(1000000);
+    > ls(1000);
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::uniform_real_distribution<float> d(-1, 1);
@@ -73,7 +72,6 @@ int main() {
         };
     }
     lines_renderer lines{ls, shared.header_shader_text};
-    p.capture("before mesh");
     mesh mesh{{
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_327680.obj",
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_rsl_327680.obj",
@@ -83,12 +81,10 @@ int main() {
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_left_rsl_327680.obj",
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_327680.obj",
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_rsl_327680.obj",
-    }};
-    p.capture("mesh");
+    }, "brain"};
     instanced_triangles_renderer triangles{mesh.vertices, mesh.indices, shared.header_shader_text};
 
     glfwSetTime(0);
-    p.capture("after mesh");
     while (!glfwWindowShouldClose(glfw.window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

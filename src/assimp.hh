@@ -9,10 +9,10 @@
 struct mesh {
     std::vector<unsigned> indices;
     std::vector<std::array<float, 3>> vertices;
-    mesh(const std::vector<std::string>& filenames) {
+    mesh(const std::vector<std::string>& filenames, std::string short_name) {
         profiler p{};
-        std::string vertices_cache_path = "meshvbufcache";
-        std::string indices_cache_path = "meshibufcache";
+        std::string vertices_cache_path = "cache/" + short_name + ".v.buf";
+        std::string indices_cache_path = "cache/" + short_name + ".i.buf";
         auto v0 = vector_from_file<std::array<float, 3>>(vertices_cache_path);
         auto v1 = vector_from_file<unsigned>(indices_cache_path);
         if (v0 && v1) {
