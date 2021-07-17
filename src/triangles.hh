@@ -46,7 +46,6 @@ void main() {
         std::string source_fragment = shared_uniforms + R"foo(
 in vec4 vertex_position;
 in vec4 gl_FragCoord;
-in int gl_PrimitiveID;
 out vec4 colour;
 
 void main() {
