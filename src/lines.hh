@@ -1,34 +1,26 @@
 #include "layer.hh"
-#include "util.hh"
 #include <vector>
 #include <array>
 #include <utility>
+#include "buffers.hh"
+#include "shader.hh"
 
 struct lines_renderer : layer_t {
-    GLuint program_vertex, program_fragment, pipeline_render, vao;
-    using lines_type = std::vector<
-        std::pair<
-            std::array<float, 3>,
-            std::array<float, 3>
-        >
+    GLuint vertex_attrib_index = 0;
+
+    using line_type = std::pair<
+        std::array<float, 3>,
+        std::array<float, 3>
     >;
-    lines_type lines;
 
-    lines_renderer(lines_type lines_, std::string shared_uniforms):
-        lines(lines_)
-    {
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
+    vertex_array_object vao;
+    vertex_buffer<line_type> vbo;
 
-        GLuint vbo;
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(*lines.data()), lines.data(), GL_STATIC_DRAW);
+    shader shader;
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-        std::string source_vertex = shared_uniforms + R"foo(
+    lines_renderer(std::vector<line_type> lines_, std::string shared_uniforms):
+        vbo(lines_, vertex_attrib_index),
+        shader(shared_uniforms + R"foo(
 in vec3 vertex;
 
 out gl_PerVertex {
@@ -39,32 +31,21 @@ out gl_PerVertex {
 void main() {
     gl_Position = projection * view * vec4(vertex, 1.0f);
 }
-)foo";
-        std::string source_fragment = R"foo(
+)foo",
+        R"foo(
 in vec4 gl_FragCoord;
 out vec4 colour;
 
 void main() {
     colour = vec4(1);
 }
-)foo";
-
-        program_vertex = create_program(GL_VERTEX_SHADER, source_vertex);
-        program_fragment = create_program(GL_FRAGMENT_SHADER, source_fragment);
-
-        glGenProgramPipelines(1, &pipeline_render);
-        glUseProgramStages(pipeline_render, GL_VERTEX_SHADER_BIT, program_vertex);
-        glUseProgramStages(pipeline_render, GL_FRAGMENT_SHADER_BIT, program_fragment);
-        glBindProgramPipeline(pipeline_render);
-
-        glBindAttribLocation(pipeline_render, 0, "vertex");
-
-        glBindVertexArray(0);
-    }
+)foo", vertex_attrib_index)
+    {}
     void draw() override {
-        glBindVertexArray(vao);
-        glBindProgramPipeline(pipeline_render);
+        vao.draw();
+        vbo.draw();
+        shader.draw();
         glLineWidth(1);
-        glDrawArrays(GL_LINES, 0, lines.size() * 2);
+        glDrawArrays(GL_LINES, 0, vbo.data.size() * 2);
     }
 };

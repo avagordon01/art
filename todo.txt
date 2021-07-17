@@ -2,10 +2,6 @@ connected lines
 
 advanced/keyframe animation
 
-maybe refactor common renderer code
-    class for fullscreen quad
-    class for buffer code
-
 text based on data
     https://learnopengl.com/In-Practice/Text-Rendering
     https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Text_Rendering_02
