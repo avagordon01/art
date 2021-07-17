@@ -15,67 +15,41 @@ struct vertex_array_object {
     }
 };
 
-template<typename T>
+template<typename T, GLenum Target = GL_ARRAY_BUFFER>
 struct vertex_buffer {
-    GLuint vbo;
+    GLuint buffer_id;
     std::vector<T> data;
-    size_t buffer_size;
+    T* previous_buffer;
     bool immutable;
     vertex_buffer() {};
     vertex_buffer(std::vector<T> data_, GLuint vertex_attrib_index, bool immutable_ = true):
         data(data_),
         immutable(immutable_)
     {
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(*data.data()), data.data(), immutable ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-        glVertexAttribPointer(vertex_attrib_index, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-        glEnableVertexAttribArray(vertex_attrib_index);
-        buffer_size = data.size();
+        glGenBuffers(1, &buffer_id);
+        glBindBuffer(Target, buffer_id);
+        glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), immutable ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+        if constexpr (Target == GL_ARRAY_BUFFER) {
+            glVertexAttribPointer(vertex_attrib_index, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+            glEnableVertexAttribArray(vertex_attrib_index);
+        }
+        previous_buffer = data.data();
     }
 
     void draw() {
         if (!immutable) {
-            if (buffer_size != data.size()) {
-                //TODO resize(/recreate) buffer
+            if (data.data() != previous_buffer) {
+                glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), immutable ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+            } else {
+                glBufferSubData(Target, 0, data.size() * sizeof(*data.data()), data.data());
             }
-            glBufferSubData(GL_ARRAY_BUFFER, 0, data.size() * sizeof(*data.data()), data.data());
         }
     }
 
     ~vertex_buffer() {
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDeleteBuffers(1, &vbo);
+        glBindBuffer(Target, 0);
+        glDeleteBuffers(1, &buffer_id);
     }
 };
 
-struct index_buffer {
-    GLuint ibo;
-    std::vector<unsigned> data;
-    size_t buffer_size;
-    bool immutable;
-    index_buffer() {};
-    index_buffer(std::vector<unsigned> data_, bool immutable_ = true):
-        data(data_),
-        immutable(immutable_)
-    {
-        glGenBuffers(1, &ibo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(*data.data()), data.data(), immutable ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-        buffer_size = data.size();
-    }
-
-    void draw() {
-        if (!immutable) {
-            if (buffer_size != data.size()) {
-                //TODO resize(/recreate) buffer
-            }
-            glBufferSubData(GL_ARRAY_BUFFER, 0, data.size() * sizeof(*data.data()), data.data());
-        }
-    }
-
-    ~index_buffer() {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glDeleteBuffers(1, &ibo);
-    }
-};
+using index_buffer = vertex_buffer<unsigned, GL_ELEMENT_ARRAY_BUFFER>;

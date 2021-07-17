@@ -15,7 +15,7 @@ struct instanced_triangles_renderer {
 
     instanced_triangles_renderer(std::vector<std::array<float, 3>> vertices_, std::vector<unsigned> indices_, std::string shared_uniforms):
         vbo(vertices_, vertex_attrib_index),
-        ibo(indices_),
+        ibo(indices_, 0),
         shader(shared_uniforms + R"foo(
 in vec3 vertex;
 out vec4 vertex_position;
