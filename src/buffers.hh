@@ -22,21 +22,31 @@ struct vertex_buffer {
     T* previous_buffer;
     bool immutable;
     vertex_buffer() {};
-    vertex_buffer(std::vector<T> data_, GLuint index, bool immutable_ = true):
+    vertex_buffer(std::vector<T> data_, bool immutable_ = true):
         data(data_),
         immutable(immutable_)
     {
         glGenBuffers(1, &buffer_id);
         glBindBuffer(Target, buffer_id);
         glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), immutable ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+        previous_buffer = data.data();
+    }
+
+    void bind(GLuint program, const GLchar* name) {
         if constexpr (Target == GL_ARRAY_BUFFER) {
-            glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-            glEnableVertexAttribArray(index);
+            GLint attrib_index = glGetAttribLocation(program, name);
+            glVertexAttribPointer(attrib_index, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+            glEnableVertexAttribArray(attrib_index);
+            /*
+            GLuint binding_index = 0;
+            glVertexAttribBinding(attrib_index, binding_index);
+            glBindAttribLocation(program, attrib_index, name);
+            */
         }
         if constexpr (Target == GL_SHADER_STORAGE_BUFFER) {
-            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, buffer_id);
+            GLuint binding_index = glGetProgramResourceIndex(program, GL_SHADER_STORAGE_BLOCK, name);
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding_index, buffer_id);
         }
-        previous_buffer = data.data();
     }
 
     void draw() {

@@ -5,8 +5,6 @@
 #include "shader.hh"
 
 struct instanced_triangles_renderer {
-    GLuint vertex_attrib_index = 0;
-
     vertex_array_object vao;
     vertex_buffer<std::array<float, 3>> vbo;
     index_buffer ibo;
@@ -14,8 +12,8 @@ struct instanced_triangles_renderer {
     shader shader;
 
     instanced_triangles_renderer(std::vector<std::array<float, 3>> vertices_, std::vector<unsigned> indices_, std::string shared_uniforms):
-        vbo(vertices_, vertex_attrib_index),
-        ibo(indices_, 0),
+        vbo(vertices_),
+        ibo(indices_),
         shader(shared_uniforms + R"foo(
 in vec3 vertex;
 out vec4 vertex_position;
@@ -42,8 +40,10 @@ void main() {
         colour = vec4(1) * float(int(vertex_position.y - float(frame) * 0.1) % 16 == 0);
     }
 }
-)foo", vertex_attrib_index)
-    {}
+)foo")
+    {
+        vbo.bind(shader.program_vertex, "vertex");
+    }
     void draw() {
         vao.draw();
         vbo.draw();

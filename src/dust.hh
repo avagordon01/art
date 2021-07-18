@@ -6,8 +6,6 @@
 #include "shader.hh"
 
 struct dust {
-    GLuint vertex_attrib_index = 0;
-
     struct point {
         std::array<float, 3> position;
         std::array<float, 3> velocity;
@@ -39,7 +37,7 @@ struct dust {
     }
 
     dust(std::string shared_uniforms):
-        vbo{gen_points(), vertex_attrib_index, false},
+        vbo{gen_points(), false},
         shader(shared_uniforms + R"foo(
 in vec3 vertex;
 
@@ -59,8 +57,10 @@ out vec4 colour;
 void main() {
     colour = vec4(1);
 }
-)foo", vertex_attrib_index)
-    {}
+)foo")
+    {
+        vbo.bind(shader.program_vertex, "vertex");
+    }
     void draw() {
         vao.draw();
         vbo.draw();

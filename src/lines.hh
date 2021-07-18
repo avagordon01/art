@@ -5,8 +5,6 @@
 #include "shader.hh"
 
 struct lines_renderer {
-    GLuint vertex_attrib_index = 0;
-
     using line_type = std::pair<
         std::array<float, 3>,
         std::array<float, 3>
@@ -18,7 +16,7 @@ struct lines_renderer {
     shader shader;
 
     lines_renderer(std::vector<line_type> lines_, std::string shared_uniforms):
-        vbo(lines_, vertex_attrib_index),
+        vbo(lines_),
         shader(shared_uniforms + R"foo(
 in vec3 vertex;
 
@@ -38,8 +36,10 @@ out vec4 colour;
 void main() {
     colour = vec4(1);
 }
-)foo", vertex_attrib_index)
-    {}
+)foo")
+    {
+        vbo.bind(shader.program_vertex, "vertex");
+    }
     void draw() {
         vao.draw();
         vbo.draw();
