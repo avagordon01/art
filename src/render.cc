@@ -48,7 +48,7 @@ int main() {
         //"fonts/artwiz-aleczapka-en-1.3/cure.pcf"
         //"fonts/tamsyn-font-1.11/Tamsyn6x12r.pcf"
     };
-    text_overlay text{shared, atlas.header_shader_text};
+    text_overlay text{shared, atlas};
 
     std::vector<
         std::pair<

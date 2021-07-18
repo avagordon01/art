@@ -2,14 +2,15 @@
 #include "buffers.hh"
 #include "shader.hh"
 #include "fullscreen-quad.hh"
+#include "font-atlas.hh"
 
 struct text_overlay {
     fullscreen_quad quad;
     vertex_array_object vao;
     shader shader;
-    text_overlay(shared_uniforms& shared_uniforms, std::string atlas):
+    text_overlay(shared_uniforms& shared_uniforms, monospace_printable_ascii_font_atlas& atlas):
     shader(quad.vertex_shader,
-        shared_uniforms.header_shader_text + atlas + R"foo(
+        shared_uniforms.header_shader_text + atlas.header_shader_text + R"foo(
 layout(origin_upper_left) in vec4 gl_FragCoord;
 out vec4 colour;
 
