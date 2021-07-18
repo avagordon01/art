@@ -16,6 +16,7 @@
 #include "text-overlay.hh"
 #include "lines.hh"
 #include "triangles.hh"
+#include "dust.hh"
 
 #include "assimp.hh"
 
@@ -83,6 +84,7 @@ int main() {
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_rsl_327680.obj",
     }, "brain"};
     instanced_triangles_renderer triangles{mesh.vertices, mesh.indices, shared};
+    dust dust{shared.header_shader_text};
 
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
@@ -92,7 +94,7 @@ int main() {
         glfwGetWindowSize(glfw.window, &w, &h);
         shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
         shared.inputs.view = glm::identity<glm::mat4>();
-        float angle = 2 * M_PI * shared.inputs.frame / 60 / 60;
+        float angle = 0;//2 * M_PI * shared.inputs.frame / 60 / 60;
         float distance = -100.0f;
         shared.inputs.view = glm::lookAt(
             glm::vec3(distance * sin(angle), 0.0f, distance * cos(angle)),
@@ -101,11 +103,12 @@ int main() {
         );
 
         shared.draw();
-        text.draw();
-        grid.draw();
-        ticks.draw();
-        lines.draw();
-        triangles.draw();
+        //text.draw();
+        //grid.draw();
+        //ticks.draw();
+        //lines.draw();
+        //triangles.draw();
+        dust.draw();
 
         glfw.tick();
     }
