@@ -15,14 +15,14 @@ struct vertex_array_object {
     }
 };
 
-template<typename T, GLenum Target = GL_ARRAY_BUFFER>
-struct vertex_buffer {
+template<typename T, GLenum Target>
+struct buffer {
     GLuint buffer_id;
     std::vector<T> data;
     T* previous_buffer;
     bool immutable;
-    vertex_buffer() {};
-    vertex_buffer(std::vector<T> data_, bool immutable_ = true):
+    buffer() {};
+    buffer(std::vector<T> data_, bool immutable_ = true):
         data(data_),
         immutable(immutable_)
     {
@@ -56,12 +56,14 @@ struct vertex_buffer {
         }
     }
 
-    ~vertex_buffer() {
+    ~buffer() {
         glBindBuffer(Target, 0);
         glDeleteBuffers(1, &buffer_id);
     }
 };
 
-using index_buffer = vertex_buffer<unsigned, GL_ELEMENT_ARRAY_BUFFER>;
 template<typename T>
-using uniform_buffer = vertex_buffer<T, GL_UNIFORM_BUFFER>;
+using vertex_buffer = buffer<T, GL_ARRAY_BUFFER>;
+using index_buffer = buffer<unsigned, GL_ELEMENT_ARRAY_BUFFER>;
+template<typename T>
+using uniform_buffer = buffer<T, GL_UNIFORM_BUFFER>;
