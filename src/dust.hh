@@ -19,7 +19,7 @@ struct dust {
     shader shader;
     compute_shader compute_shader;
 
-    static constexpr size_t num_points = 1000;
+    static constexpr size_t num_points = 1000000;
 
     std::vector<point> gen_points() {
         std::vector<point> points_data(num_points);
@@ -29,14 +29,14 @@ struct dust {
         std::normal_distribution<float> n(0, 1);
         for (auto& point: points_data) {
             point.position = {
-                static_cast<float>(u(gen)),
-                static_cast<float>(u(gen)),
-                0.5f,
+                0.0f,
+                0.0f,
+                0.0f,
             };
             point.velocity = {
-                static_cast<float>(n(gen)),
-                static_cast<float>(n(gen)),
-                static_cast<float>(n(gen)),
+                static_cast<float>(n(gen)) * 0.004f,
+                static_cast<float>(n(gen)) * 0.004f,
+                static_cast<float>(n(gen)) * 0.004f,
             };
         }
         return points_data;
