@@ -4,11 +4,13 @@
 #include <random>
 #include "buffers.hh"
 #include "shader.hh"
+#include "noise.hh"
 
 struct dust {
     struct point {
         std::array<float, 4> position;
         std::array<float, 4> velocity;
+        std::array<float, 4> acceleration;
     };
     vertex_array_object vao;
     vertex_buffer<point> vbo;
@@ -29,7 +31,7 @@ struct dust {
             point.position = {
                 static_cast<float>(u(gen)),
                 static_cast<float>(u(gen)),
-                static_cast<float>(u(gen)),
+                0.5f,
             };
             point.velocity = {
                 static_cast<float>(n(gen)),
@@ -63,10 +65,11 @@ void main() {
     colour = vec4(1);
 }
 )foo"),
-        compute_shader(shared_uniforms.header_shader_text + R"foo(
+        compute_shader(shared_uniforms.header_shader_text + noise_header_text + R"foo(
 struct point {
     vec4 position;
     vec4 velocity;
+    vec4 acceleration;
 };
 layout(std430) buffer vertices_buffer {
     point vertices[];
@@ -76,7 +79,19 @@ layout(local_size_x = 32, local_size_y = 1, local_size_z = 1) in;
 
 void main() {
     uint index = gl_GlobalInvocationID.x;
-    vertices[index].position += vertices[index].velocity / 60.0f;
+    vec2 dir = vec2(
+        noise(vec4(vertices[index].position.xyz / vec3(2, 3, 4), frame / 60.0f)),
+        noise(vec4(vertices[index].position.xyz / vec3(4, 3, 2), frame / 60.0f))
+    ) - vec2(0.5f);
+    float dt = 1.0f / 60.0f;
+    vertices[index].acceleration = vec4(dir * 20, 0.0f, 0.0f);
+    vertices[index].velocity += vertices[index].acceleration * dt;
+    float speed = length(vertices[index].velocity);
+    if (speed > 10) {
+        float new_speed = 10;
+        vertices[index].velocity *= new_speed / speed;
+    }
+    vertices[index].position += vertices[index].velocity * dt;
 }
 )foo", {num_points, 1, 1})
     {

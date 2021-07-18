@@ -1,3 +1,5 @@
+std::string noise_header_text = R"foo(
+
 //super fast method to generate a pseudo random hash from a coordinate value
 uint hash(uvec4 d) {
     d = d * 0xcc9e2d51;
@@ -71,3 +73,5 @@ float octave_noise(float octaves, float weight, vec4 pos) {
     }
     return total / maximum;
 }
+
+)foo";
