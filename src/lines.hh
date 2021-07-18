@@ -15,9 +15,9 @@ struct lines_renderer {
 
     shader shader;
 
-    lines_renderer(std::vector<line_type> lines_, std::string shared_uniforms):
+    lines_renderer(std::vector<line_type> lines_, shared_uniforms& shared_uniforms):
         vbo(lines_),
-        shader(shared_uniforms + R"foo(
+        shader(shared_uniforms.header_shader_text + R"foo(
 in vec3 vertex;
 
 out gl_PerVertex {
@@ -39,6 +39,7 @@ void main() {
 )foo")
     {
         vbo.bind(shader.program_vertex, "vertex");
+        shared_uniforms.bind(shader.program_vertex);
     }
     void draw() {
         vao.draw();

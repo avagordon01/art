@@ -7,9 +7,9 @@ struct text_overlay {
     fullscreen_quad quad;
     vertex_array_object vao;
     shader shader;
-    text_overlay(std::string shared_uniforms, std::string atlas):
+    text_overlay(shared_uniforms& shared_uniforms, std::string atlas):
     shader(quad.vertex_shader,
-        shared_uniforms + atlas + R"foo(
+        shared_uniforms.header_shader_text + atlas + R"foo(
 layout(origin_upper_left) in vec4 gl_FragCoord;
 out vec4 colour;
 
@@ -22,7 +22,9 @@ void main() {
     colour.a = 0.25f;
 }
 )foo")
-    {}
+    {
+        shared_uniforms.bind(shader.program_fragment);
+    }
     void draw() {
         vao.draw();
         shader.draw();

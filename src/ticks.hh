@@ -7,10 +7,10 @@ struct ticks {
     fullscreen_quad quad;
     vertex_array_object vao;
     shader shader;
-    ticks(std::string shared_uniforms):
+    ticks(shared_uniforms& shared_uniforms):
     shader(
         quad.vertex_shader,
-        shared_uniforms + R"foo(
+        shared_uniforms.header_shader_text + R"foo(
 layout(pixel_center_integer) in vec4 gl_FragCoord;
 out vec4 colour;
 
@@ -23,7 +23,9 @@ void main() {
     colour = vec4(1) * float(x_tick || y_tick);
 }
 )foo")
-    {}
+    {
+        shared_uniforms.bind(shader.program_fragment);
+    }
     void draw() {
         vao.draw();
         shader.draw();

@@ -41,14 +41,14 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     shared_uniforms shared{glfw};
-    ticks ticks{shared.header_shader_text};
-    grid grid{shared.header_shader_text};
+    ticks ticks{shared};
+    grid grid{shared};
     monospace_printable_ascii_font_atlas atlas{
         "fonts/gohufont-2.1/gohufont-11.pcf.gz"
         //"fonts/artwiz-aleczapka-en-1.3/cure.pcf"
         //"fonts/tamsyn-font-1.11/Tamsyn6x12r.pcf"
     };
-    text_overlay text{shared.header_shader_text, atlas.header_shader_text};
+    text_overlay text{shared, atlas.header_shader_text};
 
     std::vector<
         std::pair<
@@ -71,7 +71,7 @@ int main() {
             line.first[2] + 0.1f * static_cast<float>(d(gen)),
         };
     }
-    lines_renderer lines{ls, shared.header_shader_text};
+    lines_renderer lines{ls, shared};
     mesh mesh{{
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_327680.obj",
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_rsl_327680.obj",
@@ -82,7 +82,7 @@ int main() {
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_327680.obj",
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_rsl_327680.obj",
     }, "brain"};
-    instanced_triangles_renderer triangles{mesh.vertices, mesh.indices, shared.header_shader_text};
+    instanced_triangles_renderer triangles{mesh.vertices, mesh.indices, shared};
 
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {

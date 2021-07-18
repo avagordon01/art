@@ -9,12 +9,15 @@ struct instanced_triangles_renderer {
     vertex_buffer<std::array<float, 3>> vbo;
     index_buffer ibo;
 
+    shared_uniforms& shared_uniforms;
+
     shader shader;
 
-    instanced_triangles_renderer(std::vector<std::array<float, 3>> vertices_, std::vector<unsigned> indices_, std::string shared_uniforms):
+    instanced_triangles_renderer(std::vector<std::array<float, 3>> vertices_, std::vector<unsigned> indices_, struct shared_uniforms& shared_uniforms_):
         vbo(vertices_),
         ibo(indices_),
-        shader(shared_uniforms + R"foo(
+        shared_uniforms(shared_uniforms_),
+        shader(shared_uniforms.header_shader_text + R"foo(
 in vec3 vertex;
 out vec4 vertex_position;
 
@@ -28,7 +31,7 @@ void main() {
     vertex_position = projection * view * vec4(vertex, 1.0f);
 }
 )foo",
-        shared_uniforms + R"foo(
+        shared_uniforms.header_shader_text + R"foo(
 in vec4 vertex_position;
 in vec4 gl_FragCoord;
 out vec4 colour;
@@ -43,6 +46,8 @@ void main() {
 )foo")
     {
         vbo.bind(shader.program_vertex, "vertex");
+        shared_uniforms.bind(shader.program_vertex);
+        shared_uniforms.bind(shader.program_fragment);
     }
     void draw() {
         vao.draw();

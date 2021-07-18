@@ -37,15 +37,12 @@ struct vertex_buffer {
             GLint attrib_index = glGetAttribLocation(program, name);
             glVertexAttribPointer(attrib_index, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
             glEnableVertexAttribArray(attrib_index);
-            /*
-            GLuint binding_index = 0;
-            glVertexAttribBinding(attrib_index, binding_index);
-            glBindAttribLocation(program, attrib_index, name);
-            */
-        }
-        if constexpr (Target == GL_SHADER_STORAGE_BUFFER) {
+        } else if constexpr (Target == GL_SHADER_STORAGE_BUFFER) {
             GLuint binding_index = glGetProgramResourceIndex(program, GL_SHADER_STORAGE_BLOCK, name);
             glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding_index, buffer_id);
+        } else if constexpr (Target == GL_UNIFORM_BUFFER) {
+            GLuint binding_index = glGetUniformBlockIndex(program, name);
+            glBindBufferBase(GL_UNIFORM_BUFFER, binding_index, buffer_id);
         }
     }
 
@@ -66,3 +63,5 @@ struct vertex_buffer {
 };
 
 using index_buffer = vertex_buffer<unsigned, GL_ELEMENT_ARRAY_BUFFER>;
+template<typename T>
+using uniform_buffer = vertex_buffer<T, GL_UNIFORM_BUFFER>;
