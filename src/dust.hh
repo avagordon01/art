@@ -40,10 +40,10 @@ struct dust {
         return points_data;
     }
 
-    dust(std::string shared_uniforms):
+    dust(shared_uniforms& shared_uniforms):
         vbo{std::vector<point>{num_points}, GL_DYNAMIC_COPY},
         sbo{gen_points(), GL_DYNAMIC_COPY},
-        shader(shared_uniforms + R"foo(
+        shader(shared_uniforms.header_shader_text + R"foo(
 in vec3 vertex;
 
 out gl_PerVertex {
@@ -63,7 +63,7 @@ void main() {
     colour = vec4(1);
 }
 )foo"),
-        compute_shader(R"foo(
+        compute_shader(shared_uniforms.header_shader_text + R"foo(
 struct point {
     vec4 position;
     vec4 velocity;
@@ -80,6 +80,8 @@ void main() {
 }
 )foo", {num_points, 1, 1})
     {
+        shared_uniforms.bind(shader.program_vertex);
+        shared_uniforms.bind(compute_shader.program);
         vbo.bind(shader.program_vertex, "vertex", 3, GL_FLOAT, GL_FALSE, sizeof(point), nullptr);
         sbo.bind(compute_shader.program, "vertices_buffer");
     }

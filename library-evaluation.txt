@@ -44,3 +44,4 @@ raw opengl
             250k smooth (16x msaa) at 60 fps
         points
             5m 1px at 60 fps
+            8m 1px at 60 fps with particle straight-line movement (compute shader)
