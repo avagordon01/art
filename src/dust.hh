@@ -7,16 +7,20 @@
 
 struct dust {
     struct point {
-        std::array<float, 3> position;
-        std::array<float, 3> velocity;
+        std::array<float, 4> position;
+        std::array<float, 4> velocity;
     };
     vertex_array_object vao;
     vertex_buffer<point> vbo;
+    storage_buffer<point> sbo;
 
     shader shader;
+    compute_shader compute_shader;
+
+    static constexpr size_t num_points = 1000;
 
     std::vector<point> gen_points() {
-        std::vector<point> points_data(1000);
+        std::vector<point> points_data(num_points);
         std::random_device rd{};
         std::mt19937 gen{rd()};
         std::uniform_real_distribution<float> u(-200, 200);
@@ -37,7 +41,8 @@ struct dust {
     }
 
     dust(std::string shared_uniforms):
-        vbo{gen_points(), false},
+        vbo{std::vector<point>{num_points}, GL_DYNAMIC_COPY},
+        sbo{gen_points(), GL_DYNAMIC_COPY},
         shader(shared_uniforms + R"foo(
 in vec3 vertex;
 
@@ -57,9 +62,26 @@ out vec4 colour;
 void main() {
     colour = vec4(1);
 }
-)foo")
+)foo"),
+        compute_shader(R"foo(
+struct point {
+    vec4 position;
+    vec4 velocity;
+};
+layout(std430) buffer vertices_buffer {
+    point vertices[];
+};
+
+layout(local_size_x = 32, local_size_y = 1, local_size_z = 1) in;
+
+void main() {
+    uint index = gl_GlobalInvocationID.x;
+    vertices[index].position += vertices[index].velocity / 60.0f;
+}
+)foo", {num_points, 1, 1})
     {
-        vbo.bind(shader.program_vertex, "vertex");
+        vbo.bind(shader.program_vertex, "vertex", 3, GL_FLOAT, GL_FALSE, sizeof(point), nullptr);
+        sbo.bind(compute_shader.program, "vertices_buffer");
     }
     void draw() {
         vao.draw();
@@ -67,11 +89,7 @@ void main() {
         shader.draw();
         glPointSize(1);
         glDrawArrays(GL_POINTS, 0, vbo.data.size());
-        float dt = 1.0f / 60;
-        for (auto& p: vbo.data) {
-            p.position[0] += p.velocity[0] * dt;
-            p.position[1] += p.velocity[1] * dt;
-            p.position[2] += p.velocity[2] * dt;
-        }
+        compute_shader.draw();
+        glCopyBufferSubData(GL_SHADER_STORAGE_BUFFER, GL_ARRAY_BUFFER, 0, 0, sizeof(point) * num_points);
     }
 };

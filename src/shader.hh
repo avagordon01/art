@@ -8,7 +8,26 @@ GLuint create_program(GLenum type, std::string shader_text) {
     const char* s[] = {
         shader_text.c_str(),
     };
-    return glCreateShaderProgramv(type, 1, s);
+
+    GLuint program = glCreateShaderProgramv(type, 1, s);
+
+    GLint link_status;
+    glGetProgramiv(program, GL_LINK_STATUS, &link_status);
+    if (link_status == GL_TRUE) {
+        glValidateProgram(program);
+        GLint validate_status;
+        glGetProgramiv(program, GL_VALIDATE_STATUS, &validate_status);
+        if (validate_status == GL_TRUE) {
+            return program;
+        }
+    }
+
+    GLint info_log_length = 0;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
+    std::string info_log(info_log_length, '\0');
+    glGetProgramInfoLog(program, info_log.size(), NULL, info_log.data());
+    std::cerr << info_log << std::endl;
+    throw std::runtime_error("shader stuff");
 }
 
 struct shader {
@@ -22,5 +41,42 @@ struct shader {
     }
     void draw() {
         glBindProgramPipeline(pipeline);
+    }
+};
+
+int div_ceil(int numerator, int denominator) {
+    std::div_t res = std::div(numerator, denominator);
+    return res.rem ? (res.quot + 1) : res.quot;
+}
+
+struct compute_shader {
+    GLuint pipeline, program;
+    std::array<size_t, 3> dimensions;
+    std::array<GLint, 3> workgroup_dimensions;
+    compute_shader(std::string compute_source, std::array<size_t, 3> dimensions_):
+        dimensions(dimensions_)
+    {
+        glGenProgramPipelines(1, &pipeline);
+        program = create_program(GL_COMPUTE_SHADER, compute_source);
+        glUseProgramStages(pipeline, GL_COMPUTE_SHADER_BIT, program);
+        std::array<GLint, 3> workgroup_dimensions;
+        glGetProgramiv(program, GL_COMPUTE_WORK_GROUP_SIZE, workgroup_dimensions.data());
+        dimensions[0] = div_ceil(dimensions[0], workgroup_dimensions[0]);
+        dimensions[1] = div_ceil(dimensions[1], workgroup_dimensions[1]);
+        dimensions[2] = div_ceil(dimensions[2], workgroup_dimensions[2]);
+    }
+
+    void draw() {
+        glBindProgramPipeline(pipeline);
+        glDispatchCompute(dimensions[0], dimensions[1], dimensions[2]);
+    }
+
+    void draw(std::array<size_t, 3> dimensions_) {
+        dimensions = dimensions_;
+        dimensions[0] = div_ceil(dimensions[0], workgroup_dimensions[0]);
+        dimensions[1] = div_ceil(dimensions[1], workgroup_dimensions[1]);
+        dimensions[2] = div_ceil(dimensions[2], workgroup_dimensions[2]);
+        glBindProgramPipeline(pipeline);
+        glDispatchCompute(dimensions[0], dimensions[1], dimensions[2]);
     }
 };
