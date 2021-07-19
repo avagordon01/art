@@ -84,7 +84,7 @@ int main() {
         "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_rsl_327680.obj",
     }, "brain"};
     instanced_triangles_renderer triangles{mesh.vertices, mesh.indices, shared};
-    dust dust{shared};
+    //dust dust{shared};
 
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
