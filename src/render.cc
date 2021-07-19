@@ -103,6 +103,9 @@ int main() {
         );
 
         shared.draw();
+        if (shared.inputs.frame == 60) {
+            text.vbo.data = text.gen_text("XA__test__AX");
+        }
         text.draw();
         grid.draw();
         ticks.draw();

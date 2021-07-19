@@ -40,7 +40,7 @@ struct text_overlay {
     shader shader;
     text_overlay(shared_uniforms& shared_uniforms, monospace_printable_ascii_font_atlas& atlas_):
     atlas(atlas_),
-    vbo(gen_text("XA__test__AX"), GL_DYNAMIC_DRAW),
+    vbo({}, GL_DYNAMIC_DRAW),
     shader(
         shared_uniforms.header_shader_text + R"foo(
 in vec2 vertex;
