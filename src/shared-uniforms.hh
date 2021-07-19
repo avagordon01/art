@@ -29,7 +29,7 @@ layout(std140) uniform inputs {
             0, 0,
             0, 0,
             0
-        }}, GL_STATIC_DRAW),
+        }}, GL_DYNAMIC_DRAW),
         inputs(ubo.data.front())
     {}
     void bind(GLuint program) {
