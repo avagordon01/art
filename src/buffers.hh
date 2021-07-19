@@ -36,8 +36,9 @@ struct buffer {
     void bind(GLuint program, const GLchar* name, Args... args) {
         if constexpr (Target == GL_ARRAY_BUFFER) {
             GLint attrib_index = glGetAttribLocation(program, name);
-            glVertexAttribPointer(attrib_index, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-            if constexpr (sizeof...(args) == 5) {
+            if constexpr (sizeof...(args) == 0) {
+                glVertexAttribPointer(attrib_index, 3, GL_FLOAT, GL_FALSE, sizeof(*data.data()), nullptr);
+            } else if constexpr (sizeof...(args) == 5) {
                 glVertexAttribPointer(attrib_index, args...);
             }
             glEnableVertexAttribArray(attrib_index);

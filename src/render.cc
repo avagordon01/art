@@ -103,12 +103,12 @@ int main() {
         );
 
         shared.draw();
-        //text.draw();
-        //grid.draw();
-        //ticks.draw();
-        //lines.draw();
-        //triangles.draw();
-        dust.draw();
+        text.draw();
+        grid.draw();
+        ticks.draw();
+        lines.draw();
+        triangles.draw();
+        //dust.draw();
 
         glfw.tick();
     }

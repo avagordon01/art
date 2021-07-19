@@ -1,4 +1,6 @@
-compute shader generating vertices for text tags
+text labels
+
+way to create multiple "scenes"
 
 variable length rects
 

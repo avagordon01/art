@@ -97,7 +97,7 @@ void main() {
     {
         shared_uniforms.bind(shader.program_vertex);
         shared_uniforms.bind(compute_shader.program);
-        vbo.bind(shader.program_vertex, "vertex", 3, GL_FLOAT, GL_FALSE, sizeof(point), nullptr);
+        vbo.bind(shader.program_vertex, "vertex");
         sbo.bind(compute_shader.program, "vertices_buffer");
     }
     void draw() {
