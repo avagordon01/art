@@ -35,6 +35,7 @@ struct buffer {
     template<typename ...Args>
     void bind(GLuint program, const GLchar* name, Args... args) {
         if constexpr (Target == GL_ARRAY_BUFFER) {
+            glBindBuffer(Target, buffer_id);
             GLint attrib_index = glGetAttribLocation(program, name);
             if constexpr (sizeof...(args) == 0) {
                 glVertexAttribPointer(attrib_index, 3, GL_FLOAT, GL_FALSE, sizeof(*data.data()), nullptr);
@@ -52,9 +53,11 @@ struct buffer {
     }
 
     void draw() {
+        glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         if (hint == GL_DYNAMIC_DRAW) {
             if (data.data() != previous_buffer) {
                 glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), hint);
+                previous_buffer = data.data();
             } else {
                 glBufferSubData(Target, 0, data.size() * sizeof(*data.data()), data.data());
             }
