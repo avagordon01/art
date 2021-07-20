@@ -14,10 +14,10 @@ struct text_overlay {
     monospace_printable_ascii_font_atlas& atlas;
     vertex_buffer<char_vertex> vbo;
 
-    std::vector<char_vertex> gen_text(std::string text) {
+    std::vector<char_vertex> gen_text(std::string text, std::array<float, 2> position) {
         std::vector<char_vertex> char_data;
-        float xpos = 0.0f;
-        float ypos = 0.0f;
+        float xpos = position[0];
+        float ypos = position[1];
         for (size_t i = 0; i < text.size(); i++) {
             char c = text[i];
             float char_index = c - ' ';

@@ -103,8 +103,11 @@ int main() {
         );
 
         shared.draw();
-        if (shared.inputs.frame == 60) {
-            text.vbo.data = text.gen_text("XA__test__AX");
+        if (shared.inputs.frame % 120 == 0) {
+            text.vbo.data = text.gen_text("XA__test__AX", {1920 / 2, 1080 / 2});
+        }
+        if (shared.inputs.frame % 120 == 60) {
+            text.vbo.data.clear();
         }
         text.draw();
         grid.draw();
