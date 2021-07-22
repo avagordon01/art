@@ -36,14 +36,18 @@ in vec4 vertex_position;
 in vec4 gl_FragCoord;
 out vec4 colour;
 
-void main() {
+void main() {)foo" +
+    ((scene == scenes::dot_brain) ? R"foo(
+    colour = vec4(1);
+}
+    )foo" : R"foo(
     if (frame % (60 * 10) <= 60 * 5) {
         colour = vec4(1) * int(gl_PrimitiveID < frame * 100);
     } else {
         colour = vec4(1) * float(int(vertex_position.y - float(frame) * 0.1) % 16 == 0);
     }
 }
-)foo")
+)foo"))
     {
         vbo.bind(shader.program_vertex, "vertex");
         shared_uniforms.bind(shader.program_vertex);
@@ -55,7 +59,11 @@ void main() {
         ibo.draw();
         shader.draw();
         glLineWidth(1);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        if (scene == scenes::dot_brain) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
         glDrawElements(GL_TRIANGLES, ibo.data.size(), GL_UNSIGNED_INT, 0);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
