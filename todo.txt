@@ -1,7 +1,7 @@
+way to create multiple "scenes"
+
 text labels
     add 3D position
-
-way to create multiple "scenes"
 
 variable length rects
 
