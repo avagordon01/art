@@ -13,15 +13,47 @@ add_project_arguments(
   language: 'cpp',
 )
 
+common_deps = [
+  dependency('glfw3'),
+  dependency('glm'),
+  dependency('freetype2'),
+  dependency('assimp'),
+]
+
 executable(
   'render',
   'src/render.cc',
   dependencies: [
     dependency('gl'),
-    dependency('glfw3'),
-    dependency('glm'),
-    dependency('freetype2'),
-    dependency('assimp'),
+  ] + common_deps,
+  install: true,
+)
+
+vulkan_deps = [
+  meson.get_compiler('cpp').find_library('dl', required: false),
+  declare_dependency(
+    link_args: ['-lglslang'],
+  ),
+  declare_dependency(
+    link_args: ['-lSPIRV'],
+  ),
+  dependency('vulkan'),
+  dependency('xcb'),
+]
+
+executable(
+  'vulkan',
+  'src/vulkan.cc',
+  'subprojects/utils/math.cpp',
+  'subprojects/utils/shaders.cpp',
+  'subprojects/utils/utils.cpp',
+  include_directories: [
+    'subprojects/raii_utils',
+    'subprojects/utils',
   ],
+  cpp_args: [
+    '-DVULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1',
+  ],
+  dependencies: common_deps + vulkan_deps,
   install: true,
 )
