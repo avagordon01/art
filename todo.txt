@@ -1,17 +1,19 @@
-way to create multiple "scenes"
-
-text labels
-    add 3D position
+vulkan
+    fix unexpected image layout validation error
 
 variable length rects
 
+text labels
+    add 3D position
+    depth testing?
+
 connected lines
 
-advanced/keyframe animation
 
-text based on data
-    https://learnopengl.com/In-Practice/Text-Rendering
-    https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Text_Rendering_02
-    maybe need depth testing for this
+
+unicode support
+    unifont bitmap unicode font
+
+advanced/keyframe animation
 
 synchronised audio
