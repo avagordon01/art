@@ -1,10 +1,6 @@
+same position transform matrix pipeline for text vertices
+
 variable length rects
-
-text labels
-    add 3D position
-    depth testing?
-
-connected lines
 
 shadowed terrain
     maybe orthographic/from infinity projection

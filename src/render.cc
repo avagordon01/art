@@ -140,7 +140,7 @@ int main() {
                 for (size_t i = 0; i < 8; i++) {
                     float x = w / 2 + h / 2;
                     float y = h * i / 8 + shared.inputs.frame % (h / 8);
-                    auto tmp = text.gen_text("XA__test__AX", {x, y});
+                    auto tmp = text.gen_text("x = " + std::to_string(x / (w_ / 2)) + ", y = " + std::to_string(y / (h_ / 2)), {x, y});
                     text.vbo.data.insert(text.vbo.data.end(), tmp.begin(), tmp.end());
                     lines.vbo.data.push_back({w_ / 2, h_ / 2, 0.0f});
                     lines.vbo.data.push_back({x, y, 0.0f});
