@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "wanikani"
+version = "0.1.0"
+description = ""
+authors = ["Ava Gordon <pgavagordon@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+wanikani-api = "^0.5.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
