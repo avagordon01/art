@@ -14,28 +14,21 @@ struct text_overlay {
     monospace_printable_ascii_font_atlas& atlas;
     vertex_buffer<char_vertex> vbo;
 
-    std::vector<char_vertex> gen_text(std::string text, std::array<float, 2> position) {
-        std::vector<char_vertex> char_data;
-        float xpos = position[0];
-        float ypos = position[1];
-        for (size_t i = 0; i < text.size(); i++) {
-            char c = text[i];
+    void gen_text(std::string text, std::array<float, 2> position) {
+        auto[x, y] = position;
+        for (char c: text) {
             float char_index = c - ' ';
             float w = atlas.width();
             float h = atlas.height();
-            std::vector<char_vertex> vertices = {
-                {{xpos,     ypos + h}, {0.0f, 0.0f, char_index}},
-                {{xpos,     ypos    }, {0.0f, h,    char_index}},
-                {{xpos + w, ypos    }, {w,    h,    char_index}},
+            vbo.data.push_back({{x,     y + h}, {0.0f, 0.0f, char_index}});
+            vbo.data.push_back({{x,     y    }, {0.0f, h,    char_index}});
+            vbo.data.push_back({{x + w, y    }, {w,    h,    char_index}});
 
-                {{xpos,     ypos + h}, {0.0f, 0.0f, char_index}},
-                {{xpos + w, ypos    }, {w,    h,    char_index}},
-                {{xpos + w, ypos + h}, {w,    0.0f, char_index}}
-            };
-            xpos += w;
-            char_data.insert(char_data.end(), vertices.begin(), vertices.end());
+            vbo.data.push_back({{x,     y + h}, {0.0f, 0.0f, char_index}});
+            vbo.data.push_back({{x + w, y    }, {w,    h,    char_index}});
+            vbo.data.push_back({{x + w, y + h}, {w,    0.0f, char_index}});
+            x += w;
         }
-        return char_data;
     }
     shader shader;
     text_overlay(shared_uniforms& shared_uniforms, monospace_printable_ascii_font_atlas& atlas_):
@@ -53,7 +46,7 @@ out gl_PerVertex {
     float gl_ClipDistance[];
 };
 void main() {
-    gl_Position = vec4(vertex.xy / resolution * 2 - 1, 0.0, 1.0);
+    gl_Position = projection * view * vec4(vertex, 0.0f, 1.0f);
     texcoords_f = texcoords;
 }
 )foo",
