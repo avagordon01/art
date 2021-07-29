@@ -1,0 +1,31 @@
+messageIDName   = <UNASSIGNED-CoreValidation-DrawState-InvalidImageLayout>
+messageIdNumber = 1303270965
+message         = <Validation Error:
+    [ UNASSIGNED-CoreValidation-DrawState-InvalidImageLayout ]
+    Object 0: handle = 0x555555a36e08, type = VK_OBJECT_TYPE_COMMAND_BUFFER; |
+    MessageID = 0x4dae5635 |
+    Submitted command buffer expects VkImage 0xcad092000000000d[] (subresource: aspectMask 0x1 array layer 0, mip level 0) to be in layout VK_IMAGE_LAYOUT_PREINITIALIZED--instead, current layout is VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL.>
+Objects:
+        Object
+                objectType   = CommandBuffer
+                objectHandle = 93824997355016
+
+command buffer has a VkImage
+    layout is SHADER_READ_ONLY_OPTIMAL
+    should be PREINITIALIZED
+
+vk::Image could be from 
+    vk::su::ImageData
+        could be from DepthBufferData, TextureData
+    vk::su::SwapChainData
+        last level
+vk::Image used in
+    vk::su::setImageLayout
+    vk::raii::su::setImageLayout
+
+vk::ImageLayout::eShaderReadOnlyOptimal
+    used in setImage
+    used in updateDescriptorSets
+
+first frame works fine, second frame fails
+no way to set it back to ePreinitialized

@@ -56,6 +56,7 @@ int main() {
     vk::raii::Queue graphics_queue(device, graphics_and_present_queue_family_index.first, 0);
     vk::raii::Queue present_queue(device, graphics_and_present_queue_family_index.second, 0);
 
+    //FIXME
     vk::raii::su::SwapChainData swap_chain_data(
         physical_device,
         device,
@@ -76,6 +77,7 @@ int main() {
     );
 
     vk::raii::su::TextureData texture_data(physical_device, device);
+    //FIXME
 
     vk::raii::su::BufferData uniform_buffer_data(
         physical_device,
@@ -181,7 +183,16 @@ int main() {
         );
 
         command_buffer.begin(vk::CommandBufferBeginInfo());
-        texture_data.setImage(command_buffer, vk::su::CheckerboardImageGenerator());
+        //texture_data.setImage(command_buffer, vk::su::CheckerboardImageGenerator());
+        /*
+        vk::raii::su::setImageLayout(
+            command_buffer,
+            *(texture_data.pImageData->image),
+            texture_data.format,
+            vk::ImageLayout::eUndefined,
+            vk::ImageLayout::eShaderReadOnlyOptimal
+        );
+        */
 
         command_buffer.beginRenderPass(render_pass_begin_info, vk::SubpassContents::eInline);
         command_buffer.bindPipeline(vk::PipelineBindPoint::eGraphics, *graphics_pipeline);
@@ -224,7 +235,7 @@ int main() {
         } else {
             throw std::runtime_error("unexpected result is returned!");
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         std::cout << "frame\n";
     }
 

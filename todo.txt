@@ -1,6 +1,3 @@
-vulkan
-    fix unexpected image layout validation error
-
 variable length rects
 
 text labels
@@ -9,10 +6,16 @@ text labels
 
 connected lines
 
-
+shadowed terrain
+    maybe orthographic/from infinity projection
 
 unicode support
     unifont bitmap unicode font
+
+
+
+vulkan examples
+    calling resize immediately causes a segfault
 
 advanced/keyframe animation
 
