@@ -20,7 +20,7 @@ enum class scenes {
     noise_flow_particles,
     scratch_tmp_new,
 };
-static constexpr scenes scene = scenes::scan_brain;
+static constexpr scenes scene = scenes::scratch_tmp_new;
 #include "ticks.hh"
 #include "grid.hh"
 #include "text-overlay.hh"
@@ -121,26 +121,15 @@ int main() {
         text_overlay text{shared, atlas};
 
         std::vector<
-            std::pair<
-                std::array<float, 3>,
-                std::array<float, 3>
-            >
-        > ls(1000);
-        std::random_device rd{};
-        std::mt19937 gen{rd()};
-        std::uniform_real_distribution<float> d(-1, 1);
-        for (auto& line: ls) {
-            line.first = {
-                static_cast<float>(d(gen)),
-                static_cast<float>(d(gen)),
-                static_cast<float>(d(gen)),
-            };
-            line.second = {
-                line.first[0] + 0.1f * static_cast<float>(d(gen)),
-                line.first[1] + 0.1f * static_cast<float>(d(gen)),
-                line.first[2] + 0.1f * static_cast<float>(d(gen)),
-            };
-        }
+            std::array<float, 3>
+        > ls {
+            {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
+            {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f},
+            {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f},
+            {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
+            {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f},
+            {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
+        };
         lines_renderer lines{ls, shared};
 
         glfwSetTime(0);
@@ -149,12 +138,9 @@ int main() {
 
             int w, h;
             glfwGetWindowSize(glfw.window, &w, &h);
-            shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
-            shared.inputs.view = glm::lookAt(
-                glm::vec3(0.0f, 0.0f, -100.0f),
-                glm::vec3(),
-                glm::vec3(0, 1, 0)
-            );
+            float ratio = static_cast<float>(w) / h;
+            shared.inputs.projection = glm::ortho(-ratio, ratio, -1.0f, 1.0f, 0.0f, 200.0f);
+            shared.inputs.view = glm::identity<glm::mat4>();
 
             shared.draw();
             if (shared.inputs.frame % 120 == 0) {

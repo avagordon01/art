@@ -5,17 +5,12 @@
 #include "shader.hh"
 
 struct lines_renderer {
-    using line_type = std::pair<
-        std::array<float, 3>,
-        std::array<float, 3>
-    >;
-
     vertex_array_object vao;
-    vertex_buffer<line_type> vbo;
+    vertex_buffer<std::array<float, 3>> vbo;
 
     shader shader;
 
-    lines_renderer(std::vector<line_type> lines_, shared_uniforms& shared_uniforms):
+    lines_renderer(std::vector<std::array<float, 3>> lines_, shared_uniforms& shared_uniforms):
         vbo(lines_),
         shader(shared_uniforms.header_shader_text + R"foo(
 in vec3 vertex;
@@ -46,6 +41,6 @@ void main() {
         vbo.draw();
         shader.draw();
         glLineWidth(1);
-        glDrawArrays(GL_LINES, 0, vbo.data.size() * 2);
+        glDrawArrays(GL_LINES, 0, vbo.data.size());
     }
 };
