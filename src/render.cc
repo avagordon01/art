@@ -128,25 +128,23 @@ int main() {
 
             int w, h;
             glfwGetWindowSize(glfw.window, &w, &h);
-            float ratio = static_cast<float>(w) / h;
-            shared.inputs.projection = glm::ortho(-ratio, ratio, -1.0f, 1.0f, 0.0f, 200.0f);
+            float w_ = w;
+            float h_ = h;
+            shared.inputs.projection = glm::ortho(0.0f, w_, 0.0f, h_, 0.0f, 200.0f);
             shared.inputs.view = glm::identity<glm::mat4>();
-
             shared.draw();
-            if (shared.inputs.frame % 120 == 0) {
-                text.vbo.data = text.gen_text("XA__test__AX", {1920 / 2, 1080 / 2});
-                lines.vbo.data = {};
-            }
-            if (shared.inputs.frame % 120 == 60) {
-                text.vbo.data = {};
-                lines.vbo.data = {
-                    {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
-                    {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f},
-                    {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f},
-                    {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
-                    {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f},
-                    {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
-                };
+
+            {
+                text.vbo.data.clear();
+                lines.vbo.data.clear();
+                for (size_t i = 0; i < 8; i++) {
+                    float x = w / 2 + h / 2;
+                    float y = h * i / 8 + shared.inputs.frame % (h / 8);
+                    auto tmp = text.gen_text("XA__test__AX", {x, y});
+                    text.vbo.data.insert(text.vbo.data.end(), tmp.begin(), tmp.end());
+                    lines.vbo.data.push_back({w_ / 2, h_ / 2, 0.0f});
+                    lines.vbo.data.push_back({x, y, 0.0f});
+                }
             }
             text.draw();
             lines.draw();
