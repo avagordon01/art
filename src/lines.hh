@@ -11,7 +11,7 @@ struct lines_renderer {
     shader shader;
 
     lines_renderer(std::vector<std::array<float, 3>> lines_, shared_uniforms& shared_uniforms):
-        vbo(lines_),
+        vbo(lines_, GL_DYNAMIC_DRAW),
         shader(shared_uniforms.header_shader_text + R"foo(
 in vec3 vertex;
 

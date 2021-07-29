@@ -120,17 +120,7 @@ int main() {
         };
         text_overlay text{shared, atlas};
 
-        std::vector<
-            std::array<float, 3>
-        > ls {
-            {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
-            {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f},
-            {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f},
-            {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
-            {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f},
-            {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
-        };
-        lines_renderer lines{ls, shared};
+        lines_renderer lines{{}, shared};
 
         glfwSetTime(0);
         while (!glfwWindowShouldClose(glfw.window)) {
@@ -145,9 +135,18 @@ int main() {
             shared.draw();
             if (shared.inputs.frame % 120 == 0) {
                 text.vbo.data = text.gen_text("XA__test__AX", {1920 / 2, 1080 / 2});
+                lines.vbo.data = {};
             }
             if (shared.inputs.frame % 120 == 60) {
-                text.vbo.data.clear();
+                text.vbo.data = {};
+                lines.vbo.data = {
+                    {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
+                    {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f},
+                    {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f},
+                    {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
+                    {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f},
+                    {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
+                };
             }
             text.draw();
             lines.draw();
