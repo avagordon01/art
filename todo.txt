@@ -1,3 +1,5 @@
+use the japanese data
+
 same position transform matrix pipeline for text vertices
 
 variable length rects
