@@ -1,0 +1,84 @@
+user_information
+    content
+        username
+    level/srs
+        level
+    ids
+        id
+    timestamps
+        created_at, data_updated_at
+
+level_progressions
+    level/srs
+        level
+    ids
+        id
+    timestamps
+        completed_at, created_at, data_updated_at, passed_at, started_at, unlocked_at
+
+reviews
+    content
+        subject
+    level/srs
+        ending_srs_stage, starting_srs_stage
+    ids
+        id, assignment_id, subject_id
+    timestamps
+        data_updated_at
+
+assignments
+    content
+        subject_type
+    level/srs
+        srs_stage
+    ids
+        id, subject_id
+    timestamps
+        available_at, burned_at, created_at, passed_at, resurrected_at_at, started_at, unlocked_at
+
+vocabulary
+    content
+        characters, meanings, readings
+    level/srs
+        level
+    ids
+        id, component_subject_ids
+    timestamps
+        data_updated_at
+
+subjects
+    content
+        resource, auxiliary_meanings, characters, meanings
+    level/srs
+        level
+    ids
+        id, amalgamation_subject_ids
+    timestamps
+        created_at, data_updated_at
+
+
+review -> assignment, subject
+assignment -> subject
+subject : vocabulary, kanji, radical
+vocabulary -> (component) subjects
+subject -> (amalgamation) subjects
+
+"component_subject_ids and amalgamation_subject_ids are symmetrical"
+"Assignments are the association between a user, and a subject."
+"A review is a single instance of this user getting a single review correctly submitted."
+
+
+subject_types (str[]) - The specific models.Subject types you wish to retrieve. Possible values are: ["kanji", "vocabulary", "radicals"]
+srs_stages - 0 is lessons, 5 is passed, 9 is the burned state
+created, unlocked (made available to lessons), started (move from lessons to reviews), srs_stages, resurrected
+
+
+
+contains code points from
+    common,
+    han : 4e00 <= x <= 9ffc,
+    hiragana : 3040 <= x <= 309f && x != 3040 | 3097 | 3098,
+    katakana : 30a0 <= x <= 30ff,
+    katakana phonetic extensions : 31f0 <= x <= 31ff
+    katakana halfwidth and fullwidth : ff00 <= x <= ffef && x != ff00 | ffbf | ff{c,d}{0,1,8,9} ffdd ffde ffdf ffe7 ffef
+    latin : 0021 <= x <= 007e, 
