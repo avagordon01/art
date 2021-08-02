@@ -1,4 +1,11 @@
 use the japanese data
+    time-series of subjects
+        brightness : srs stage
+        x-axis is first-seen-time
+    time-series of reviews
+    time-series of levels
+        network of subjects
+    network of vocabulary to kanji
 
 same position transform matrix pipeline for text vertices
 
@@ -9,6 +16,10 @@ shadowed terrain
 
 unicode support
     unifont bitmap unicode font
+    or noto fonts
+    array texture limited to 2048 layers
+    array texture layers must all be the same size
+    use a storage buffer with a fixed maximum glyph width/height?
 
 
 
