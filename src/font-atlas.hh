@@ -35,6 +35,9 @@ layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DAr
             throw std::runtime_error("new face error!");
         }
 
+        if (face->num_fixed_sizes == 0) {
+            throw std::runtime_error("no fixed sizes in font!");
+        }
         if (face->num_fixed_sizes > 1) {
             throw std::runtime_error("more than one size in font!");
         }
@@ -42,8 +45,8 @@ layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DAr
         height_ = face->available_sizes[0].height;
 
         std::vector<char> texels;
-        texels.resize(colour_channels() * num_chars() * width() * height());
-        for (char c = ' '; c <= '~'; c++) {
+        texels.resize(colour_channels() * max_chars() * width() * height());
+        for (uint32_t c = ' '; c <= '~'; c++) {
             error = FT_Load_Char(face, c, FT_LOAD_RENDER);
             if (error) {
                 throw std::runtime_error("load char error!");
@@ -62,7 +65,7 @@ layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DAr
                     bool bit = (bitmap->buffer[y * bitmap->pitch + x / 8] >> (7 - (x % 8))) & 1;
                     if (bit) {
                         std::fill_n(texels.begin() +
-                            colour_channels() * ((c - ' ') * width() * height() + y * width() + x)
+                            colour_channels() * (c * width() * height() + y * width() + x)
                         , 4, 255);
                     }
                 }
@@ -74,8 +77,8 @@ layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DAr
 
         glGenTextures(1, &texture_);
         glBindTexture(GL_TEXTURE_2D_ARRAY, texture_);
-        glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, width(), height(), num_chars());
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width(), height(), num_chars(), GL_RGBA, GL_UNSIGNED_BYTE, texels.data());
+        glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, width(), height(), max_chars());
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width(), height(), max_chars(), GL_RGBA, GL_UNSIGNED_BYTE, texels.data());
         glBindTextureUnit(binding_id, texture());
     }
 
@@ -88,8 +91,8 @@ layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DAr
     size_t colour_channels() {
         return 4;
     }
-    size_t num_chars() {
-        return 1 + '~' - ' ';
+    size_t max_chars() {
+        return 1 + '~';
     }
     size_t width() {
         return width_;

@@ -114,7 +114,8 @@ int main() {
     } else if (scene == scenes::scratch_tmp_new) {
 
         monospace_printable_ascii_font_atlas atlas{
-            "fonts/gohufont-2.1/gohufont-11.pcf.gz"
+            "fonts/unifont-13.0.06.pcf"
+            //"fonts/gohufont-2.1/gohufont-11.pcf.gz"
             //"fonts/artwiz-aleczapka-en-1.3/cure.pcf"
             //"fonts/tamsyn-font-1.11/Tamsyn6x12r.pcf"
         };

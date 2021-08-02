@@ -17,7 +17,7 @@ struct text_overlay {
     void gen_text(std::string text, std::array<float, 2> position) {
         auto[x, y] = position;
         for (char c: text) {
-            float char_index = c - ' ';
+            float char_index = c;
             float w = atlas.width();
             float h = atlas.height();
             vbo.data.push_back({{x,     y + h}, {0.0f, 0.0f, char_index}});
