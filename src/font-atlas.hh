@@ -11,17 +11,25 @@
 #include <freetype/freetype.h>
 #include <GL/gl.h>
 
+#include "buffers.hh"
+
 struct monospace_printable_ascii_font_atlas {
     size_t width_ = 0;
     size_t height_ = 0;
-    GLuint texture_ = 0;
+    storage_buffer<uint32_t> buffer;
 
-    GLuint binding_id = 1;
     std::string header_shader_text = R"foo(
-layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DArray font_atlas;
+layout(std430) buffer font_atlas {
+    uint pixels[];
+};
+bool bitmap_font_atlas_fetch(ivec3 tc) {
+    return bitfieldExtract(pixels[(tc.z * 16) + tc.y], tc.x, 1) != 0;
+};
 )foo";
 
-    monospace_printable_ascii_font_atlas(std::string filename) {
+    monospace_printable_ascii_font_atlas(std::string filename):
+        buffer({}, GL_DYNAMIC_DRAW)
+    {
         FT_Error error;
         FT_Library library;
         error = FT_Init_FreeType(&library);
@@ -41,15 +49,21 @@ layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DAr
         if (face->num_fixed_sizes > 1) {
             throw std::runtime_error("more than one size in font!");
         }
-        width_ = face->available_sizes[0].width;
-        height_ = face->available_sizes[0].height;
+        width_ = 16;
+        height_ = 16;
+        std::cout << "width = " << width_ << ", height = " << height_ << std::endl;
+        if (width_ > 32) {
+            throw std::runtime_error("bitmap font width " + std::to_string(width_) + " (> 32) not supported!");
+        }
 
-        std::vector<char> texels;
-        texels.resize(colour_channels() * max_chars() * width() * height());
-        for (uint32_t c = ' '; c <= '~'; c++) {
-            error = FT_Load_Char(face, c, FT_LOAD_RENDER);
+        std::vector<uint32_t> texels;
+        texels.resize(max_chars() * height());
+        size_t num_errors = 0;
+        for (uint32_t c = 0; c < max_chars(); c++) {
+            error = FT_Load_Char(face, c, FT_LOAD_DEFAULT);
             if (error) {
-                throw std::runtime_error("load char error!");
+                num_errors++;
+                continue;
             }
 
             FT_GlyphSlot slot = face->glyph;
@@ -57,42 +71,35 @@ layout(binding=)foo" + std::to_string(binding_id) + R"foo() uniform usampler2DAr
             if (bitmap->pixel_mode != FT_PIXEL_MODE_MONO) {
                 throw std::runtime_error("bitmap is not 1bpp monochrome!" );
             }
-            if (bitmap->width != width() || bitmap->rows != height()) {
+            if (bitmap->width > width() || bitmap->rows > height()) {
+                std::cout << "glyph width = " << bitmap->width << ", glyph height = " << bitmap->rows << std::endl;
                 throw std::runtime_error("bitmap is not monospaced!" );
             }
             for (unsigned y = 0; y < bitmap->rows; y++) {
                 for (unsigned x = 0; x < bitmap->width; x++) {
                     bool bit = (bitmap->buffer[y * bitmap->pitch + x / 8] >> (7 - (x % 8))) & 1;
-                    if (bit) {
-                        std::fill_n(texels.begin() +
-                            colour_channels() * (c * width() * height() + y * width() + x)
-                        , 4, 255);
-                    }
+                    texels[c * height() + y] |= bit << x;
                 }
             }
         }
+        std::cout << "ignored " << num_errors << " FT_Load_Char errors" << std::endl;
 
         FT_Done_Face(face);
         FT_Done_FreeType(library);
 
-        glGenTextures(1, &texture_);
-        glBindTexture(GL_TEXTURE_2D_ARRAY, texture_);
-        glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, width(), height(), max_chars());
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width(), height(), max_chars(), GL_RGBA, GL_UNSIGNED_BYTE, texels.data());
-        glBindTextureUnit(binding_id, texture());
+        buffer.data = texels;
+    }
+
+    void bind(GLuint program) {
+        buffer.bind(program, "font_atlas");
     }
 
     void draw() {
+        buffer.draw();
     }
 
-    GLuint texture() {
-        return texture_;
-    }
-    size_t colour_channels() {
-        return 4;
-    }
     size_t max_chars() {
-        return 1 + '~';
+        return 0x400;
     }
     size_t width() {
         return width_;

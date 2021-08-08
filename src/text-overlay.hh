@@ -55,18 +55,20 @@ in vec3 texcoords_f;
 out vec4 colour;
 
 void main() {
-    colour = texelFetch(font_atlas, ivec3(texcoords_f), 0);
+    colour = vec4(bitmap_font_atlas_fetch(ivec3(texcoords_f)));
 }
 )foo")
     {
         shared_uniforms.bind(shader.program_fragment);
         vbo.bind(shader.program_vertex, "vertex", 2, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, vertex));
         vbo.bind(shader.program_vertex, "texcoords", 3, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, texcoords));
+        atlas.bind(shader.program_fragment);
     }
     void draw() {
         vao.draw();
         vbo.draw();
         shader.draw();
+        atlas.draw();
         glDrawArrays(GL_TRIANGLES, 0, vbo.data.size());
     }
 };

@@ -1,3 +1,7 @@
+unicode support
+    test out unicode character
+    halfwidth/variablewidth bitmap font support
+
 use the japanese data
     time-series of subjects
         brightness : srs stage
@@ -13,13 +17,6 @@ variable length rects
 
 shadowed terrain
     maybe orthographic/from infinity projection
-
-unicode support
-    unifont bitmap unicode font
-    or noto fonts
-    array texture limited to 2048 layers
-    array texture layers must all be the same size
-    use a storage buffer with a fixed maximum glyph width/height?
 
 
 
