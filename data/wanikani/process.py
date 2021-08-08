@@ -44,6 +44,7 @@ for id, s in dict_subjects.items():
     if id not in reviews_by_subject:
         continue
     if not s['characters']:
+        del reviews_by_subject[id]
         continue
     if len(s['characters']) == 1:
         reviews_by_subject[id]['character'] = s['characters']
