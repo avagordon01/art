@@ -1,7 +1,6 @@
-unicode support
-    halfwidth/variablewidth bitmap font support
-
 use the japanese data
+    complete/dense grid-layout of subjects
+        flashes/fades/colours with srs stage
     time-series of subjects
         brightness : srs stage
         x-axis is first-seen-time
@@ -10,18 +9,29 @@ use the japanese data
         network of subjects
     network of vocabulary to kanji
 
+flash/fade/brightness effect
+
+unicode support
+    halfwidth/variablewidth bitmap font support
+
 same position transform matrix pipeline for text vertices
 
 variable length rects
 
+
+
+smooth (s)lerp camera animation
+
+scene/keyframe animation
+
 shadowed terrain
     maybe orthographic/from infinity projection
 
-
+use vendored noise glsl function
+    https://github.com/patriciogonzalezvivo/lygia/tree/main/generative
+    https://github.com/ashima/webgl-noise/tree/master/src
 
 vulkan examples
     calling resize immediately causes a segfault
-
-advanced/keyframe animation
 
 synchronised audio
