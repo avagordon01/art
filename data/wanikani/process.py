@@ -53,4 +53,12 @@ for id, s in dict_subjects.items():
 for r in reviews_by_subject.values():
     r['updates'].sort(key=lambda x: x['data_updated_at'])
 
-print(reviews_by_subject)
+output = reviews_by_subject.values()
+for x in output:
+    for y in x['updates']:
+        y['data_updated_at'] = y['data_updated_at'].timestamp()
+
+output = list(output)
+
+with open('data.json', 'w', encoding='utf-8') as f:
+    json.dump(output, f, ensure_ascii=False, indent=4)
