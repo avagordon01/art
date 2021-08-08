@@ -143,7 +143,7 @@ int main() {
                 size_t s = 28;
                 size_t rows = h / s;
                 size_t i = 0;
-                for (json::iterator it = j.begin(); it != j.end(); ++it, i++) {
+                for (json::iterator it = j["subjects"].begin(); it != j["subjects"].end(); ++it, i++) {
                     float x = floor(i / rows) * s;
                     float y = floor(i % rows) * s;
                     std::string character = (*it)["character"];

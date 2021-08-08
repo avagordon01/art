@@ -26,8 +26,6 @@ for k, v in dict_assignments.items():
     dates = [v[x] for x in date_labels if x in v and v[x]]
     assert dates == sorted(dates)
 
-print(len(dict_reviews))
-
 reviews_by_subject = {}
 for r in dict_reviews.values():
     subject = r['subject_id']
@@ -60,6 +58,11 @@ for x in output:
         y['data_updated_at'] = y['data_updated_at'].timestamp()
 
 output = list(output)
+
+timestamps = sorted([x['data_updated_at'] for y in output for x in y['updates']])
+start_timestamp = timestamps[0]
+end_timestamp = timestamps[-1]
+output = {'subjects': output, 'start_timestamp': start_timestamp, 'end_timestamp': end_timestamp}
 
 with open('data.json', 'w', encoding='utf-8') as f:
     json.dump(output, f, ensure_ascii=False, indent=4)
