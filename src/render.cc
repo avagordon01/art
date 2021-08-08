@@ -6,6 +6,9 @@
 #include <utility>
 #include <random>
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 #include "profiler.hh"
 
 #include "glerror.hh"
@@ -18,9 +21,10 @@ enum class scenes {
     dot_brain,
     scan_brain,
     noise_flow_particles,
+    wanikani_grid,
     scratch_tmp_new,
 };
-static constexpr scenes scene = scenes::scratch_tmp_new;
+static constexpr scenes scene = scenes::wanikani_grid;
 #include "ticks.hh"
 #include "grid.hh"
 #include "text-overlay.hh"
@@ -107,6 +111,48 @@ int main() {
 
             shared.draw();
             dust.draw();
+
+            glfw.tick();
+        }
+
+    } else if (scene == scenes::wanikani_grid) {
+
+        monospace_printable_unicode_font_atlas atlas{
+            "fonts/unifont-13.0.06.pcf"
+        };
+        text_overlay text{shared, atlas};
+
+        std::ifstream i("data/wanikani/data.json");
+        json j;
+        i >> j;
+
+        glfwSetTime(0);
+        while (!glfwWindowShouldClose(glfw.window)) {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            int w, h;
+            glfwGetWindowSize(glfw.window, &w, &h);
+            float w_ = w;
+            float h_ = h;
+            shared.inputs.projection = glm::ortho(0.0f, w_, 0.0f, h_, 0.0f, 200.0f);
+            shared.inputs.view = glm::identity<glm::mat4>();
+            shared.draw();
+
+            {
+                text.vbo.data.clear();
+                size_t s = 28;
+                size_t rows = h / s;
+                size_t i = 0;
+                for (json::iterator it = j.begin(); it != j.end(); ++it, i++) {
+                    float x = floor(i / rows) * s;
+                    float y = floor(i % rows) * s;
+                    std::string character = (*it)["character"];
+                    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+                    std::wstring wide = converter.from_bytes(character);
+                    text.gen_text(wide, {x, y});
+                }
+            }
+            text.draw();
 
             glfw.tick();
         }
