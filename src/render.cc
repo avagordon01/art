@@ -140,16 +140,22 @@ int main() {
 
             {
                 text.vbo.data.clear();
-                size_t s = 28;
+                size_t s = 24;
                 size_t rows = h / s;
                 size_t i = 0;
+                float start_timestamp = j["start_timestamp"];
+                float end_timestamp = j["end_timestamp"];
                 for (json::iterator it = j["subjects"].begin(); it != j["subjects"].end(); ++it, i++) {
                     float x = floor(i / rows) * s;
                     float y = floor(i % rows) * s;
                     std::string character = (*it)["character"];
-                    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-                    std::wstring wide = converter.from_bytes(character);
-                    text.gen_text(wide, {x, y});
+                    float first_review_timestamp = (*it)["updates"][0]["data_updated_at"];
+                    first_review_timestamp = (first_review_timestamp - start_timestamp) / (end_timestamp - start_timestamp);
+                    if (shared.inputs.frame > first_review_timestamp * 600) {
+                        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+                        std::wstring wide = converter.from_bytes(character);
+                        text.gen_text(wide, {x, y});
+                    }
                 }
             }
             text.draw();
