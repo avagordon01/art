@@ -56,8 +56,7 @@ bool bitmap_font_atlas_fetch(ivec3 tc) {
             throw std::runtime_error("bitmap font width " + std::to_string(width_) + " (> 32) not supported!");
         }
 
-        std::vector<uint32_t> texels;
-        texels.resize(max_chars() * height());
+        buffer.data.resize(max_chars() * height());
         size_t num_errors = 0;
         for (uint32_t c = 0; c < max_chars(); c++) {
             error = FT_Load_Char(face, c, FT_LOAD_DEFAULT);
@@ -78,7 +77,7 @@ bool bitmap_font_atlas_fetch(ivec3 tc) {
             for (unsigned y = 0; y < bitmap->rows; y++) {
                 for (unsigned x = 0; x < bitmap->width; x++) {
                     bool bit = (bitmap->buffer[y * bitmap->pitch + x / 8] >> (7 - (x % 8))) & 1;
-                    texels[c * height() + y] |= bit << x;
+                    buffer.data[c * height() + y] |= bit << x;
                 }
             }
         }
@@ -87,15 +86,11 @@ bool bitmap_font_atlas_fetch(ivec3 tc) {
         FT_Done_Face(face);
         FT_Done_FreeType(library);
 
-        buffer.data = texels;
+        buffer.draw();
     }
 
     void bind(GLuint program) {
         buffer.bind(program, "font_atlas");
-    }
-
-    void draw() {
-        buffer.draw();
     }
 
     size_t max_chars() {

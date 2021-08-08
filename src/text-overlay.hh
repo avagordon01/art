@@ -68,7 +68,6 @@ void main() {
         vao.draw();
         vbo.draw();
         shader.draw();
-        atlas.draw();
         glDrawArrays(GL_TRIANGLES, 0, vbo.data.size());
     }
 };
