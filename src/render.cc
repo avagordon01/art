@@ -113,7 +113,7 @@ int main() {
 
     } else if (scene == scenes::scratch_tmp_new) {
 
-        monospace_printable_ascii_font_atlas atlas{
+        monospace_printable_unicode_font_atlas atlas{
             "fonts/unifont-13.0.06.pcf"
             //"fonts/gohufont-2.1/gohufont-11.pcf.gz"
             //"fonts/artwiz-aleczapka-en-1.3/cure.pcf"
@@ -141,7 +141,7 @@ int main() {
                 for (size_t i = 0; i < 8; i++) {
                     float x = w / 2 + h / 2;
                     float y = h * i / 8 + shared.inputs.frame % (h / 8);
-                    text.gen_text("x = " + std::to_string(x / (w_ / 2)) + ", y = " + std::to_string(y / (h_ / 2)), {x, y});
+                    text.gen_text(L"匚 x = " + std::to_wstring(x / (w_ / 2)) + L", y = " + std::to_wstring(y / (h_ / 2)), {x, y});
                     lines.vbo.data.push_back({w_ / 2, h_ / 2, 0.0f});
                     lines.vbo.data.push_back({x, y, 0.0f});
                 }

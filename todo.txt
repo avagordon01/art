@@ -1,5 +1,4 @@
 unicode support
-    test out unicode character
     halfwidth/variablewidth bitmap font support
 
 use the japanese data

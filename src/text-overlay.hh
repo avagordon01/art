@@ -11,12 +11,12 @@ struct text_overlay {
         std::array<float, 2> vertex;
         std::array<float, 3> texcoords;
     };
-    monospace_printable_ascii_font_atlas& atlas;
+    monospace_printable_unicode_font_atlas& atlas;
     vertex_buffer<char_vertex> vbo;
 
-    void gen_text(std::string text, std::array<float, 2> position) {
+    void gen_text(std::wstring text, std::array<float, 2> position) {
         auto[x, y] = position;
-        for (char c: text) {
+        for (uint32_t c: text) {
             float char_index = c;
             float w = atlas.width();
             float h = atlas.height();
@@ -31,7 +31,7 @@ struct text_overlay {
         }
     }
     shader shader;
-    text_overlay(shared_uniforms& shared_uniforms, monospace_printable_ascii_font_atlas& atlas_):
+    text_overlay(shared_uniforms& shared_uniforms, monospace_printable_unicode_font_atlas& atlas_):
     atlas(atlas_),
     vbo({}, GL_DYNAMIC_DRAW),
     shader(
