@@ -28,6 +28,7 @@ static constexpr scenes scene = scenes::wanikani_grid;
 #include "ticks.hh"
 #include "grid.hh"
 #include "text-overlay.hh"
+#include "text-wanikani.hh"
 #include "lines.hh"
 #include "triangles.hh"
 #include "dust.hh"
@@ -120,7 +121,7 @@ int main() {
         monospace_unicode_font_atlas atlas{
             "fonts/unifont-13.0.06.pcf"
         };
-        text_overlay text{shared, atlas};
+        text_wanikani text{shared, atlas};
 
         std::ifstream i("data/wanikani/data.json");
         json j;
@@ -140,6 +141,7 @@ int main() {
 
             {
                 text.vbo.data.clear();
+                text.extra_buffer.data.clear();
                 size_t s = 24;
                 size_t rows = h / s;
                 size_t i = 0;
@@ -149,12 +151,22 @@ int main() {
                     float x = floor(i / rows) * s;
                     float y = floor(i % rows) * s;
                     std::string character = (*it)["character"];
-                    float first_review_timestamp = (*it)["updates"][0]["data_updated_at"];
-                    first_review_timestamp = (first_review_timestamp - start_timestamp) / (end_timestamp - start_timestamp);
-                    if (shared.inputs.frame > first_review_timestamp * 600) {
-                        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-                        std::wstring wide = converter.from_bytes(character);
-                        text.gen_text(wide, {x, y});
+                    auto& updates = (*it)["updates"];
+                    float timestamp = std::numeric_limits<float>::infinity();
+                    for (json::iterator jt = updates.begin(); jt != updates.end(); ++jt) {
+                        float next_timestamp = (*jt)["data_updated_at"];
+                        next_timestamp = (next_timestamp - start_timestamp) / (end_timestamp - start_timestamp) * 60 * 100;
+                        if (shared.inputs.frame > next_timestamp) {
+                            timestamp = next_timestamp;
+                        } else {
+                            break;
+                        }
+                    }
+                    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+                    std::wstring wide = converter.from_bytes(character);
+                    text.gen_text(wide, {x, y});
+                    for (size_t i = 0; i < 6; i++) {
+                        text.extra_buffer.data.push_back({timestamp, 1});
                     }
                 }
             }
