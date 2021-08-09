@@ -13,7 +13,7 @@
 
 #include "buffers.hh"
 
-struct monospace_printable_unicode_font_atlas {
+struct monospace_unicode_font_atlas {
     size_t width_ = 0;
     size_t height_ = 0;
     storage_buffer<uint32_t> buffer;
@@ -27,7 +27,7 @@ bool bitmap_font_atlas_fetch(ivec3 tc) {
 };
 )foo";
 
-    monospace_printable_unicode_font_atlas(std::string filename):
+    monospace_unicode_font_atlas(std::string filename):
         buffer({}, GL_DYNAMIC_DRAW)
     {
         FT_Error error;

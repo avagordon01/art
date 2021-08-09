@@ -117,7 +117,7 @@ int main() {
 
     } else if (scene == scenes::wanikani_grid) {
 
-        monospace_printable_unicode_font_atlas atlas{
+        monospace_unicode_font_atlas atlas{
             "fonts/unifont-13.0.06.pcf"
         };
         text_overlay text{shared, atlas};
@@ -165,7 +165,7 @@ int main() {
 
     } else if (scene == scenes::scratch_tmp_new) {
 
-        monospace_printable_unicode_font_atlas atlas{
+        monospace_unicode_font_atlas atlas{
             "fonts/unifont-13.0.06.pcf"
             //"fonts/gohufont-2.1/gohufont-11.pcf.gz"
             //"fonts/artwiz-aleczapka-en-1.3/cure.pcf"
