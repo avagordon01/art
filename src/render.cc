@@ -153,11 +153,13 @@ int main() {
                     std::string character = (*it)["character"];
                     auto& updates = (*it)["updates"];
                     float timestamp = std::numeric_limits<float>::infinity();
+                    uint32_t stage = 1;
                     for (json::iterator jt = updates.begin(); jt != updates.end(); ++jt) {
                         float next_timestamp = (*jt)["data_updated_at"];
                         next_timestamp = (next_timestamp - start_timestamp) / (end_timestamp - start_timestamp) * 60 * 100;
                         if (shared.inputs.frame > next_timestamp) {
                             timestamp = next_timestamp;
+                            stage = (*jt)["ending_srs_stage"];
                         } else {
                             break;
                         }
@@ -166,7 +168,7 @@ int main() {
                     std::wstring wide = converter.from_bytes(character);
                     text.gen_text(wide, {x, y});
                     for (size_t i = 0; i < 6; i++) {
-                        text.extra_buffer.data.push_back({timestamp, 1});
+                        text.extra_buffer.data.push_back({timestamp, stage});
                     }
                 }
             }

@@ -48,6 +48,7 @@ in vec2 vertex;
 in vec3 texcoords;
 out vec3 texcoords_f;
 in float timestamp;
+in uint stage;
 out vec4 colour_f;
 
 out gl_PerVertex {
@@ -66,6 +67,9 @@ void main() {
     gl_Position = projection * view * vec4(vertex, 0.0f, 1.0f);
     texcoords_f = texcoords;
     colour_f = vec4(exp_decay(frame, timestamp, 0.001));
+    if (stage == 9) {
+        colour_f = vec4(1, 0, 0, 1);
+    }
 }
 )foo",
         shared_uniforms.header_shader_text + atlas.header_shader_text + R"foo(
@@ -82,6 +86,13 @@ void main() {
         vbo.bind(shader.program_vertex, "vertex", 2, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, vertex));
         vbo.bind(shader.program_vertex, "texcoords", 3, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, texcoords));
         extra_buffer.bind(shader.program_vertex, "timestamp", 1, GL_FLOAT, GL_FALSE, sizeof(extra_data), (void*)offsetof(extra_data, timestamp));
+        //extra_buffer.bind(shader.program_vertex, "stage", 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(extra_data), (void*)offsetof(extra_data, stage));
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, extra_buffer.buffer_id);
+            GLint attrib_index = glGetAttribLocation(shader.program_vertex, "stage");
+            glVertexAttribIPointer(attrib_index, 1, GL_UNSIGNED_INT, sizeof(extra_data), (void*)offsetof(extra_data, stage));
+            glEnableVertexAttribArray(attrib_index);
+        }
         atlas.bind(shader.program_fragment);
     }
     void draw() {
