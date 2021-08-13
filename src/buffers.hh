@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 struct vertex_array_object {
     GLuint vao;
     vertex_array_object() {
@@ -21,7 +23,8 @@ struct buffer {
     std::vector<T> data;
     T* previous_buffer;
     GLenum hint;
-    buffer() {};
+
+    buffer() = delete;
     buffer(std::vector<T> data_, GLenum hint_ = GL_STATIC_DRAW):
         data(data_),
         hint(hint_)
@@ -31,6 +34,26 @@ struct buffer {
         glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), hint);
         previous_buffer = data.data();
     }
+
+    buffer(const buffer&) = delete;
+    buffer &operator=(const buffer&) = delete;
+
+    buffer(buffer &&other):
+        buffer_id(std::exchange(other.buffer_id, 0)),
+        data(std::move(other.data)),
+        previous_buffer(std::exchange(other.previous_buffer, nullptr)),
+        hint(std::exchange(other.hint, 0))
+    {};
+    buffer &operator=(buffer &&other) {
+        if (this != &other) {
+            glDeleteBuffers(1, &buffer_id);
+            buffer_id = std::exchange(other.buffer_id, 0);
+            data = std::move(other.data);
+            previous_buffer = std::exchange(other.previous_buffer, nullptr);
+            hint = std::exchange(other.hint, 0);
+        }
+        return *this;
+    };
 
     template<typename ...Args>
     void bind(GLuint program, const GLchar* name, Args... args) {
