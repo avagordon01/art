@@ -18,6 +18,28 @@ layout(std140) uniform inputs {
     uint frame;
 };
 )foo";
+
+    std::string passthrough_vertex = R"foo(
+in vec3 vertex;
+
+out gl_PerVertex {
+    vec4 gl_Position;
+    float gl_PointSize;
+    float gl_ClipDistance[];
+};
+void main() {
+    gl_Position = projection * view * vec4(vertex, 1.0f);
+}
+)foo";
+    std::string passthrough_fragment = R"foo(
+in vec4 gl_FragCoord;
+out vec4 colour;
+
+void main() {
+    colour = vec4(1);
+}
+)foo";
+
     glfw_t& glfw;
     uniform_buffer<inputs> ubo;
     inputs& inputs;

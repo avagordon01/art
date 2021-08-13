@@ -43,26 +43,7 @@ struct dust {
     dust(shared_uniforms& shared_uniforms):
         drawable(GL_POINTS),
         sbo{gen_points(), GL_DYNAMIC_COPY},
-        shader(shared_uniforms.header_shader_text + R"foo(
-in vec3 vertex;
-
-out gl_PerVertex {
-    vec4 gl_Position;
-    float gl_PointSize;
-    float gl_ClipDistance[];
-};
-void main() {
-    gl_Position = projection * view * vec4(vertex, 1.0f);
-}
-)foo",
-        R"foo(
-in vec4 gl_FragCoord;
-out vec4 colour;
-
-void main() {
-    colour = vec4(1);
-}
-)foo"),
+        shader(shared_uniforms.header_shader_text + shared_uniforms.passthrough_vertex, shared_uniforms.passthrough_fragment),
         compute_shader(shared_uniforms.header_shader_text + noise_header_text + R"foo(
 struct point {
     vec4 position;
