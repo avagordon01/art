@@ -3,19 +3,15 @@
 #include <array>
 #include "buffers.hh"
 #include "shader.hh"
+#include "drawable.hh"
 
 struct instanced_triangles_renderer {
-    vertex_array_object vao;
-    vertex_buffer<std::array<float, 3>> vbo;
-    index_buffer ibo;
-
+    drawable<> drawable;
     shared_uniforms& shared_uniforms;
-
     shader shader;
 
     instanced_triangles_renderer(std::vector<std::array<float, 3>> vertices_, std::vector<unsigned> indices_, struct shared_uniforms& shared_uniforms_):
-        vbo(vertices_),
-        ibo(indices_),
+        drawable(GL_TRIANGLES, true),
         shared_uniforms(shared_uniforms_),
         shader(shared_uniforms.header_shader_text + R"foo(
 in vec3 vertex;
@@ -49,22 +45,21 @@ void main() {)foo" +
 }
 )foo"))
     {
-        vbo.bind(shader.program_vertex, "vertex");
+        drawable.vbo.data = vertices_;
+        drawable.ibo.data = indices_;
+        drawable.vbo.bind(shader.program_vertex, "vertex");
         shared_uniforms.bind(shader.program_vertex);
         shared_uniforms.bind(shader.program_fragment);
     }
     void draw() {
-        vao.draw();
-        vbo.draw();
-        ibo.draw();
         shader.draw();
-        glLineWidth(1);
-        if (scene == scenes::dot_brain) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-        } else {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
-        glDrawElements(GL_TRIANGLES, ibo.data.size(), GL_UNSIGNED_INT, 0);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        drawable.draw([](){
+            glLineWidth(1);
+            if (scene == scenes::dot_brain) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+            } else {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
+        });
     }
 };

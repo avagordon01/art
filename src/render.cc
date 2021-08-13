@@ -203,13 +203,13 @@ int main() {
 
             {
                 text.vbo.data.clear();
-                lines.vbo.data.clear();
+                lines.drawable.vbo.data.clear();
                 for (size_t i = 0; i < 8; i++) {
                     float x = w / 2 + h / 2;
                     float y = h * i / 8 + shared.inputs.frame % (h / 8);
                     text.gen_text(L"匚 x = " + std::to_wstring(x / (w_ / 2)) + L", y = " + std::to_wstring(y / (h_ / 2)), {x, y});
-                    lines.vbo.data.push_back({w_ / 2, h_ / 2, 0.0f});
-                    lines.vbo.data.push_back({x, y, 0.0f});
+                    lines.drawable.vbo.data.push_back({w_ / 2, h_ / 2, 0.0f});
+                    lines.drawable.vbo.data.push_back({x, y, 0.0f});
                 }
             }
             text.draw();

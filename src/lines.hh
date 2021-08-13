@@ -3,15 +3,14 @@
 #include <utility>
 #include "buffers.hh"
 #include "shader.hh"
+#include "drawable.hh"
 
 struct lines_renderer {
-    vertex_array_object vao;
-    vertex_buffer<std::array<float, 3>> vbo;
-
+    drawable<> drawable;
     shader shader;
 
     lines_renderer(std::vector<std::array<float, 3>> lines_, shared_uniforms& shared_uniforms):
-        vbo(lines_, GL_DYNAMIC_DRAW),
+        drawable(GL_LINES),
         shader(shared_uniforms.header_shader_text + R"foo(
 in vec3 vertex;
 
@@ -33,14 +32,12 @@ void main() {
 }
 )foo")
     {
-        vbo.bind(shader.program_vertex, "vertex");
+        drawable.vbo.data = lines_;
+        drawable.vbo.bind(shader.program_vertex, "vertex");
         shared_uniforms.bind(shader.program_vertex);
     }
     void draw() {
-        vao.draw();
-        vbo.draw();
         shader.draw();
-        glLineWidth(1);
-        glDrawArrays(GL_LINES, 0, vbo.data.size());
+        drawable.draw();
     }
 };
