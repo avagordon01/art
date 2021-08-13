@@ -76,7 +76,7 @@ struct buffer {
     }
 
     void draw() {
-        glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+        glBindBuffer(Target, buffer_id);
         if (hint == GL_DYNAMIC_DRAW) {
             if (data.data() != previous_buffer) {
                 glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), hint);
