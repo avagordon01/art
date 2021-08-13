@@ -10,7 +10,6 @@ struct dust {
     struct point {
         std::array<float, 4> position;
         std::array<float, 4> velocity;
-        std::array<float, 4> acceleration;
     };
     vertex_array_object vao;
     vertex_buffer<point> vbo;
@@ -69,7 +68,6 @@ void main() {
 struct point {
     vec4 position;
     vec4 velocity;
-    vec4 acceleration;
 };
 layout(std430) buffer vertices_buffer {
     point vertices[];
@@ -84,8 +82,8 @@ void main() {
         noise(vec4(vertices[index].position.xyz / vec3(4, 3, 2), frame / 60.0f))
     ) - vec2(0.5f);
     float dt = 1.0f / 60.0f;
-    vertices[index].acceleration = vec4(dir * 20, 0.0f, 0.0f);
-    vertices[index].velocity += vertices[index].acceleration * dt;
+    vec4 acceleration = vec4(dir * 20, 0.0f, 0.0f);
+    vertices[index].velocity += acceleration * dt;
     float speed = length(vertices[index].velocity);
     if (speed > 10) {
         float new_speed = 10;
