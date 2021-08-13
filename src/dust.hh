@@ -11,8 +11,7 @@ struct dust {
         std::array<float, 4> position;
         std::array<float, 4> velocity;
     };
-    vertex_array_object vao;
-    vertex_buffer<point> vbo;
+    drawable<point> drawable;
     storage_buffer<point> sbo;
 
     shader shader;
@@ -42,7 +41,7 @@ struct dust {
     }
 
     dust(shared_uniforms& shared_uniforms):
-        vbo{std::vector<point>{num_points}, GL_DYNAMIC_COPY},
+        drawable(GL_POINTS),
         sbo{gen_points(), GL_DYNAMIC_COPY},
         shader(shared_uniforms.header_shader_text + R"foo(
 in vec3 vertex;
@@ -95,15 +94,13 @@ void main() {
     {
         shared_uniforms.bind(shader.program_vertex);
         shared_uniforms.bind(compute_shader.program);
-        vbo.bind(shader.program_vertex, "vertex");
+        drawable.vbo = {std::vector<point>{num_points}, GL_DYNAMIC_COPY};
+        drawable.vbo.bind(shader.program_vertex, "vertex");
         sbo.bind(compute_shader.program, "vertices_buffer");
     }
     void draw() {
-        vao.draw();
-        vbo.draw();
         shader.draw();
-        glPointSize(1);
-        glDrawArrays(GL_POINTS, 0, vbo.data.size());
+        drawable.draw();
         compute_shader.draw();
         glCopyBufferSubData(GL_SHADER_STORAGE_BUFFER, GL_ARRAY_BUFFER, 0, 0, sizeof(point) * num_points);
     }
