@@ -55,15 +55,25 @@ struct buffer {
         return *this;
     };
 
-    template<typename ...Args>
-    void bind(GLuint program, const GLchar* name, Args... args) {
+    void bind(GLuint program, const GLchar* name, size_t num = 3, size_t member_offset = 0, GLenum type = GL_FLOAT) {
         if constexpr (Target == GL_ARRAY_BUFFER) {
             glBindBuffer(Target, buffer_id);
             GLint attrib_index = glGetAttribLocation(program, name);
-            if constexpr (sizeof...(args) == 0) {
-                glVertexAttribPointer(attrib_index, 3, GL_FLOAT, GL_FALSE, sizeof(*data.data()), nullptr);
-            } else if constexpr (sizeof...(args) == 5) {
-                glVertexAttribPointer(attrib_index, args...);
+            if (type == GL_FLOAT) {
+                glVertexAttribPointer(attrib_index, num, type, GL_FALSE, sizeof(*data.data()), (void*)member_offset);
+            } else if (type == GL_DOUBLE) {
+                glVertexAttribLPointer(attrib_index, num, type, sizeof(*data.data()), (void*)member_offset);
+            } else if (
+                type == GL_BYTE ||
+                type == GL_UNSIGNED_BYTE ||
+                type == GL_SHORT ||
+                type == GL_UNSIGNED_SHORT ||
+                type == GL_INT ||
+                type == GL_UNSIGNED_INT
+            ) {
+                glVertexAttribIPointer(attrib_index, num, type, sizeof(*data.data()), (void*)member_offset);
+            } else {
+                throw std::runtime_error("error, unsupported type parameter to glVertexAttrib*Pointer in bind");
             }
             glEnableVertexAttribArray(attrib_index);
         } else if constexpr (Target == GL_SHADER_STORAGE_BUFFER) {

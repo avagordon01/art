@@ -24,13 +24,13 @@ struct drawable {
 
     template<typename F>
     void draw(F custom_params) {
+        custom_params();
         vao.draw();
         vbo.draw();
-        ibo.draw();
-        custom_params();
         if (!instanced) {
             glDrawArrays(primitive, 0, vbo.data.size());
         } else {
+            ibo.draw();
             glDrawElements(primitive, ibo.data.size(), GL_UNSIGNED_INT, 0);
         }
         glPointSize(1);

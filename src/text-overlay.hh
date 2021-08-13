@@ -58,8 +58,8 @@ void main() {
 )foo")
     {
         shared_uniforms.bind(shader.program_fragment);
-        drawable.vbo.bind(shader.program_vertex, "vertex", 2, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, vertex));
-        drawable.vbo.bind(shader.program_vertex, "texcoords", 3, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, texcoords));
+        drawable.vbo.bind(shader.program_vertex, "vertex", 2, offsetof(char_vertex, vertex));
+        drawable.vbo.bind(shader.program_vertex, "texcoords", 3, offsetof(char_vertex, texcoords));
         atlas.bind(shader.program_fragment);
     }
     void draw() {
