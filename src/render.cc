@@ -140,7 +140,7 @@ int main() {
             shared.draw();
 
             {
-                text.vbo.data.clear();
+                text.drawable.vbo.data.clear();
                 text.extra_buffer.data.clear();
                 size_t s = 24;
                 size_t rows = h / s;
@@ -202,7 +202,7 @@ int main() {
             shared.draw();
 
             {
-                text.vbo.data.clear();
+                text.drawable.vbo.data.clear();
                 lines.drawable.vbo.data.clear();
                 for (size_t i = 0; i < 8; i++) {
                     float x = w / 2 + h / 2;

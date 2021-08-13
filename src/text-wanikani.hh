@@ -3,18 +3,16 @@
 #include <string>
 #include "buffers.hh"
 #include "shader.hh"
-#include "fullscreen-quad.hh"
 #include "font-atlas.hh"
+#include "drawable.hh"
 
 struct text_wanikani {
-    fullscreen_quad quad;
-    vertex_array_object vao;
     struct char_vertex {
         std::array<float, 2> vertex;
         std::array<float, 3> texcoords;
     };
     monospace_unicode_font_atlas& atlas;
-    vertex_buffer<char_vertex> vbo;
+    drawable<char_vertex> drawable;
     struct extra_data {
         float timestamp;
         uint32_t stage;
@@ -27,20 +25,20 @@ struct text_wanikani {
             float char_index = c;
             float w = atlas.width();
             float h = atlas.height();
-            vbo.data.push_back({{x,     y + h}, {0.0f, 0.0f, char_index}});
-            vbo.data.push_back({{x,     y    }, {0.0f, h,    char_index}});
-            vbo.data.push_back({{x + w, y    }, {w,    h,    char_index}});
+            drawable.vbo.data.push_back({{x,     y + h}, {0.0f, 0.0f, char_index}});
+            drawable.vbo.data.push_back({{x,     y    }, {0.0f, h,    char_index}});
+            drawable.vbo.data.push_back({{x + w, y    }, {w,    h,    char_index}});
 
-            vbo.data.push_back({{x,     y + h}, {0.0f, 0.0f, char_index}});
-            vbo.data.push_back({{x + w, y    }, {w,    h,    char_index}});
-            vbo.data.push_back({{x + w, y + h}, {w,    0.0f, char_index}});
+            drawable.vbo.data.push_back({{x,     y + h}, {0.0f, 0.0f, char_index}});
+            drawable.vbo.data.push_back({{x + w, y    }, {w,    h,    char_index}});
+            drawable.vbo.data.push_back({{x + w, y + h}, {w,    0.0f, char_index}});
             x += w;
         }
     }
     shader shader;
     text_wanikani(shared_uniforms& shared_uniforms, monospace_unicode_font_atlas& atlas_):
     atlas(atlas_),
-    vbo({}, GL_DYNAMIC_DRAW),
+    drawable(GL_TRIANGLES),
     extra_buffer({}, GL_DYNAMIC_DRAW),
     shader(
         shared_uniforms.header_shader_text + R"foo(
@@ -90,8 +88,8 @@ void main() {
 )foo")
     {
         shared_uniforms.bind(shader.program_fragment);
-        vbo.bind(shader.program_vertex, "vertex", 2, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, vertex));
-        vbo.bind(shader.program_vertex, "texcoords", 3, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, texcoords));
+        drawable.vbo.bind(shader.program_vertex, "vertex", 2, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, vertex));
+        drawable.vbo.bind(shader.program_vertex, "texcoords", 3, GL_FLOAT, GL_FALSE, sizeof(char_vertex), (void*)offsetof(char_vertex, texcoords));
         extra_buffer.bind(shader.program_vertex, "timestamp", 1, GL_FLOAT, GL_FALSE, sizeof(extra_data), (void*)offsetof(extra_data, timestamp));
         //extra_buffer.bind(shader.program_vertex, "stage", 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(extra_data), (void*)offsetof(extra_data, stage));
         {
@@ -103,10 +101,8 @@ void main() {
         atlas.bind(shader.program_fragment);
     }
     void draw() {
-        vao.draw();
-        vbo.draw();
-        extra_buffer.draw();
         shader.draw();
-        glDrawArrays(GL_TRIANGLES, 0, vbo.data.size());
+        extra_buffer.draw();
+        drawable.draw();
     }
 };
