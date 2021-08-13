@@ -1,6 +1,4 @@
 use the japanese data
-    complete/dense grid-layout of subjects
-        flashes/fades/colours with srs stage
     time-series of subjects
         brightness : srs stage
         x-axis is first-seen-time
@@ -8,8 +6,6 @@ use the japanese data
     time-series of levels
         network of subjects
     network of vocabulary to kanji
-
-flash/fade/brightness effect
 
 unicode support
     halfwidth/variablewidth bitmap font support

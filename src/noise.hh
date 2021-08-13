@@ -1,3 +1,5 @@
+#pragma once
+
 std::string noise_header_text = R"foo(
 
 //super fast method to generate a pseudo random hash from a coordinate value

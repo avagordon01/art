@@ -21,10 +21,11 @@ enum class scenes {
     dot_brain,
     scan_brain,
     noise_flow_particles,
-    wanikani_grid,
+    wanikani_subject_grid,
+    wanikani_review_time_grid,
     scratch_tmp_new,
 };
-static constexpr scenes scene = scenes::wanikani_grid;
+static constexpr scenes scene = scenes::wanikani_review_time_grid;
 #include "ticks.hh"
 #include "grid.hh"
 #include "text-overlay.hh"
@@ -32,6 +33,7 @@ static constexpr scenes scene = scenes::wanikani_grid;
 #include "lines.hh"
 #include "triangles.hh"
 #include "dust.hh"
+#include "wanikani-review-time-grid.hh"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
@@ -116,7 +118,7 @@ int main() {
             glfw.tick();
         }
 
-    } else if (scene == scenes::wanikani_grid) {
+    } else if (scene == scenes::wanikani_subject_grid) {
 
         monospace_unicode_font_atlas atlas{
             "fonts/unifont-13.0.06.pcf"
@@ -173,6 +175,50 @@ int main() {
                 }
             }
             text.draw();
+
+            glfw.tick();
+        }
+
+    } else if (scene == scenes::wanikani_review_time_grid) {
+
+        wanikani_review_time_grid wanikani_review_time_grid{shared};
+
+        std::ifstream i("data/wanikani/data2.json");
+        json j;
+        i >> j;
+
+        glfwSetTime(0);
+
+        int w, h;
+        glfwGetWindowSize(glfw.window, &w, &h);
+        {
+            float seconds_per_day = 24 * 60 * 60;
+            float start_timestamp = j["start_timestamp"];
+            float end_timestamp = j["end_timestamp"];
+            start_timestamp = floor(start_timestamp / seconds_per_day) * seconds_per_day;
+            for (json::iterator it = j["reviews"].begin(); it != j["reviews"].end(); ++it) {
+                float timestamp = (*it)["data_updated_at"];
+                timestamp -= start_timestamp;
+                float x = 4 * floor(timestamp / seconds_per_day);
+                float y = h * (timestamp - floor(timestamp / seconds_per_day) * seconds_per_day) / seconds_per_day;
+                uint32_t stage = (*it)["ending_srs_stage"];
+                timestamp /= (end_timestamp - start_timestamp);
+                timestamp *= 60 * 10 * 2;
+                wanikani_review_time_grid.drawable.vbo.data.push_back({{x, y}, {}, timestamp, stage});
+            }
+        }
+        while (!glfwWindowShouldClose(glfw.window)) {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            int w, h;
+            glfwGetWindowSize(glfw.window, &w, &h);
+            float w_ = w;
+            float h_ = h;
+            shared.inputs.projection = glm::ortho(0.0f, w_, 0.0f, h_, 0.0f, 200.0f);
+            shared.inputs.view = glm::identity<glm::mat4>();
+            shared.draw();
+
+            wanikani_review_time_grid.draw();
 
             glfw.tick();
         }
