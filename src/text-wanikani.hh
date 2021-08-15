@@ -66,12 +66,12 @@ void main() {
     texcoords_f = texcoords;
     float decay = 0;
     if (stage < 5) {
-        decay = 0.1 * pow(0.6, stage);
+        decay = 6 * pow(0.6, stage);
     } else {
-        decay = 0.1 * pow(0.5, stage);
+        decay = 6 * pow(0.5, stage);
     }
 
-    colour_f = vec4(exp_decay(frame, floor(timestamp), decay));
+    colour_f = vec4(exp_decay(time, timestamp, decay));
     if (stage == 9) {
         colour_f = vec4(1, 0, 0, 1);
     }

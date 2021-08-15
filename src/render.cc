@@ -44,7 +44,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 int main() {
     glfw_t glfw;
 
-    glfwSwapInterval(1);
     glfwSetInputMode(glfw.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetInputMode(glfw.window, GLFW_STICKY_KEYS, 1);
     glfwSetKeyCallback(glfw.window, key_callback);
@@ -79,7 +78,7 @@ int main() {
             int w, h;
             glfwGetWindowSize(glfw.window, &w, &h);
             shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
-            float angle = 2 * M_PI * shared.inputs.frame / 60 / 60;
+            float angle = 2 * M_PI * shared.inputs.time / 60;
             float distance = -100.0f;
             shared.inputs.view = glm::lookAt(
                 glm::vec3(distance * sin(angle), 0.0f, distance * cos(angle)),
@@ -158,8 +157,8 @@ int main() {
                     uint32_t stage = 1;
                     for (json::iterator jt = updates.begin(); jt != updates.end(); ++jt) {
                         float next_timestamp = (*jt)["data_updated_at"];
-                        next_timestamp = (next_timestamp - start_timestamp) / (end_timestamp - start_timestamp) * 60 * 100;
-                        if (shared.inputs.frame > next_timestamp) {
+                        next_timestamp = (next_timestamp - start_timestamp) / (end_timestamp - start_timestamp) * 100;
+                        if (shared.inputs.time > next_timestamp) {
                             timestamp = next_timestamp;
                             stage = (*jt)["ending_srs_stage"];
                         } else {
@@ -203,7 +202,7 @@ int main() {
                 float y = h * (timestamp - floor(timestamp / seconds_per_day) * seconds_per_day) / seconds_per_day;
                 uint32_t stage = (*it)["ending_srs_stage"];
                 timestamp /= (end_timestamp - start_timestamp);
-                timestamp *= 60 * 10 * 2;
+                timestamp *= 10 * 2;
                 wanikani_review_time_grid.drawable.vbo.data.push_back({{x, y}, {}, timestamp, stage});
             }
         }
@@ -252,7 +251,7 @@ int main() {
                 lines.drawable.vbo.data.clear();
                 for (size_t i = 0; i < 8; i++) {
                     float x = w / 2 + h / 2;
-                    float y = h * i / 8 + shared.inputs.frame % (h / 8);
+                    float y = h * i / 8 + static_cast<int>(shared.inputs.time * 60) % (h / 8);
                     text.gen_text(L"匚 x = " + std::to_wstring(x / (w_ / 2)) + L", y = " + std::to_wstring(y / (h_ / 2)), {x, y});
                     lines.drawable.vbo.data.push_back({w_ / 2, h_ / 2, 0.0f});
                     lines.drawable.vbo.data.push_back({x, y, 0.0f});
@@ -265,5 +264,5 @@ int main() {
         }
 
     }
-    std::cout << shared.inputs.frame / glfwGetTime() << " average fps" << std::endl;
+    std::cout << shared.inputs.time * shared.inputs.framerate / glfwGetTime() << " average fps" << std::endl;
 }

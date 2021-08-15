@@ -58,8 +58,8 @@ layout(local_size_x = 32, local_size_y = 1, local_size_z = 1) in;
 void main() {
     uint index = gl_GlobalInvocationID.x;
     vec2 dir = vec2(
-        noise(vec4(vertices[index].position.xyz / vec3(2, 3, 4), frame / 60.0f)),
-        noise(vec4(vertices[index].position.xyz / vec3(4, 3, 2), frame / 60.0f))
+        noise(vec4(vertices[index].position.xyz / vec3(2, 3, 4), time)),
+        noise(vec4(vertices[index].position.xyz / vec3(4, 3, 2), time))
     ) - vec2(0.5f);
     float dt = 1.0f / 60.0f;
     vec4 acceleration = vec4(dir * 20, 0.0f, 0.0f);

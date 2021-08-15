@@ -15,7 +15,6 @@ out vec4 colour;
 
 void main() {
     ivec2 fc = ivec2(gl_FragCoord.xy);
-    //ivec2 fc_new = fc + ivec2(frame) * ivec2(2, 1);
 
     ivec2 fc_mod = fc % ivec2(64);
 

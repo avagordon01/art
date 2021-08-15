@@ -37,10 +37,10 @@ void main() {)foo" +
     colour = vec4(1);
 }
     )foo" : R"foo(
-    if (frame % (60 * 10) <= 60 * 5) {
-        colour = vec4(1) * int(gl_PrimitiveID < frame * 100);
+    if (mod(time, 10) <= 5) {
+        colour = vec4(1) * int(gl_PrimitiveID < time * 6000);
     } else {
-        colour = vec4(1) * float(int(vertex_position.y - float(frame) * 0.1) % 16 == 0);
+        colour = vec4(1) * float(int(vertex_position.y - time * 6) % 16 == 0);
     }
 }
 )foo"))
