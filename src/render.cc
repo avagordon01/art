@@ -50,9 +50,6 @@ int main() {
 
     gl_setup_errors();
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     shared_uniforms shared{glfw};
 
     if (scene == scenes::dot_brain || scene == scenes::scan_brain) {

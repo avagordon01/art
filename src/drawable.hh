@@ -24,6 +24,12 @@ struct drawable {
 
     template<typename F>
     void draw(F custom_params) {
+        glPointSize(1);
+        glLineWidth(1);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_SCISSOR_TEST);
         custom_params();
         vao.draw();
         vbo.draw();
@@ -33,9 +39,6 @@ struct drawable {
             ibo.draw();
             glDrawElements(primitive, ibo.data.size(), GL_UNSIGNED_INT, 0);
         }
-        glPointSize(1);
-        glLineWidth(1);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
     void draw() {
         draw([](){});
