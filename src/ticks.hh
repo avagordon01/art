@@ -2,14 +2,15 @@
 #include "buffers.hh"
 #include "shader.hh"
 #include "fullscreen-quad.hh"
+#include "drawable.hh"
 
 struct ticks {
-    fullscreen_quad quad;
-    vertex_array_object vao;
+    drawable<> drawable;
     shader shader;
     ticks(shared_uniforms& shared_uniforms):
+    drawable(GL_QUADS),
     shader(
-        quad.vertex_shader,
+        drawable.quad.vertex_shader,
         shared_uniforms.header_shader_text + R"foo(
 layout(pixel_center_integer) in vec4 gl_FragCoord;
 out vec4 colour;
@@ -27,8 +28,7 @@ void main() {
         shared_uniforms.bind(shader.program_fragment);
     }
     void draw() {
-        vao.draw();
         shader.draw();
-        quad.draw();
+        drawable.draw();
     }
 };

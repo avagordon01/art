@@ -2,13 +2,14 @@
 #include "buffers.hh"
 #include "shader.hh"
 #include "fullscreen-quad.hh"
+#include "drawable.hh"
 
 struct grid {
-    fullscreen_quad quad;
-    vertex_array_object vao;
+    drawable<> drawable;
     shader shader;
     grid(shared_uniforms& shared_uniforms):
-        shader(quad.vertex_shader,
+        drawable(GL_QUADS),
+        shader(drawable.quad.vertex_shader,
         shared_uniforms.header_shader_text + R"foo(
 layout(pixel_center_integer) in vec4 gl_FragCoord;
 out vec4 colour;
@@ -31,8 +32,7 @@ void main() {
         shared_uniforms.bind(shader.program_fragment);
     }
     void draw() {
-        vao.draw();
         shader.draw();
-        quad.draw();
+        drawable.draw();
     }
 };

@@ -2,14 +2,15 @@
 #include "buffers.hh"
 #include "shader.hh"
 #include "fullscreen-quad.hh"
+#include "drawable.hh"
 
 struct juliaset {
-    fullscreen_quad quad;
-    vertex_array_object vao;
+    drawable<> drawable;
     shader shader;
     juliaset(std::string shared_uniforms):
+        drawable(GL_QUADS),
         shader(
-        quad.vertex_shader,
+        drawable.quad.vertex_shader,
         shared_uniforms + R"foo(
 layout(origin_upper_left) in vec4 gl_FragCoord;
 out vec4 colour;
@@ -53,8 +54,7 @@ void main() {
 )foo")
     {}
     void draw() {
-        vao.draw();
         shader.draw();
-        quad.draw();
+        drawable.draw();
     }
 };
