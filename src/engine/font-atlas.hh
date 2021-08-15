@@ -11,7 +11,7 @@
 #include <freetype/freetype.h>
 #include <GL/gl.h>
 
-#include "buffers.hh"
+#include "engine/buffers.hh"
 
 struct monospace_unicode_font_atlas {
     size_t width_ = 0;

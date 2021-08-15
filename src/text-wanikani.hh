@@ -1,10 +1,10 @@
 #pragma once
 
 #include <string>
-#include "buffers.hh"
-#include "shader.hh"
-#include "font-atlas.hh"
-#include "drawable.hh"
+#include "engine/buffers.hh"
+#include "engine/shader.hh"
+#include "engine/font-atlas.hh"
+#include "engine/drawable.hh"
 
 struct text_wanikani {
     struct char_vertex {

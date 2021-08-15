@@ -1,9 +1,7 @@
-#include <string>
 #include <vector>
 #include <array>
-#include "buffers.hh"
-#include "shader.hh"
-#include "drawable.hh"
+#include "engine/shader.hh"
+#include "engine/drawable.hh"
 
 struct instanced_triangles_renderer {
     drawable<> drawable;

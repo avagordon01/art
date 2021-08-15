@@ -11,11 +11,11 @@ using json = nlohmann::json;
 
 #include "profiler.hh"
 
-#include "glerror.hh"
-#include "glfw.hh"
-#include "shared-uniforms.hh"
-#include "assimp.hh"
-#include "font-atlas.hh"
+#include "engine/glerror.hh"
+#include "engine/glfw.hh"
+#include "engine/shared-uniforms.hh"
+#include "engine/assimp.hh"
+#include "engine/font-atlas.hh"
 
 enum class scenes {
     dot_brain,

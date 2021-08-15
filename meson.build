@@ -26,6 +26,9 @@ executable(
   dependencies: [
     dependency('gl'),
   ] + common_deps,
+  include_directories: [
+    'src',
+  ],
   install: true,
 )
 

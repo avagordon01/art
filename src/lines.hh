@@ -1,9 +1,7 @@
 #include <vector>
 #include <array>
-#include <utility>
-#include "buffers.hh"
-#include "shader.hh"
-#include "drawable.hh"
+#include "engine/shader.hh"
+#include "engine/drawable.hh"
 
 struct lines_renderer {
     drawable<> drawable;

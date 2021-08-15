@@ -4,10 +4,8 @@
 #include <array>
 #include <utility>
 #include <random>
-#include "buffers.hh"
-#include "shader.hh"
-#include "noise.hh"
-#include "drawable.hh"
+#include "engine/shader.hh"
+#include "engine/drawable.hh"
 
 struct wanikani_review_time_grid {
     struct point {

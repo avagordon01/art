@@ -1,6 +1,7 @@
 #pragma once
 
 #include "buffers.hh"
+#include "fullscreen-quad.hh"
 
 template<typename T = std::array<float, 3>>
 struct drawable {

@@ -2,8 +2,8 @@
 #include <array>
 #include <utility>
 #include <random>
-#include "buffers.hh"
-#include "shader.hh"
+#include "engine/buffers.hh"
+#include "engine/shader.hh"
 #include "noise.hh"
 
 struct dust {

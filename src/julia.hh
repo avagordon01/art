@@ -1,8 +1,6 @@
 #include <string>
-#include "buffers.hh"
-#include "shader.hh"
-#include "fullscreen-quad.hh"
-#include "drawable.hh"
+#include "engine/shader.hh"
+#include "engine/drawable.hh"
 
 struct juliaset {
     drawable<> drawable;
