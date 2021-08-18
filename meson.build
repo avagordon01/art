@@ -46,7 +46,7 @@ vulkan_deps = [
 
 executable(
   'vulkan',
-  'src/vulkan.cc',
+  'src/vulkan/vulkan.cc',
   'subprojects/utils/math.cpp',
   'subprojects/utils/shaders.cpp',
   'subprojects/utils/utils.cpp',

@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-#include "profiler.hh"
+#include "util/profiler.hh"
 
 #include "engine/glerror.hh"
 #include "engine/glfw.hh"
@@ -26,14 +26,14 @@ enum class scenes {
     scratch_tmp_new,
 };
 static constexpr scenes scene = scenes::wanikani_review_time_grid;
-#include "ticks.hh"
-#include "grid.hh"
-#include "text-overlay.hh"
-#include "text-wanikani.hh"
-#include "lines.hh"
-#include "triangles.hh"
-#include "dust.hh"
-#include "wanikani-review-time-grid.hh"
+#include "drawables/ticks.hh"
+#include "drawables/grid.hh"
+#include "drawables/text-overlay.hh"
+#include "drawables/text-wanikani.hh"
+#include "drawables/lines.hh"
+#include "drawables/triangles.hh"
+#include "drawables/dust.hh"
+#include "drawables/wanikani-review-time-grid.hh"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
