@@ -26,8 +26,6 @@ in vec3 vertex;
 
 out gl_PerVertex {
     vec4 gl_Position;
-    float gl_PointSize;
-    float gl_ClipDistance[];
 };
 void main() {
     gl_Position = projection * view * vec4(vertex, 1.0f);

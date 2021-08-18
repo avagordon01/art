@@ -30,8 +30,6 @@ out vec4 colour_f;
 
 out gl_PerVertex {
     vec4 gl_Position;
-    float gl_PointSize;
-    float gl_ClipDistance[];
 };
 float exp_decay(float value, float cutoff, float decay) {
     if (value >= cutoff) {
