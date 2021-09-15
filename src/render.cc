@@ -23,9 +23,10 @@ enum class scenes {
     noise_flow_particles,
     wanikani_subject_grid,
     wanikani_review_time_grid,
+    grid_bezier,
     scratch_tmp_new,
 };
-static constexpr scenes scene = scenes::wanikani_review_time_grid;
+static constexpr scenes scene = scenes::grid_bezier;
 #include "drawables/ticks.hh"
 #include "drawables/grid.hh"
 #include "drawables/text-overlay.hh"
@@ -34,6 +35,7 @@ static constexpr scenes scene = scenes::wanikani_review_time_grid;
 #include "drawables/triangles.hh"
 #include "drawables/dust.hh"
 #include "drawables/wanikani-review-time-grid.hh"
+#include "drawables/grid-bezier-evaluator.hh"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
@@ -215,6 +217,42 @@ int main() {
             shared.draw();
 
             wanikani_review_time_grid.draw();
+
+            glfw.tick();
+        }
+
+    } else if (scene == scenes::grid_bezier) {
+
+        grid_bezier_evaluator<2, glm::vec3> gbe{shared, GL_POINT, 32, 32};
+        gbe.controls = {
+            glm::vec3{0, 0, -10},
+            glm::vec3{5, 5, -5},
+            glm::vec3{10, 0, -10},
+
+            glm::vec3{0, 5, -5},
+            glm::vec3{5, 5, -5},
+            glm::vec3{10, 5, -5},
+
+            glm::vec3{0, 10, -10},
+            glm::vec3{5, 5, -5},
+            glm::vec3{10, 10, -10},
+        };
+
+        glfwSetTime(0);
+        while (!glfwWindowShouldClose(glfw.window)) {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            int w, h;
+            glfwGetWindowSize(glfw.window, &w, &h);
+            shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
+            shared.inputs.view = glm::lookAt(
+                glm::vec3(0, 0, 20),
+                glm::vec3(0, 0, -10),
+                glm::vec3(0, 1, 0)
+            );
+            shared.draw();
+
+            gbe.draw();
 
             glfw.tick();
         }
