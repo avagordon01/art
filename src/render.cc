@@ -17,16 +17,6 @@ using json = nlohmann::json;
 #include "engine/assimp.hh"
 #include "engine/font-atlas.hh"
 
-enum class scenes {
-    dot_brain,
-    scan_brain,
-    noise_flow_particles,
-    wanikani_subject_grid,
-    wanikani_review_time_grid,
-    grid_bezier,
-    scratch_tmp_new,
-};
-static constexpr scenes scene = scenes::scratch_tmp_new;
 #include "drawables/ticks.hh"
 #include "drawables/grid.hh"
 #include "drawables/text-overlay.hh"
@@ -58,52 +48,18 @@ int main() {
 
     shared_uniforms shared{glfw};
 
-    if (scene == scenes::dot_brain || scene == scenes::scan_brain) {
-        brain scene{glfw};
-        glfwSetTime(0);
-        while (!glfwWindowShouldClose(glfw.window)) {
-            scene.draw();
-            glfw.tick();
-        }
-    } else if (scene == scenes::noise_flow_particles) {
-        noise_flow_particles scene{glfw};
-        glfwSetTime(0);
-        while (!glfwWindowShouldClose(glfw.window)) {
-            scene.draw();
-            glfw.tick();
-        }
-    } else if (scene == scenes::wanikani_subject_grid) {
-        wanikani_subject_grid scene{glfw};
+    brain scene{glfw, true};
+    //noise_flow_particles scene{glfw};
+    //wanikani_subject_grid scene{glfw};
+    //wanikani_review_time_grid scene{glfw};
+    //grid_bezier scene{glfw};
+    //scratch scene{glfw};
 
-        glfwSetTime(0);
-        while (!glfwWindowShouldClose(glfw.window)) {
-            scene.draw();
-            glfw.tick();
-        }
-
-    } else if (scene == scenes::wanikani_review_time_grid) {
-        wanikani_review_time_grid scene{glfw};
-        glfwSetTime(0);
-        while (!glfwWindowShouldClose(glfw.window)) {
-            scene.draw();
-            glfw.tick();
-        }
-    } else if (scene == scenes::grid_bezier) {
-        grid_bezier scene{glfw};
-        glfwSetTime(0);
-        while (!glfwWindowShouldClose(glfw.window)) {
-            scene.draw();
-            glfw.tick();
-        }
-
-    } else if (scene == scenes::scratch_tmp_new) {
-        scratch scene{glfw};
-        glfwSetTime(0);
-        while (!glfwWindowShouldClose(glfw.window)) {
-            scene.draw();
-            glfw.tick();
-        }
-
+    glfwSetTime(0);
+    while (!glfwWindowShouldClose(glfw.window)) {
+        scene.draw();
+        glfw.tick();
     }
+
     std::cout << shared.inputs.time * shared.inputs.framerate / glfwGetTime() << " average fps" << std::endl;
 }

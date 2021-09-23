@@ -12,15 +12,17 @@ struct brain {
     glfw_t& glfw;
     shared_uniforms shared;
 
+    bool dotty;
     ticks ticks;
     grid grid;
     mesh mesh;
     drawable<> drawable;
     shader shader;
 
-    brain(glfw_t& glfw_):
+    brain(glfw_t& glfw_, bool dotty_):
         glfw{glfw_},
         shared{glfw},
+        dotty{dotty_},
         ticks{shared},
         grid{shared},
         mesh{{
@@ -52,7 +54,7 @@ in vec4 gl_FragCoord;
 out vec4 colour;
 
 void main() {)foo" +
-    ((scene == scenes::dot_brain) ? R"foo(
+    (dotty ? R"foo(
     colour = vec4(1);
 }
     )foo" : R"foo(
@@ -89,9 +91,9 @@ void main() {)foo" +
         ticks.draw();
 
         shader.draw();
-        drawable.draw([](){
+        drawable.draw([this](){
             glLineWidth(1);
-            if (scene == scenes::dot_brain) {
+            if (dotty) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
             } else {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
