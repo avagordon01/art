@@ -61,5 +61,5 @@ int main() {
         glfw.tick();
     }
 
-    std::cout << shared.inputs.time * shared.inputs.framerate / glfwGetTime() << " average fps" << std::endl;
+    std::cout << scene.shared.inputs.time * scene.shared.inputs.framerate / glfwGetTime() << " average fps" << std::endl;
 }
