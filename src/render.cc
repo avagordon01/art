@@ -39,12 +39,12 @@ int main() {
 
     shared_uniforms shared{glfw};
 
-    brain scene{glfw, true};
+    //brain scene{glfw, true};
     //noise_flow_particles scene{glfw};
     //wanikani_subject_grid scene{glfw};
     //wanikani_review_time_grid scene{glfw};
     //grid_bezier scene{glfw};
-    //scratch scene{glfw};
+    scratch scene{glfw};
 
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
