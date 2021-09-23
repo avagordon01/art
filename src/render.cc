@@ -26,16 +26,17 @@ enum class scenes {
     grid_bezier,
     scratch_tmp_new,
 };
-static constexpr scenes scene = scenes::grid_bezier;
+static constexpr scenes scene = scenes::noise_flow_particles;
 #include "drawables/ticks.hh"
 #include "drawables/grid.hh"
 #include "drawables/text-overlay.hh"
 #include "drawables/text-wanikani.hh"
 #include "drawables/lines.hh"
 #include "drawables/triangles.hh"
-#include "drawables/dust.hh"
 #include "drawables/wanikani-review-time-grid.hh"
 #include "drawables/grid-bezier-evaluator.hh"
+
+#include "scenes/noise-flow-particles.hh"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
@@ -94,24 +95,11 @@ int main() {
         }
 
     } else if (scene == scenes::noise_flow_particles) {
-
-        dust dust{shared};
+        noise_flow_particles scene{glfw};
 
         glfwSetTime(0);
         while (!glfwWindowShouldClose(glfw.window)) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            int w, h;
-            glfwGetWindowSize(glfw.window, &w, &h);
-            shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
-            shared.inputs.view = glm::lookAt(
-                glm::vec3(0.0f, 0.0f, -100.0f),
-                glm::vec3(),
-                glm::vec3(0, 1, 0)
-            );
-
-            shared.draw();
-            dust.draw();
+            scene.draw();
 
             glfw.tick();
         }

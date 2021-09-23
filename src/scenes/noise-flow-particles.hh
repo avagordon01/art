@@ -4,9 +4,13 @@
 #include <random>
 #include "engine/buffers.hh"
 #include "engine/shader.hh"
+#include "engine/shared-uniforms.hh"
 #include "noise.hh"
 
-struct dust {
+struct noise_flow_particles {
+    glfw_t glfw;
+    shared_uniforms shared;
+
     struct point {
         std::array<float, 4> position;
         std::array<float, 4> velocity;
@@ -39,12 +43,13 @@ struct dust {
         }
         return points_data;
     }
-
-    dust(shared_uniforms& shared_uniforms):
+    noise_flow_particles(glfw_t& glfw_):
+        glfw{glfw_},
+        shared{glfw},
         drawable(GL_POINTS),
         sbo{gen_points(), GL_DYNAMIC_COPY},
-        shader(shared_uniforms.header_shader_text + shared_uniforms.passthrough_vertex, shared_uniforms.passthrough_fragment),
-        compute_shader(shared_uniforms.header_shader_text + noise_header_text + R"foo(
+        shader(shared.header_shader_text + shared.passthrough_vertex, shared.passthrough_fragment),
+        compute_shader(shared.header_shader_text + noise_header_text + R"foo(
 struct point {
     vec4 position;
     vec4 velocity;
@@ -73,13 +78,25 @@ void main() {
 }
 )foo", {num_points, 1, 1})
     {
-        shared_uniforms.bind(shader.program_vertex);
-        shared_uniforms.bind(compute_shader.program);
+        shared.bind(shader.program_vertex);
+        shared.bind(compute_shader.program);
         drawable.vbo = {std::vector<point>{num_points}, GL_DYNAMIC_COPY};
         drawable.vbo.bind(shader.program_vertex, "vertex");
         sbo.bind(compute_shader.program, "vertices_buffer");
     }
     void draw() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        int w, h;
+        glfwGetWindowSize(glfw.window, &w, &h);
+        shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
+        shared.inputs.view = glm::lookAt(
+            glm::vec3(0.0f, 0.0f, -100.0f),
+            glm::vec3(),
+            glm::vec3(0, 1, 0)
+        );
+        shared.draw();
+
         shader.draw();
         drawable.draw();
         compute_shader.draw();
