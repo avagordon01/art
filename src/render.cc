@@ -2,7 +2,6 @@
 
 #include "engine/glfw.hh"
 #include "engine/glerror.hh"
-#include "engine/shared-uniforms.hh"
 
 #include "scenes/noise-flow-particles.hh"
 #include "scenes/brain.hh"
@@ -25,8 +24,6 @@ int main() {
     glfwSetKeyCallback(glfw.window, key_callback);
 
     gl_setup_errors();
-
-    shared_uniforms shared{glfw};
 
     //brain scene{glfw, true};
     //noise_flow_particles scene{glfw};
