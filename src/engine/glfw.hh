@@ -29,7 +29,7 @@ struct glfw_t {
         glfwMakeContextCurrent(window);
     }
 
-    void tick(){
+    void draw(){
         glfwSwapBuffers(window);
         int width, height;
         glfwGetWindowSize(window, &width, &height);

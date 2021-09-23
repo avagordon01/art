@@ -49,7 +49,7 @@ int main() {
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
         scene.draw();
-        glfw.tick();
+        glfw.draw();
     }
 
     std::cout << scene.shared.inputs.time * scene.shared.inputs.framerate / glfwGetTime() << " average fps" << std::endl;
