@@ -2,6 +2,9 @@
 #include "engine/shader.hh"
 #include "engine/shared-uniforms.hh"
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 struct wanikani_review_time_grid {
     glfw_t& glfw;
     shared_uniforms shared;

@@ -1,18 +1,7 @@
-#define GL_GLEXT_PROTOTYPES
-#include <GLFW/glfw3.h>
 #include <iostream>
-#include <vector>
-#include <array>
-#include <utility>
-#include <random>
 
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
-
-#include "util/profiler.hh"
-
-#include "engine/glerror.hh"
 #include "engine/glfw.hh"
+#include "engine/glerror.hh"
 #include "engine/shared-uniforms.hh"
 
 #include "scenes/noise-flow-particles.hh"

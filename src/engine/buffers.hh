@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility>
+#include <vector>
 
 struct vertex_array_object {
     GLuint vao;

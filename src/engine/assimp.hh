@@ -7,6 +7,8 @@
 #include <array>
 #include "cache_vector.hh"
 
+#include "util/profiler.hh"
+
 struct mesh {
     std::vector<unsigned> indices;
     std::vector<std::array<float, 3>> vertices;

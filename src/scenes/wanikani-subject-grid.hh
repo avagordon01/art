@@ -4,6 +4,9 @@
 #include "engine/font-atlas.hh"
 #include "drawables/text-wanikani.hh"
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 struct wanikani_subject_grid {
     glfw_t& glfw;
     shared_uniforms shared;
