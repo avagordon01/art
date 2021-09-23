@@ -26,17 +26,17 @@ enum class scenes {
     grid_bezier,
     scratch_tmp_new,
 };
-static constexpr scenes scene = scenes::noise_flow_particles;
+static constexpr scenes scene = scenes::scan_brain;
 #include "drawables/ticks.hh"
 #include "drawables/grid.hh"
 #include "drawables/text-overlay.hh"
 #include "drawables/text-wanikani.hh"
 #include "drawables/lines.hh"
-#include "drawables/triangles.hh"
 #include "drawables/wanikani-review-time-grid.hh"
 #include "drawables/grid-bezier-evaluator.hh"
 
 #include "scenes/noise-flow-particles.hh"
+#include "scenes/brain.hh"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
@@ -56,54 +56,19 @@ int main() {
     shared_uniforms shared{glfw};
 
     if (scene == scenes::dot_brain || scene == scenes::scan_brain) {
-
-        ticks ticks{shared};
-        grid grid{shared};
-        mesh mesh{{
-            "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_327680.obj",
-            "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_rsl_327680.obj",
-            "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_right_327680.obj",
-            "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_right_rsl_327680.obj",
-            "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_left_327680.obj",
-            "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_left_rsl_327680.obj",
-            "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_327680.obj",
-            "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_rsl_327680.obj",
-        }, "brain"};
-        instanced_triangles_renderer triangles{mesh.vertices, mesh.indices, shared};
-
-        glfwSetTime(0);
-        while (!glfwWindowShouldClose(glfw.window)) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            int w, h;
-            glfwGetWindowSize(glfw.window, &w, &h);
-            shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
-            float angle = 2 * M_PI * shared.inputs.time / 60;
-            float distance = -100.0f;
-            shared.inputs.view = glm::lookAt(
-                glm::vec3(distance * sin(angle), 0.0f, distance * cos(angle)),
-                glm::vec3(),
-                glm::vec3(0, 1, 0)
-            );
-
-            shared.draw();
-            grid.draw();
-            ticks.draw();
-            triangles.draw();
-
-            glfw.tick();
-        }
-
-    } else if (scene == scenes::noise_flow_particles) {
-        noise_flow_particles scene{glfw};
-
+        brain scene{glfw};
         glfwSetTime(0);
         while (!glfwWindowShouldClose(glfw.window)) {
             scene.draw();
-
             glfw.tick();
         }
-
+    } else if (scene == scenes::noise_flow_particles) {
+        noise_flow_particles scene{glfw};
+        glfwSetTime(0);
+        while (!glfwWindowShouldClose(glfw.window)) {
+            scene.draw();
+            glfw.tick();
+        }
     } else if (scene == scenes::wanikani_subject_grid) {
 
         monospace_unicode_font_atlas atlas{

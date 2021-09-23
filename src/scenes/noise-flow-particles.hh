@@ -8,7 +8,7 @@
 #include "noise.hh"
 
 struct noise_flow_particles {
-    glfw_t glfw;
+    glfw_t& glfw;
     shared_uniforms shared;
 
     struct point {
