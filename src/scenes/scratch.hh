@@ -1,6 +1,8 @@
-#include "engine/buffers.hh"
+#include "engine/drawable.hh"
 #include "engine/shader.hh"
 #include "engine/shared-uniforms.hh"
+#include "drawables/text-overlay.hh"
+#include "drawables/lines.hh"
 
 struct scratch {
     glfw_t& glfw;

@@ -1,6 +1,7 @@
-#include "engine/buffers.hh"
+#include "engine/drawable.hh"
 #include "engine/shader.hh"
 #include "engine/shared-uniforms.hh"
+#include "drawables/grid-bezier-evaluator.hh"
 
 struct grid_bezier {
     glfw_t& glfw;

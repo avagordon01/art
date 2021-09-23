@@ -2,11 +2,12 @@
 #include <array>
 #include <utility>
 #include <random>
-#include "engine/buffers.hh"
 #include "engine/shader.hh"
 #include "engine/shared-uniforms.hh"
-#include "engine/shader.hh"
 #include "engine/drawable.hh"
+#include "engine/assimp.hh"
+#include "drawables/ticks.hh"
+#include "drawables/grid.hh"
 
 struct brain {
     glfw_t& glfw;

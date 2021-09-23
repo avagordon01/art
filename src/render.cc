@@ -14,15 +14,6 @@ using json = nlohmann::json;
 #include "engine/glerror.hh"
 #include "engine/glfw.hh"
 #include "engine/shared-uniforms.hh"
-#include "engine/assimp.hh"
-#include "engine/font-atlas.hh"
-
-#include "drawables/ticks.hh"
-#include "drawables/grid.hh"
-#include "drawables/text-overlay.hh"
-#include "drawables/text-wanikani.hh"
-#include "drawables/lines.hh"
-#include "drawables/grid-bezier-evaluator.hh"
 
 #include "scenes/noise-flow-particles.hh"
 #include "scenes/brain.hh"

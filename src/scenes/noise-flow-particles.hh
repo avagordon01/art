@@ -2,7 +2,7 @@
 #include <array>
 #include <utility>
 #include <random>
-#include "engine/buffers.hh"
+#include "engine/drawable.hh"
 #include "engine/shader.hh"
 #include "engine/shared-uniforms.hh"
 #include "noise.hh"

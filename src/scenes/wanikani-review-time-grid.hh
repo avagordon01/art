@@ -1,4 +1,4 @@
-#include "engine/buffers.hh"
+#include "engine/drawable.hh"
 #include "engine/shader.hh"
 #include "engine/shared-uniforms.hh"
 

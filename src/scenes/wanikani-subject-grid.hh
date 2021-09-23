@@ -1,6 +1,8 @@
-#include "engine/buffers.hh"
+#include "engine/drawable.hh"
 #include "engine/shader.hh"
 #include "engine/shared-uniforms.hh"
+#include "engine/font-atlas.hh"
+#include "drawables/text-wanikani.hh"
 
 struct wanikani_subject_grid {
     glfw_t& glfw;
