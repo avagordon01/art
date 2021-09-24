@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include "buffers.hh"
 #include "fullscreen-quad.hh"
 
@@ -10,19 +11,10 @@ struct drawable {
     index_buffer ibo;
     fullscreen_quad quad;
 
-    GLenum primitive;
-    bool instanced;
-
-    drawable(GLenum primitive_ = GL_POINTS, bool instanced_ = false):
+    drawable():
         vbo({}, GL_DYNAMIC_DRAW),
-        ibo({}, GL_DYNAMIC_DRAW),
-        primitive(primitive_),
-        instanced(instanced_)
-    {
-        if (!(primitive == GL_POINTS || primitive == GL_LINES || primitive == GL_TRIANGLES || primitive == GL_QUADS)) {
-            throw std::runtime_error("error, primitive is not GL_POINTS, GL_LINES, GL_TRIANGLES, or GL_QUADS");
-        }
-    }
+        ibo({}, GL_DYNAMIC_DRAW)
+    {}
     void default_params() {
         glPointSize(1);
         glLineWidth(1);
@@ -34,8 +26,10 @@ struct drawable {
         glEnable(GL_FRAMEBUFFER_SRGB);
     }
 
-    template<typename F>
-    void draw(F custom_params) {
+    void draw(GLenum primitive = GL_POINTS, bool instanced = false, std::function<void(void)> custom_params = [](){}) {
+        if (!(primitive == GL_POINTS || primitive == GL_LINES || primitive == GL_TRIANGLES || primitive == GL_QUADS)) {
+            throw std::runtime_error("error, primitive is not GL_POINTS, GL_LINES, GL_TRIANGLES, or GL_QUADS");
+        }
         default_params();
         custom_params();
         vao.draw();
@@ -51,8 +45,5 @@ struct drawable {
             quad.draw();
         }
         default_params();
-    }
-    void draw() {
-        draw([](){});
     }
 };

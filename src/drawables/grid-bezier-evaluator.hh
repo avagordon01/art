@@ -47,7 +47,7 @@ struct grid_bezier_evaluator {
     std::array<T, (Order + 1) * (Order + 1)> controls;
     grid_bezier_evaluator(shared_uniforms& shared_uniforms, GLenum mode, size_t n_, size_t m_):
         type(primitive_mode_to_primitive_type(mode)),
-        drawable(type),
+        drawable(),
         shader(shared_uniforms.header_shader_text + shared_uniforms.passthrough_vertex, shared_uniforms.passthrough_fragment),
         n(n_), m(m_)
     {
@@ -103,6 +103,6 @@ struct grid_bezier_evaluator {
             }
         }
         shader.draw();
-        drawable.draw();
+        drawable.draw(type);
     }
 };

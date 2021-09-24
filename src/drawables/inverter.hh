@@ -5,7 +5,7 @@ struct inverter {
     drawable<> drawable;
     shader shader;
     inverter():
-        drawable(GL_QUADS),
+        drawable(),
         shader(drawable.quad.vertex_shader,
         R"foo(
 out vec4 colour;
@@ -17,7 +17,7 @@ void main() {
     {}
     void draw() {
         shader.draw();
-        drawable.draw([](){
+        drawable.draw(GL_QUADS, false, [](){
             glBlendFuncSeparate(GL_ONE_MINUS_DST_COLOR, GL_ZERO, GL_ONE, GL_ZERO);
         });
     }

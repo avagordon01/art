@@ -24,7 +24,7 @@ struct wanikani_review_time_grid {
     wanikani_review_time_grid(glfw_t& glfw_):
         glfw{glfw_},
         shared{glfw},
-        drawable(GL_POINTS),
+        drawable(),
         //extra_buffer({}, GL_DYNAMIC_DRAW),
         shader(
             shared.header_shader_text + R"foo(
@@ -107,6 +107,6 @@ void main() {
 
         shader.draw();
         //extra_buffer.draw();
-        drawable.draw();
+        drawable.draw(GL_POINTS);
     }
 };

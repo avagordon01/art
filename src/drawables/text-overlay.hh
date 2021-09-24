@@ -10,7 +10,6 @@ struct text_overlay {
     };
     monospace_unicode_font_atlas& atlas;
     drawable<char_vertex> drawable;
-
     void gen_text(std::wstring text, std::array<float, 2> position) {
         auto[x, y] = position;
         for (uint32_t c: text) {
@@ -30,7 +29,7 @@ struct text_overlay {
     shader shader;
     text_overlay(shared_uniforms& shared_uniforms, monospace_unicode_font_atlas& atlas_):
     atlas(atlas_),
-    drawable(GL_TRIANGLES),
+    drawable(),
     shader(
         shared_uniforms.header_shader_text + R"foo(
 in vec2 vertex;
@@ -61,6 +60,6 @@ void main() {
     }
     void draw() {
         shader.draw();
-        drawable.draw();
+        drawable.draw(GL_TRIANGLES);
     }
 };

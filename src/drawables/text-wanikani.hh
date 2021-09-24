@@ -38,7 +38,7 @@ struct text_wanikani {
     shader shader;
     text_wanikani(shared_uniforms& shared_uniforms, monospace_unicode_font_atlas& atlas_):
     atlas(atlas_),
-    drawable(GL_TRIANGLES),
+    drawable(),
     extra_buffer({}, GL_DYNAMIC_DRAW),
     shader(
         shared_uniforms.header_shader_text + R"foo(
@@ -95,6 +95,6 @@ void main() {
     void draw() {
         shader.draw();
         extra_buffer.draw();
-        drawable.draw();
+        drawable.draw(GL_TRIANGLES);
     }
 };

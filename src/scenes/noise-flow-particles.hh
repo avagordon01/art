@@ -46,7 +46,7 @@ struct noise_flow_particles {
     noise_flow_particles(glfw_t& glfw_):
         glfw{glfw_},
         shared{glfw},
-        drawable(GL_POINTS),
+        drawable(),
         sbo{gen_points(), GL_DYNAMIC_COPY},
         shader(shared.header_shader_text + shared.passthrough_vertex, shared.passthrough_fragment),
         compute_shader(shared.header_shader_text + noise_header_text + R"foo(
@@ -98,7 +98,7 @@ void main() {
         shared.draw();
 
         shader.draw();
-        drawable.draw();
+        drawable.draw(GL_POINTS);
         compute_shader.draw();
         glCopyBufferSubData(GL_SHADER_STORAGE_BUFFER, GL_ARRAY_BUFFER, 0, 0, sizeof(point) * num_points);
     }

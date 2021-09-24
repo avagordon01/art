@@ -5,7 +5,7 @@ struct ticks {
     drawable<> drawable;
     shader shader;
     ticks(shared_uniforms& shared_uniforms):
-    drawable(GL_QUADS),
+    drawable(),
     shader(
         drawable.quad.vertex_shader,
         shared_uniforms.header_shader_text + R"foo(
@@ -26,6 +26,6 @@ void main() {
     }
     void draw() {
         shader.draw();
-        drawable.draw();
+        drawable.draw(GL_QUADS);
     }
 };

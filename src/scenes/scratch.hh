@@ -24,7 +24,7 @@ struct scratch {
             //"fonts/tamsyn-font-1.11/Tamsyn6x12r.pcf"
         },
         text{shared, atlas},
-        drawable(GL_LINES),
+        drawable(),
         shader(shared.header_shader_text + shared.passthrough_vertex, shared.passthrough_fragment)
     {
         drawable.vbo.data = {};
@@ -55,6 +55,6 @@ struct scratch {
         }
         text.draw();
         shader.draw();
-        drawable.draw();
+        drawable.draw(GL_LINES);
     }
 };

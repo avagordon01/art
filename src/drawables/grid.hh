@@ -5,7 +5,7 @@ struct grid {
     drawable<> drawable;
     shader shader;
     grid(shared_uniforms& shared_uniforms):
-        drawable(GL_QUADS),
+        drawable(),
         shader(drawable.quad.vertex_shader,
         shared_uniforms.header_shader_text + R"foo(
 layout(pixel_center_integer) in vec4 gl_FragCoord;
@@ -30,6 +30,6 @@ void main() {
     }
     void draw() {
         shader.draw();
-        drawable.draw();
+        drawable.draw(GL_QUADS);
     }
 };

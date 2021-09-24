@@ -6,7 +6,7 @@ struct juliaset {
     drawable<> drawable;
     shader shader;
     juliaset(std::string shared_uniforms):
-        drawable(GL_QUADS),
+        drawable(),
         shader(
         drawable.quad.vertex_shader,
         shared_uniforms + R"foo(
@@ -53,6 +53,6 @@ void main() {
     {}
     void draw() {
         shader.draw();
-        drawable.draw();
+        drawable.draw(GL_QUADS);
     }
 };

@@ -36,7 +36,7 @@ struct brain {
             "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_327680.obj",
             "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_rsl_327680.obj",
         }, "brain"},
-        drawable(GL_TRIANGLES, true),
+        drawable(),
         shader(shared.header_shader_text + R"foo(
 in vec3 vertex;
 out vec4 vertex_position;
@@ -92,7 +92,7 @@ void main() {)foo" +
         ticks.draw();
 
         shader.draw();
-        drawable.draw([this](){
+        drawable.draw(GL_TRIANGLES, true, [this](){
             glLineWidth(1);
             if (dotty) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
