@@ -90,9 +90,9 @@ void main() {
         }
 
         shared.bind(shader.program_vertex);
-        drawable.vbo.bind(shader.program_vertex, "vertex");
-        drawable.vbo.bind(shader.program_vertex, "timestamp", 1, offsetof(point, timestamp));
-        drawable.vbo.bind(shader.program_vertex, "stage", 1, offsetof(point, stage), GL_UNSIGNED_INT);
+        drawable.vbo.bind(shader.program_vertex, "vertex", &point::position);
+        drawable.vbo.bind(shader.program_vertex, "timestamp", &point::timestamp);
+        drawable.vbo.bind(shader.program_vertex, "stage", &point::stage);
     }
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

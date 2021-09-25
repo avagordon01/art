@@ -86,10 +86,10 @@ void main() {
 )foo")
     {
         shared_uniforms.bind(shader.program_fragment);
-        drawable.vbo.bind(shader.program_vertex, "vertex", 2, offsetof(char_vertex, vertex));
-        drawable.vbo.bind(shader.program_vertex, "texcoords", 3, offsetof(char_vertex, texcoords));
-        extra_buffer.bind(shader.program_vertex, "timestamp", 1, offsetof(extra_data, timestamp));
-        extra_buffer.bind(shader.program_vertex, "stage", 1, offsetof(extra_data, stage), GL_UNSIGNED_INT);
+        drawable.vbo.bind(shader.program_vertex, "vertex", &char_vertex::vertex);
+        drawable.vbo.bind(shader.program_vertex, "texcoords", &char_vertex::texcoords);
+        extra_buffer.bind(shader.program_vertex, "timestamp", &extra_data::timestamp);
+        extra_buffer.bind(shader.program_vertex, "stage", &extra_data::stage);
         atlas.bind(shader.program_fragment);
     }
     void draw() {

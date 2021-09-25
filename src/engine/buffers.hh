@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <vector>
+#include "util/gl-data-layout.hh"
 
 struct vertex_array_object {
     GLuint vao;
@@ -19,6 +20,7 @@ struct vertex_array_object {
 };
 
 template<typename T, GLenum Target>
+requires std::is_standard_layout_v<T>
 struct buffer {
     GLuint buffer_id;
     std::vector<T> data;
@@ -56,26 +58,12 @@ struct buffer {
         return *this;
     };
 
-    void bind(GLuint program, const GLchar* name, size_t num = 3, size_t member_offset = 0, GLenum type = GL_FLOAT) {
+    template<typename D>
+    void bind(GLuint program, const GLchar* name, D d) {
         if constexpr (Target == GL_ARRAY_BUFFER) {
             glBindBuffer(Target, buffer_id);
             GLint attrib_index = glGetAttribLocation(program, name);
-            if (type == GL_FLOAT) {
-                glVertexAttribPointer(attrib_index, num, type, GL_FALSE, sizeof(*data.data()), (void*)member_offset);
-            } else if (type == GL_DOUBLE) {
-                glVertexAttribLPointer(attrib_index, num, type, sizeof(*data.data()), (void*)member_offset);
-            } else if (
-                type == GL_BYTE ||
-                type == GL_UNSIGNED_BYTE ||
-                type == GL_SHORT ||
-                type == GL_UNSIGNED_SHORT ||
-                type == GL_INT ||
-                type == GL_UNSIGNED_INT
-            ) {
-                glVertexAttribIPointer(attrib_index, num, type, sizeof(*data.data()), (void*)member_offset);
-            } else {
-                throw std::runtime_error("error, unsupported type parameter to glVertexAttrib*Pointer in bind");
-            }
+            gl_vertex_attrib(attrib_index, d);
             glEnableVertexAttribArray(attrib_index);
         } else if constexpr (Target == GL_SHADER_STORAGE_BUFFER) {
             GLuint binding_index = glGetProgramResourceIndex(program, GL_SHADER_STORAGE_BLOCK, name);
@@ -84,6 +72,11 @@ struct buffer {
             GLuint binding_index = glGetUniformBlockIndex(program, name);
             glBindBufferBase(GL_UNIFORM_BUFFER, binding_index, buffer_id);
         }
+    }
+
+    void bind(GLuint program, const GLchar* name) {
+        T d {};
+        bind(program, name, d);
     }
 
     void draw() {
