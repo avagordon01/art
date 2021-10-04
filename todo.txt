@@ -7,6 +7,11 @@ use the japanese data
         network of subjects
     network of vocabulary to kanji
 
+decoration
+    dot grid flashes every day
+    line grid flashes every week
+    time axis along the bottom
+
 unicode support
     halfwidth/variablewidth bitmap font support
 
@@ -14,7 +19,18 @@ same position transform matrix pipeline for text vertices
 
 variable length rects
 
+scissor test for borders/padding
+    glEnable(GL_SCISSOR_TEST);
+    size_t padding = 512;
+    glScissor(padding, padding, 1920 - 2 * padding, 1080 - 2 * padding);
 
+merge shader and drawable
+    two main customisation points (shader, drawable)
+        drawable<T>
+        shader(fragment shader text, vertex shader text)
+        drawable.vbo.data = ...
+        drawable.vbo.bind(program, name, data member pointer)
+        drawable.draw(primitive, instanced, custom opengl params)
 
 smooth (s)lerp camera animation
 
