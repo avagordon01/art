@@ -9,6 +9,9 @@
 #include "scenes/wanikani-review-time-grid.hh"
 #include "scenes/grid-bezier.hh"
 #include "scenes/scratch.hh"
+#include "scenes/vsync-test.hh"
+
+#include "engine/render-to-file.hh"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
@@ -30,12 +33,16 @@ int main() {
     //wanikani_subject_grid scene{glfw};
     //wanikani_review_time_grid scene{glfw};
     //grid_bezier scene{glfw};
-    scratch scene{glfw};
+    //scratch scene{glfw};
+    vsync_test scene{glfw};
+
+    render_to_file rtf(glfw, "test.mp4");
 
     glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
         scene.draw();
         glfw.draw();
+        rtf.draw();
     }
 
     std::cout << scene.shared.inputs.time * scene.shared.inputs.framerate / glfwGetTime() << " average fps" << std::endl;
