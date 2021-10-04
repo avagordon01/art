@@ -1,0 +1,17 @@
+it seems almost impossible to get vsync working under this specific hw/sw setup
+    Xorg, integrated intel gpu, discrete nvidia gpu, rendering on proprietary nvidia driver
+
+doesn't seem to work
+    export __GL_SYNC_TO_VBLANK=1
+    export __GL_SYNC_DISPLAY_DEVICE=eDP-1
+    xrandr --output eDP-1 --set "PRIME Synchronization" 1
+    nvidia-settings --assign="SyncToVBlank=1"
+    nvidia-settings --assign="TripleBuffer=1"
+
+seems to work
+    nvidia, nvidia-prime, xf86-video-intel
+    kernel parameter nvidia-drm.modeset=1
+    no xorg.conf changes
+    no env vars
+    no xrandr changes
+    for some reason embedded display identifier changed from eDP-1 to eDP1
