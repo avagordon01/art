@@ -1,22 +1,6 @@
 #include "engine/shader.hh"
 #include "engine/drawable.hh"
-
-GLenum primitive_mode_to_primitive_type(GLenum mode) {
-    if (mode == GL_FILL) {
-        return GL_TRIANGLES;
-    } else if (mode == GL_LINE) {
-        return GL_LINES;
-    } else if (mode == GL_POINT) {
-        return GL_POINTS;
-    } else {
-        throw std::runtime_error("bad");
-    }
-}
-
-template<typename From>
-std::array<float, 3> vec_to_array(From x) {
-    return {x[0], x[1], x[2]};
-}
+#include "util/misc.hh"
 
 template<typename T, size_t Order>
 struct bezier_evaluator {

@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <string>
+#include "util/misc.hh"
 
 GLuint create_program(GLenum type, std::string shader_text) {
     shader_text = std::string("#version 450\n") + shader_text;
@@ -43,11 +44,6 @@ struct shader {
         glBindProgramPipeline(pipeline);
     }
 };
-
-int div_ceil(int numerator, int denominator) {
-    std::div_t res = std::div(numerator, denominator);
-    return res.rem ? (res.quot + 1) : res.quot;
-}
 
 struct compute_shader {
     GLuint pipeline, program;
