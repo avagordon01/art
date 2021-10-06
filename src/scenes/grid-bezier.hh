@@ -6,14 +6,14 @@
 struct grid_bezier {
     glfw_t& glfw;
     shared_uniforms shared;
-    grid_bezier_evaluator<2, glm::vec3> gbe;
+    grid_bezier_renderer<2, glm::vec3> gbr;
 
     grid_bezier(glfw_t& glfw_):
         glfw{glfw_},
         shared{glfw},
-        gbe{shared, GL_POINT, 32, 32}
+        gbr{shared, GL_LINE, 32, 32}
     {
-        gbe.controls = {
+        gbr.be.controls = {
             glm::vec3{0, 0, -10},
             glm::vec3{5, 5, -5},
             glm::vec3{10, 0, -10},
@@ -40,6 +40,6 @@ struct grid_bezier {
         );
         shared.draw();
 
-        gbe.draw();
+        gbr.draw();
     }
 };
