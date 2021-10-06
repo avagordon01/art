@@ -39,7 +39,7 @@ struct drawable {
                 glDrawArrays(primitive, 0, vbo.data.size());
             } else {
                 ibo.draw();
-                glDrawElements(primitive, ibo.data.size(), GL_UNSIGNED_INT, 0);
+                glDrawElements(primitive, ibo.data.size(), type_to_gltype<index_buffer::value_type>(), 0);
             }
         } else {
             quad.draw();

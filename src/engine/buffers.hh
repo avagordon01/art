@@ -22,6 +22,7 @@ struct vertex_array_object {
 template<typename T, GLenum Target>
 requires std::is_standard_layout_v<T>
 struct buffer {
+    using value_type = T;
     GLuint buffer_id;
     std::vector<T> data;
     T* previous_buffer;
