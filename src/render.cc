@@ -10,6 +10,7 @@
 #include "scenes/grid-bezier.hh"
 #include "scenes/scratch.hh"
 #include "scenes/vsync-test.hh"
+#include "scenes/icosphere.hh"
 
 #include "engine/render-to-file.hh"
 
@@ -34,7 +35,8 @@ int main() {
     //wanikani_review_time_grid scene{glfw};
     //grid_bezier scene{glfw};
     //scratch scene{glfw};
-    vsync_test scene{glfw};
+    //vsync_test scene{glfw};
+    icosphere scene{glfw};
 
     render_to_file rtf(glfw, "test.mp4");
 
