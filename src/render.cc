@@ -30,26 +30,29 @@ int main() {
 
     gl_setup_errors();
 
-    brain scene{glfw, true};
-    //noise_flow_particles scene{glfw};
-    //wanikani_subject_grid scene{glfw};
-    //wanikani_review_time_grid scene{glfw};
-    //grid_bezier scene{glfw};
-    //scratch scene{glfw};
-    //vsync_test scene{glfw};
-    //icosphere scene{glfw};
+    {
+        brain scene{glfw, true};
+        //noise_flow_particles scene{glfw};
+        //wanikani_subject_grid scene{glfw};
+        //wanikani_review_time_grid scene{glfw};
+        //grid_bezier scene{glfw};
+        //scratch scene{glfw};
+        //vsync_test scene{glfw};
+        //icosphere scene{glfw};
 
-    //render_to_file rtf(glfw, "test.mp4");
+        //render_to_file rtf(glfw, "test.mp4");
 
-    for (size_t tick = 0; tick < 60 * 3 && !glfwWindowShouldClose(glfw.window); tick++) {
-        scene.draw();
-        glfw.draw();
-        //rtf.draw();
+        for (size_t tick = 0; tick < 60 * 3 && !glfwWindowShouldClose(glfw.window); tick++) {
+            scene.draw();
+            glfw.draw();
+            //rtf.draw();
+        }
     }
-    scene.~brain();
-    disintegrate scene2{glfw};
-    while (!glfwWindowShouldClose(glfw.window)) {
-        scene2.draw();
-        glfw.draw();
+    {
+        disintegrate scene{glfw};
+        while (!glfwWindowShouldClose(glfw.window)) {
+            scene.draw();
+            glfw.draw();
+        }
     }
 }
