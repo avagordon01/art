@@ -11,6 +11,7 @@
 #include "scenes/scratch.hh"
 #include "scenes/vsync-test.hh"
 #include "scenes/icosphere.hh"
+#include "scenes/disintegrate.hh"
 
 #include "engine/render-to-file.hh"
 
@@ -40,8 +41,15 @@ int main() {
 
     //render_to_file rtf(glfw, "test.mp4");
 
-    while (!glfwWindowShouldClose(glfw.window)) {
+    for (size_t tick = 0; tick < 60 * 3 && !glfwWindowShouldClose(glfw.window); tick++) {
         scene.draw();
+        glfw.draw();
+        //rtf.draw();
+    }
+    scene.~brain();
+    disintegrate scene2{glfw};
+    while (!glfwWindowShouldClose(glfw.window)) {
+        scene2.draw();
         glfw.draw();
     }
 }
