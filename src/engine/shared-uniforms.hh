@@ -61,6 +61,7 @@ void main() {
         glfwSwapInterval(interval);
         const GLFWvidmode *vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         inputs.framerate = vidmode->refreshRate / interval;
+        glfwSetTime(0);
     }
     void bind(GLuint program) {
         ubo.bind(program, "inputs");
@@ -80,5 +81,8 @@ void main() {
 
         frame++;
         inputs.time = static_cast<float>(frame) / inputs.framerate;
+    }
+    ~shared_uniforms() {
+        std::cout << frame / glfwGetTime() << " average fps" << std::endl;
     }
 };

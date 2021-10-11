@@ -29,23 +29,19 @@ int main() {
 
     gl_setup_errors();
 
-    //brain scene{glfw, true};
+    brain scene{glfw, true};
     //noise_flow_particles scene{glfw};
     //wanikani_subject_grid scene{glfw};
     //wanikani_review_time_grid scene{glfw};
     //grid_bezier scene{glfw};
     //scratch scene{glfw};
     //vsync_test scene{glfw};
-    icosphere scene{glfw};
+    //icosphere scene{glfw};
 
-    render_to_file rtf(glfw, "test.mp4");
+    //render_to_file rtf(glfw, "test.mp4");
 
-    glfwSetTime(0);
     while (!glfwWindowShouldClose(glfw.window)) {
         scene.draw();
         glfw.draw();
-        rtf.draw();
     }
-
-    std::cout << scene.shared.inputs.time * scene.shared.inputs.framerate / glfwGetTime() << " average fps" << std::endl;
 }
