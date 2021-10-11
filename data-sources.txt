@@ -32,3 +32,9 @@ CERN LHC collider 3D models
 Helenas japanese learning data
 
 https://www.tiktok.com/@hello.babbie/video/6985965765157457154
+
+bgp data
+    https://jvns.ca/blog/2021/10/05/tools-to-look-at-bgp-routes/
+    https://bgpview.io/
+
+small body database

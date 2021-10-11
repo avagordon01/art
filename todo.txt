@@ -7,6 +7,10 @@ use the japanese data
         network of subjects
     network of vocabulary to kanji
 
+pixel-based things
+    pixels turn into particles
+    pixel sorting
+
 decoration
     dot grid flashes every day
     line grid flashes every week
