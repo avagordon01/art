@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "engine/glfw.hh"
-#include "engine/glerror.hh"
 
 #include "scenes/noise-flow-particles.hh"
 #include "scenes/brain.hh"
@@ -15,21 +14,8 @@
 
 #include "engine/render-to-file.hh"
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    }
-}
-
 int main() {
     glfw_t glfw;
-
-    glfwSetInputMode(glfw.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetInputMode(glfw.window, GLFW_STICKY_KEYS, 1);
-    glfwSetKeyCallback(glfw.window, key_callback);
-
-    gl_setup_errors();
-
     {
         brain scene{glfw, true};
         //noise_flow_particles scene{glfw};

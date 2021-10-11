@@ -4,8 +4,16 @@
 #include <stdexcept>
 #include <string>
 
+#include "engine/glerror.hh"
+
 struct glfw_t {
     GLFWwindow* window;
+
+    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+        if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+            glfwSetWindowShouldClose(window, true);
+        }
+    }
 
     static void error_callback(int error, const char* description) {
         throw std::runtime_error("glfw error: " + std::string(description));
@@ -30,6 +38,11 @@ struct glfw_t {
             throw std::runtime_error("glfw error: failed to create window");
         }
         glfwMakeContextCurrent(window);
+
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetKeyCallback(window, key_callback);
+
+        gl_setup_errors();
     }
 
     void draw(){
