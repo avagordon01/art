@@ -36,6 +36,8 @@ merge shader and drawable
         drawable.vbo.bind(program, name, data member pointer)
         drawable.draw(primitive, instanced, custom opengl params)
 
+use c++20 modules for fast compile times without separate header/impl files
+
 smooth (s)lerp camera animation
 
 scene/keyframe animation
