@@ -1,13 +1,18 @@
 #include "engine/drawable.hh"
 #include "engine/shader.hh"
 #include "engine/shared-uniforms.hh"
+#include "engine/rigid-body.hh"
 #include "util/misc.hh"
+#include "util/glm.hh"
+#include <glm/ext.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 struct icosphere {
     glfw_t& glfw;
     shared_uniforms shared;
     drawable<> drawable;
     shader shader;
+    rigid_body camera;
 
     icosphere(glfw_t& glfw_):
         glfw{glfw_},
@@ -71,20 +76,20 @@ struct icosphere {
         drawable.ibo.data = indices;
         drawable.vbo.bind(shader.program_vertex, "vertex");
         shared.bind(shader.program_vertex);
+
+        camera.angular_position = quaternionRand();
+        camera.angular_velocity = quaternionRand() * 0.1f;
     }
+
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         int w, h;
         glfwGetWindowSize(glfw.window, &w, &h);
         shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
-        float angle = 2 * M_PI * shared.inputs.time / 60;
-        float distance = -4.0f;
-        shared.inputs.view = glm::lookAt(
-            glm::vec3(distance * sin(angle), distance * cos(angle), 0.0f),
-            glm::vec3(),
-            glm::vec3(0, 0, 1)
-        );
+        camera.tick();
+        auto translate = glm::translate(glm::identity<glm::mat4>(), glm::vec3(0, 0, -4));
+        shared.inputs.view = translate * glm::mat4_cast(camera.angular_position);
 
         shared.draw();
 
