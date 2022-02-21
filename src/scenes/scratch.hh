@@ -4,8 +4,7 @@
 #include "drawables/text-overlay.hh"
 
 struct scratch {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
 
     monospace_unicode_font_atlas atlas;
     text_overlay text;
@@ -13,9 +12,8 @@ struct scratch {
     drawable<> drawable;
     shader shader;
 
-    scratch(glfw_t& glfw_):
-        glfw{glfw_},
-        shared{glfw},
+    scratch(shared_uniforms& shared_):
+        shared{shared_},
 
         atlas{
             "fonts/unifont-13.0.06.pcf"

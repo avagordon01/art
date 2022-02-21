@@ -10,8 +10,7 @@
 #include "drawables/grid.hh"
 
 struct brain {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
 
     bool dotty;
     ticks ticks;
@@ -20,9 +19,8 @@ struct brain {
     drawable<> drawable;
     shader shader;
 
-    brain(glfw_t& glfw_, bool dotty_):
-        glfw{glfw_},
-        shared{glfw},
+    brain(shared_uniforms& shared_, bool dotty_):
+        shared{shared_},
         dotty{dotty_},
         ticks{shared},
         grid{shared},

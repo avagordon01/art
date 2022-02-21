@@ -8,8 +8,7 @@
 #include "noise.hh"
 
 struct noise_flow_particles {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
 
     struct point {
         std::array<float, 4> position;
@@ -43,9 +42,8 @@ struct noise_flow_particles {
         }
         return points_data;
     }
-    noise_flow_particles(glfw_t& glfw_):
-        glfw{glfw_},
-        shared{glfw},
+    noise_flow_particles(shared_uniforms& shared_):
+        shared{shared_},
         drawable(),
         sbo{gen_points(), GL_DYNAMIC_COPY},
         shader(shared.header_shader_text + shared.passthrough_vertex, shared.passthrough_fragment),

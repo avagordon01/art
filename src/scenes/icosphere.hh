@@ -8,15 +8,13 @@
 #include <glm/gtx/string_cast.hpp>
 
 struct icosphere {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
     drawable<> drawable;
     shader shader;
     rigid_body camera;
 
-    icosphere(glfw_t& glfw_):
-        glfw{glfw_},
-        shared{glfw},
+    icosphere(shared_uniforms& shared_):
+        shared{shared_},
         drawable{},
         shader{shared.header_shader_text + shared.passthrough_vertex, shared.passthrough_fragment}
     {

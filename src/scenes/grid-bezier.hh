@@ -4,13 +4,11 @@
 #include "drawables/grid-bezier-evaluator.hh"
 
 struct grid_bezier {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
     grid_bezier_renderer<2, glm::vec3> gbr;
 
-    grid_bezier(glfw_t& glfw_):
-        glfw{glfw_},
-        shared{glfw},
+    grid_bezier(shared_uniforms& shared_):
+        shared{shared_},
         gbr{shared, GL_LINE, 32, 32}
     {
         gbr.be.controls = {

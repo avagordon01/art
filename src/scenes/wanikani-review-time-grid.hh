@@ -6,8 +6,7 @@
 using json = nlohmann::json;
 
 struct wanikani_review_time_grid {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
 
     struct point {
         std::array<float, 4> position;
@@ -21,9 +20,8 @@ struct wanikani_review_time_grid {
 
     json j;
 
-    wanikani_review_time_grid(glfw_t& glfw_):
-        glfw{glfw_},
-        shared{glfw},
+    wanikani_review_time_grid(shared_uniforms& shared_):
+        shared{shared_},
         drawable(),
         //extra_buffer({}, GL_DYNAMIC_DRAW),
         shader(

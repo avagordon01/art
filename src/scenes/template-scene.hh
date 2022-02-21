@@ -3,12 +3,10 @@
 #include "engine/shared-uniforms.hh"
 
 struct template_scene {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
 
-    template_scene(glfw_t& glfw_):
-        glfw{glfw_},
-        shared{glfw},
+    template_scene(shared_uniforms& shared_):
+        shared{shared_},
     {
     }
     void draw() {

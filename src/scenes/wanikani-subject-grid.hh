@@ -8,16 +8,14 @@
 using json = nlohmann::json;
 
 struct wanikani_subject_grid {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
 
     monospace_unicode_font_atlas atlas;
     text_wanikani text;
     json j;
 
-    wanikani_subject_grid(glfw_t& glfw_):
-        glfw{glfw_},
-        shared{glfw},
+    wanikani_subject_grid(shared_uniforms& shared_):
+        shared{shared_},
         atlas{"fonts/unifont-13.0.06.pcf"},
         text{shared, atlas}
     {

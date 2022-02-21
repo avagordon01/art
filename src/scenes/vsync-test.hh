@@ -3,14 +3,12 @@
 #include "engine/drawable.hh"
 
 struct vsync_test {
-    glfw_t& glfw;
-    shared_uniforms shared;
+    shared_uniforms& shared;
 
     drawable<> drawable;
     shader shader;
-    vsync_test(glfw_t& glfw_):
-    glfw{glfw_},
-    shared{glfw},
+    vsync_test(shared_uniforms& shared_):
+    shared{shared_},
     drawable{},
     shader{
         drawable.quad.vertex_shader,
