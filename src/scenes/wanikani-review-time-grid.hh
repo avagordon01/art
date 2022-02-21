@@ -70,8 +70,6 @@ void main() {
         std::ifstream i("data/wanikani/data2.json");
         i >> j;
 
-        int w, h;
-        glfwGetWindowSize(glfw.window, &w, &h);
         {
             float seconds_per_day = 24 * 60 * 60;
             float start_timestamp = j["start_timestamp"];
@@ -81,7 +79,7 @@ void main() {
                 float timestamp = (*it)["data_updated_at"];
                 timestamp -= start_timestamp;
                 float x = 4 * floor(timestamp / seconds_per_day);
-                float y = h * (timestamp - floor(timestamp / seconds_per_day) * seconds_per_day) / seconds_per_day;
+                float y = shared.inputs.resolution_y * (timestamp - floor(timestamp / seconds_per_day) * seconds_per_day) / seconds_per_day;
                 uint32_t stage = (*it)["ending_srs_stage"];
                 timestamp /= (end_timestamp - start_timestamp);
                 timestamp *= 10 * 2;

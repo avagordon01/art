@@ -23,9 +23,7 @@ struct disintegrate {
     compute_shader compute_shader;
 
     std::vector<point> gen_points() {
-        int w_, h_;
-        glfwGetWindowSize(glfw.window, &w_, &h_);
-        size_t w = w_, h = h_;
+        size_t w = shared.inputs.resolution_x, h = shared.inputs.resolution_y;
         std::vector<std::array<uint8_t, 3>> buffer(w * h);
         glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
         std::vector<point> points_data;

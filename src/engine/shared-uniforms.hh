@@ -62,6 +62,11 @@ void main() {
         const GLFWvidmode *vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         inputs.framerate = vidmode->refreshRate / interval;
         glfwSetTime(0);
+
+        int w, h;
+        glfwGetWindowSize(glfw.window, &w, &h);
+        inputs.resolution_x = w;
+        inputs.resolution_y = h;
     }
     void bind(GLuint program) {
         ubo.bind(program, "inputs");
