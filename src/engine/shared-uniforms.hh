@@ -76,6 +76,7 @@ void main() {
         glfwGetWindowSize(glfw.window, &w, &h);
         inputs.resolution_x = w;
         inputs.resolution_y = h;
+        inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
 
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(inputs), &inputs);
 

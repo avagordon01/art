@@ -30,9 +30,6 @@ struct grid_bezier {
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        int w, h;
-        glfwGetWindowSize(glfw.window, &w, &h);
-        shared.inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
         shared.inputs.view = glm::lookAt(
             glm::vec3(0, 0, 20),
             glm::vec3(0, 0, -10),
