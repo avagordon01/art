@@ -34,22 +34,19 @@ struct scratch {
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        int w, h;
-        glfwGetWindowSize(glfw.window, &w, &h);
-        float w_ = w;
-        float h_ = h;
-        shared.inputs.projection = glm::ortho(0.0f, w_, 0.0f, h_, 0.0f, 200.0f);
         shared.inputs.view = glm::identity<glm::mat4>();
-        shared.draw();
+        shared.draw(false);
 
         {
             text.drawable.vbo.data.clear();
             drawable.vbo.data.clear();
+            float w = shared.inputs.resolution_x;
+            float h = shared.inputs.resolution_y;
             for (size_t i = 0; i < 8; i++) {
                 float x = w / 2 + h / 2;
-                float y = h * i / 8 + static_cast<int>(shared.inputs.time * 60) % (h / 8);
-                text.gen_text(L"匚 x = " + std::to_wstring(x / (w_ / 2)) + L", y = " + std::to_wstring(y / (h_ / 2)), {x, y});
-                drawable.vbo.data.push_back({w_ / 2, h_ / 2, 0.0f});
+                float y = h * i / 8 + static_cast<int>(shared.inputs.time * 60) % static_cast<int>(h / 8);
+                text.gen_text(L"匚 x = " + std::to_wstring(x / (w / 2)) + L", y = " + std::to_wstring(y / (h / 2)), {x, y});
+                drawable.vbo.data.push_back({w / 2, h / 2, 0.0f});
                 drawable.vbo.data.push_back({x, y, 0.0f});
             }
         }

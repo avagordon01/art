@@ -92,12 +92,8 @@ void main() {
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        int w_, h_;
-        glfwGetWindowSize(glfw.window, &w_, &h_);
-        float w = w_, h = h_;
-        shared.inputs.projection = glm::ortho(0.0f, w, 0.0f, h, 0.1f, 200.0f);
         shared.inputs.view = glm::identity<glm::mat4>();
-        shared.draw();
+        shared.draw(false);
 
         shader.draw();
         drawable.draw(GL_POINTS);

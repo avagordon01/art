@@ -27,19 +27,14 @@ struct wanikani_subject_grid {
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        int w, h;
-        glfwGetWindowSize(glfw.window, &w, &h);
-        float w_ = w;
-        float h_ = h;
-        shared.inputs.projection = glm::ortho(0.0f, w_, 0.0f, h_, 0.0f, 200.0f);
         shared.inputs.view = glm::identity<glm::mat4>();
-        shared.draw();
+        shared.draw(false);
 
         {
             text.drawable.vbo.data.clear();
             text.extra_buffer.data.clear();
             size_t s = 24;
-            size_t rows = h / s;
+            size_t rows = shared.inputs.resolution_y / s;
             size_t i = 0;
             float start_timestamp = j["start_timestamp"];
             float end_timestamp = j["end_timestamp"];

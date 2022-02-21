@@ -66,7 +66,7 @@ void main() {
     void bind(GLuint program) {
         ubo.bind(program, "inputs");
     }
-    void draw() {
+    void draw(bool perspective = true) {
         double mx, my;
         glfwGetCursorPos(glfw.window, &mx, &my);
         inputs.mouse_x = mx;
@@ -76,7 +76,11 @@ void main() {
         glfwGetWindowSize(glfw.window, &w, &h);
         inputs.resolution_x = w;
         inputs.resolution_y = h;
-        inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
+        if (perspective) {
+            inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
+        } else {
+            inputs.projection = glm::ortho(0.0f, static_cast<float>(w), 0.0f, static_cast<float>(h), 0.0f, 200.0f);
+        }
 
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(inputs), &inputs);
 
