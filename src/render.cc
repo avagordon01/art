@@ -18,7 +18,7 @@ int main() {
     glfw_t glfw;
     shared_uniforms shared{glfw};
     {
-        brain scene{shared, true};
+        brain scene{shared};
         //noise_flow_particles scene{shared};
         //wanikani_subject_grid scene{shared};
         //wanikani_review_time_grid scene{shared};

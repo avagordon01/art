@@ -12,16 +12,14 @@
 struct brain {
     shared_uniforms& shared;
 
-    bool dotty;
     ticks ticks;
     grid grid;
     mesh mesh;
     drawable<> drawable;
     shader shader;
 
-    brain(shared_uniforms& shared_, bool dotty_):
+    brain(shared_uniforms& shared_):
         shared{shared_},
-        dotty{dotty_},
         ticks{shared},
         grid{shared},
         mesh{{
@@ -52,18 +50,16 @@ in vec4 vertex_position;
 in vec4 gl_FragCoord;
 out vec4 colour;
 
-void main() {)foo" +
-    (dotty ? R"foo(
-    colour = vec4(1);
-}
-    )foo" : R"foo(
-    if (mod(time, 10) <= 5) {
+void main() {
+    if (mod(time, 20) < 10) {
         colour = vec4(1) * int(gl_PrimitiveID < time * 6000);
-    } else {
+    } else if (mod(time, 20) < 15) {
         colour = vec4(1) * float(int(vertex_position.y - time * 6) % 16 == 0);
+    } else {
+        colour = vec4(1);
     }
 }
-)foo"))
+)foo")
     {
         drawable.vbo.data = mesh.vertices;
         drawable.ibo.data = mesh.indices;
@@ -89,7 +85,8 @@ void main() {)foo" +
         shader.draw();
         drawable.draw(GL_TRIANGLES, true, [this](){
             glLineWidth(1);
-            if (dotty) {
+            int t = static_cast<int>(shared.inputs.time) % 20;
+            if (t >= 15 || t >= 5 && t < 10) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
             } else {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
