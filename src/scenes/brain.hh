@@ -85,7 +85,7 @@ void main() {
         drawable.draw(GL_TRIANGLES, true, [this](){
             glLineWidth(1);
             int t = static_cast<int>(shared.inputs.time) % 20;
-            if (t >= 15 || t >= 5 && t < 10) {
+            if (t >= 15 || (t >= 5 && t < 10)) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
             } else {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
