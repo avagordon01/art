@@ -2,7 +2,7 @@
 
 struct ticks {
     drawable<> drawable;
-    ticks(shared_uniforms& shared_uniforms):
+    ticks():
     drawable(
         fullscreen_quad{}.vertex_shader,
         R"foo(

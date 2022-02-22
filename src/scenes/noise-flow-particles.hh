@@ -6,8 +6,6 @@
 #include "noise.hh"
 
 struct noise_flow_particles {
-    shared_uniforms& shared;
-
     struct point {
         std::array<float, 4> position;
         std::array<float, 4> velocity;
@@ -39,8 +37,7 @@ struct noise_flow_particles {
         }
         return points_data;
     }
-    noise_flow_particles(shared_uniforms& shared_):
-        shared{shared_},
+    noise_flow_particles():
         drawable(),
         sbo{gen_points(), GL_DYNAMIC_COPY},
         compute_shader(noise_header_text + R"foo(

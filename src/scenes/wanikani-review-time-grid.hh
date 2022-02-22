@@ -4,8 +4,6 @@
 using json = nlohmann::json;
 
 struct wanikani_review_time_grid {
-    shared_uniforms& shared;
-
     struct point {
         std::array<float, 4> position;
         std::array<float, 4> velocity;
@@ -16,8 +14,7 @@ struct wanikani_review_time_grid {
 
     json j;
 
-    wanikani_review_time_grid(shared_uniforms& shared_):
-        shared{shared_},
+    wanikani_review_time_grid():
         //extra_buffer({}, GL_DYNAMIC_DRAW),
         drawable(
             R"foo(

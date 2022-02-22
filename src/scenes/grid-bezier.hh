@@ -2,12 +2,10 @@
 #include "drawables/grid-bezier-evaluator.hh"
 
 struct grid_bezier {
-    shared_uniforms& shared;
     grid_bezier_renderer<2, glm::vec3> gbr;
 
-    grid_bezier(shared_uniforms& shared_):
-        shared{shared_},
-        gbr{shared, GL_LINE, 32, 32}
+    grid_bezier():
+        gbr{GL_LINE, 32, 32}
     {
         gbr.be.controls = {
             glm::vec3{0, 0, -10},

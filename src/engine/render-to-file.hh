@@ -5,7 +5,7 @@ struct render_to_file {
     FILE* ffmpeg = NULL;
     int w, h;
 
-    render_to_file(glfw_t &glfw, std::string filename) {
+    render_to_file(std::string filename) {
         glfwGetWindowSize(glfw.window, &w, &h);
 
         using namespace std::string_literals;

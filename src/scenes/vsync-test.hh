@@ -1,11 +1,8 @@
 #include "engine/drawable.hh"
 
 struct vsync_test {
-    shared_uniforms& shared;
-
     drawable<> drawable;
-    vsync_test(shared_uniforms& shared_):
-    shared{shared_},
+    vsync_test():
     drawable{
         fullscreen_quad{}.vertex_shader,
         R"foo(

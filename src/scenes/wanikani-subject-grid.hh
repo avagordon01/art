@@ -6,16 +6,13 @@
 using json = nlohmann::json;
 
 struct wanikani_subject_grid {
-    shared_uniforms& shared;
-
     monospace_unicode_font_atlas atlas;
     text_wanikani text;
     json j;
 
-    wanikani_subject_grid(shared_uniforms& shared_):
-        shared{shared_},
+    wanikani_subject_grid():
         atlas{"fonts/unifont-13.0.06.pcf"},
-        text{shared, atlas}
+        text{atlas}
     {
         std::ifstream i("data/wanikani/data.json");
         i >> j;

@@ -25,7 +25,7 @@ struct text_overlay {
             x += w;
         }
     }
-    text_overlay(shared_uniforms& shared_uniforms, monospace_unicode_font_atlas& atlas_):
+    text_overlay(monospace_unicode_font_atlas& atlas_):
     atlas(atlas_),
     drawable(
         R"foo(

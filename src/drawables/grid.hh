@@ -2,7 +2,7 @@
 
 struct grid {
     drawable<> drawable;
-    grid(shared_uniforms& shared_uniforms):
+    grid():
         drawable(fullscreen_quad{}.vertex_shader,
         R"foo(
 layout(pixel_center_integer) in vec4 gl_FragCoord;

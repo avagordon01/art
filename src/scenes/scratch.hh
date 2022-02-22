@@ -2,23 +2,19 @@
 #include "drawables/text-overlay.hh"
 
 struct scratch {
-    shared_uniforms& shared;
-
     monospace_unicode_font_atlas atlas;
     text_overlay text;
 
     drawable<> drawable;
 
-    scratch(shared_uniforms& shared_):
-        shared{shared_},
-
+    scratch():
         atlas{
             "fonts/unifont-13.0.06.pcf"
             //"fonts/gohufont-2.1/gohufont-11.pcf.gz"
             //"fonts/artwiz-aleczapka-en-1.3/cure.pcf"
             //"fonts/tamsyn-font-1.11/Tamsyn6x12r.pcf"
         },
-        text{shared, atlas},
+        text{atlas},
         drawable()
     {
         drawable.vbo.data = {};

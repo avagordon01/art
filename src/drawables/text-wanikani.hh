@@ -34,7 +34,7 @@ struct text_wanikani {
             x += w;
         }
     }
-    text_wanikani(shared_uniforms& shared_uniforms, monospace_unicode_font_atlas& atlas_):
+    text_wanikani(monospace_unicode_font_atlas& atlas_):
     atlas(atlas_),
     extra_buffer({}, GL_DYNAMIC_DRAW),
     drawable(

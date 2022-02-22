@@ -1,12 +1,12 @@
 #include "engine/drawable.hh"
 
 struct template_scene {
-    shared_uniforms& shared;
-
-    template_scene(shared_uniforms& shared_):
-        shared{shared_},
+    drawable<> drawable;
+    template_scene():
+        drawable()
     {
     }
     void draw() {
+        drawable.draw();
     }
 };

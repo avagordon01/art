@@ -8,17 +8,14 @@
 #include "drawables/grid.hh"
 
 struct brain {
-    shared_uniforms& shared;
-
     ticks ticks;
     grid grid;
     mesh mesh;
     drawable<> drawable;
 
-    brain(shared_uniforms& shared_):
-        shared{shared_},
-        ticks{shared},
-        grid{shared},
+    brain():
+        ticks{},
+        grid{},
         mesh{{
             "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_327680.obj",
             "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/gray_left_rsl_327680.obj",
@@ -76,7 +73,7 @@ void main() {
         grid.draw();
         ticks.draw();
 
-        drawable.draw(GL_TRIANGLES, true, [this](){
+        drawable.draw(GL_TRIANGLES, true, [](){
             glLineWidth(1);
             int t = static_cast<int>(shared.inputs.time) % 20;
             if (t >= 15 || (t >= 5 && t < 10)) {

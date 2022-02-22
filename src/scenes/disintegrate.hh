@@ -6,8 +6,6 @@
 #include "noise.hh"
 
 struct disintegrate {
-    shared_uniforms& shared;
-
     struct point {
         std::array<float, 4> position;
         std::array<float, 4> velocity;
@@ -41,8 +39,7 @@ struct disintegrate {
 
         return points_data;
     }
-    disintegrate(shared_uniforms& shared_):
-        shared{shared_},
+    disintegrate():
         points_data{gen_points()},
         drawable(),
         sbo{points_data, GL_DYNAMIC_COPY},

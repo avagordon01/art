@@ -16,16 +16,16 @@
 
 int main() {
     {
-        brain scene{shared};
-        //noise_flow_particles scene{shared};
-        //wanikani_subject_grid scene{shared};
-        //wanikani_review_time_grid scene{shared};
-        //grid_bezier scene{shared};
-        //scratch scene{shared};
-        //vsync_test scene{shared};
-        //icosphere scene{shared};
+        brain scene{};
+        //noise_flow_particles scene{};
+        //wanikani_subject_grid scene{};
+        //wanikani_review_time_grid scene{};
+        //grid_bezier scene{};
+        //scratch scene{};
+        //vsync_test scene{};
+        //icosphere scene{};
 
-        //render_to_file rtf(glfw, "test.mp4");
+        //render_to_file rtf("test.mp4");
 
         for (size_t tick = 0; tick < 60 * 3 && !glfwWindowShouldClose(glfw.window); tick++) {
             scene.draw();
@@ -34,7 +34,7 @@ int main() {
         }
     }
     {
-        disintegrate scene{shared};
+        disintegrate scene{};
         while (!glfwWindowShouldClose(glfw.window)) {
             scene.draw();
             glfw.draw();

@@ -6,12 +6,10 @@
 #include <glm/gtx/string_cast.hpp>
 
 struct icosphere {
-    shared_uniforms& shared;
     drawable<> drawable;
     rigid_body camera;
 
-    icosphere(shared_uniforms& shared_):
-        shared{shared_},
+    icosphere():
         drawable{}
     {
         using std::numbers::pi;
