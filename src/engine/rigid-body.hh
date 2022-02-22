@@ -1,3 +1,5 @@
+#pragma once
+
 struct rigid_body {
     glm::vec3 position {};
     glm::vec3 velocity {};

@@ -11,6 +11,7 @@
 #include "scenes/vsync-test.hh"
 #include "scenes/icosphere.hh"
 #include "scenes/disintegrate.hh"
+#include "scenes/grid-3d.hh"
 
 #include "engine/render-to-file.hh"
 
@@ -24,6 +25,7 @@ int main() {
         //scratch scene{};
         //vsync_test scene{};
         //icosphere scene{};
+        //grid_3d scene{};
 
         //render_to_file rtf("test.mp4");
 
