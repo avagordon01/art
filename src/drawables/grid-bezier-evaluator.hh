@@ -1,4 +1,3 @@
-#include "engine/shader.hh"
 #include "engine/drawable.hh"
 #include "util/misc.hh"
 
@@ -41,16 +40,14 @@ template<size_t Order, typename T>
 struct grid_bezier_renderer {
     GLenum type;
     drawable<> drawable;
-    shader shader;
     bezier_evaluator<T, Order> be;
     size_t n, m;
     grid_bezier_renderer(shared_uniforms& shared_uniforms, GLenum mode, size_t n_, size_t m_):
         type(primitive_mode_to_primitive_type(mode)),
         drawable(),
-        shader(),
         n(n_), m(m_)
     {
-        drawable.vbo.bind(shader.program_vertex, "vertex");
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex");
     }
     std::array<float, 2> grid_cvt(std::array<size_t, 2> x) {
         return {
@@ -93,7 +90,6 @@ struct grid_bezier_renderer {
                 }
             }
         }
-        shader.draw();
         drawable.draw(type);
     }
 };

@@ -1,12 +1,9 @@
-#include "engine/shader.hh"
 #include "engine/drawable.hh"
 
 struct grid {
     drawable<> drawable;
-    shader shader;
     grid(shared_uniforms& shared_uniforms):
-        drawable(),
-        shader(drawable.quad.vertex_shader,
+        drawable(fullscreen_quad{}.vertex_shader,
         R"foo(
 layout(pixel_center_integer) in vec4 gl_FragCoord;
 out vec4 colour;
@@ -27,7 +24,6 @@ void main() {
 )foo")
     {}
     void draw() {
-        shader.draw();
         drawable.draw(GL_QUADS);
     }
 };

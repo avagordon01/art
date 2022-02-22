@@ -1,5 +1,4 @@
 #include "engine/drawable.hh"
-#include "engine/shader.hh"
 #include "engine/font-atlas.hh"
 #include "drawables/text-wanikani.hh"
 

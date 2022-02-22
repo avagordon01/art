@@ -1,5 +1,4 @@
 #include "engine/drawable.hh"
-#include "engine/shader.hh"
 #include "drawables/text-overlay.hh"
 
 struct scratch {
@@ -9,7 +8,6 @@ struct scratch {
     text_overlay text;
 
     drawable<> drawable;
-    shader shader;
 
     scratch(shared_uniforms& shared_):
         shared{shared_},
@@ -21,11 +19,10 @@ struct scratch {
             //"fonts/tamsyn-font-1.11/Tamsyn6x12r.pcf"
         },
         text{shared, atlas},
-        drawable(),
-        shader()
+        drawable()
     {
         drawable.vbo.data = {};
-        drawable.vbo.bind(shader.program_vertex, "vertex");
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex");
     }
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -47,7 +44,6 @@ struct scratch {
             }
         }
         text.draw();
-        shader.draw();
         drawable.draw(GL_LINES);
     }
 };

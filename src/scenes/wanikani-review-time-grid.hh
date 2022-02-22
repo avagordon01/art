@@ -1,5 +1,4 @@
 #include "engine/drawable.hh"
-#include "engine/shader.hh"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -15,15 +14,12 @@ struct wanikani_review_time_grid {
     };
     drawable<point> drawable;
 
-    shader shader;
-
     json j;
 
     wanikani_review_time_grid(shared_uniforms& shared_):
         shared{shared_},
-        drawable(),
         //extra_buffer({}, GL_DYNAMIC_DRAW),
-        shader(
+        drawable(
             R"foo(
 in vec2 vertex;
 in float timestamp;
@@ -84,9 +80,9 @@ void main() {
             }
         }
 
-        drawable.vbo.bind(shader.program_vertex, "vertex", &point::position);
-        drawable.vbo.bind(shader.program_vertex, "timestamp", &point::timestamp);
-        drawable.vbo.bind(shader.program_vertex, "stage", &point::stage);
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex", &point::position);
+        drawable.vbo.bind(drawable.shader.program_vertex, "timestamp", &point::timestamp);
+        drawable.vbo.bind(drawable.shader.program_vertex, "stage", &point::stage);
     }
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -94,7 +90,6 @@ void main() {
         shared.inputs.view = glm::identity<glm::mat4>();
         shared.draw(false);
 
-        shader.draw();
         //extra_buffer.draw();
         drawable.draw(GL_POINTS);
     }

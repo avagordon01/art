@@ -2,7 +2,6 @@
 
 #include <string>
 #include "engine/buffers.hh"
-#include "engine/shader.hh"
 #include "engine/font-atlas.hh"
 #include "engine/drawable.hh"
 
@@ -12,12 +11,12 @@ struct text_wanikani {
         std::array<float, 3> texcoords;
     };
     monospace_unicode_font_atlas& atlas;
-    drawable<char_vertex> drawable;
     struct extra_data {
         float timestamp;
         uint32_t stage;
     };
     vertex_buffer<extra_data> extra_buffer;
+    drawable<char_vertex> drawable;
 
     void gen_text(std::wstring text, std::array<float, 2> position) {
         auto[x, y] = position;
@@ -35,12 +34,10 @@ struct text_wanikani {
             x += w;
         }
     }
-    shader shader;
     text_wanikani(shared_uniforms& shared_uniforms, monospace_unicode_font_atlas& atlas_):
     atlas(atlas_),
-    drawable(),
     extra_buffer({}, GL_DYNAMIC_DRAW),
-    shader(
+    drawable(
         R"foo(
 in vec2 vertex;
 in vec3 texcoords;
@@ -85,14 +82,13 @@ void main() {
 }
 )foo")
     {
-        drawable.vbo.bind(shader.program_vertex, "vertex", &char_vertex::vertex);
-        drawable.vbo.bind(shader.program_vertex, "texcoords", &char_vertex::texcoords);
-        extra_buffer.bind(shader.program_vertex, "timestamp", &extra_data::timestamp);
-        extra_buffer.bind(shader.program_vertex, "stage", &extra_data::stage);
-        atlas.bind(shader.program_fragment);
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex", &char_vertex::vertex);
+        drawable.vbo.bind(drawable.shader.program_vertex, "texcoords", &char_vertex::texcoords);
+        extra_buffer.bind(drawable.shader.program_vertex, "timestamp", &extra_data::timestamp);
+        extra_buffer.bind(drawable.shader.program_vertex, "stage", &extra_data::stage);
+        atlas.bind(drawable.shader.program_fragment);
     }
     void draw() {
-        shader.draw();
         extra_buffer.draw();
         drawable.draw(GL_TRIANGLES);
     }

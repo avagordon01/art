@@ -3,7 +3,6 @@
 #include <utility>
 #include <random>
 #include "engine/drawable.hh"
-#include "engine/shader.hh"
 #include "noise.hh"
 
 struct disintegrate {
@@ -17,7 +16,6 @@ struct disintegrate {
     drawable<point> drawable;
     storage_buffer<point> sbo;
 
-    shader shader;
     compute_shader compute_shader;
 
     std::vector<point> gen_points() {
@@ -48,7 +46,6 @@ struct disintegrate {
         points_data{gen_points()},
         drawable(),
         sbo{points_data, GL_DYNAMIC_COPY},
-        shader(),
         compute_shader(noise_header_text + R"foo(
 struct point {
     vec4 position;
@@ -79,7 +76,7 @@ void main() {
 )foo", {points_data.size(), 1, 1})
     {
         drawable.vbo = {std::vector<point>{points_data.size()}, GL_DYNAMIC_COPY};
-        drawable.vbo.bind(shader.program_vertex, "vertex", &point::position);
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex", &point::position);
         sbo.bind(compute_shader.program, "vertices_buffer");
     }
     void draw() {
@@ -88,7 +85,6 @@ void main() {
         shared.inputs.view = glm::identity<glm::mat4>();
         shared.draw(false);
 
-        shader.draw();
         drawable.draw(GL_POINTS);
         compute_shader.draw();
         glCopyBufferSubData(GL_SHADER_STORAGE_BUFFER, GL_ARRAY_BUFFER, 0, 0, sizeof(point) * drawable.vbo.data.size());

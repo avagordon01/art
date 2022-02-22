@@ -2,7 +2,6 @@
 #include <array>
 #include <utility>
 #include <random>
-#include "engine/shader.hh"
 #include "engine/drawable.hh"
 #include "engine/assimp.hh"
 #include "drawables/ticks.hh"
@@ -15,7 +14,6 @@ struct brain {
     grid grid;
     mesh mesh;
     drawable<> drawable;
-    shader shader;
 
     brain(shared_uniforms& shared_):
         shared{shared_},
@@ -31,8 +29,7 @@ struct brain {
             "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_327680.obj",
             "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_rsl_327680.obj",
         }, "brain"},
-        drawable(),
-        shader(R"foo(
+        drawable(R"foo(
 in vec3 vertex;
 out vec4 vertex_position;
 
@@ -62,7 +59,7 @@ void main() {
     {
         drawable.vbo.data = mesh.vertices;
         drawable.ibo.data = mesh.indices;
-        drawable.vbo.bind(shader.program_vertex, "vertex");
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex");
     }
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -79,7 +76,6 @@ void main() {
         grid.draw();
         ticks.draw();
 
-        shader.draw();
         drawable.draw(GL_TRIANGLES, true, [this](){
             glLineWidth(1);
             int t = static_cast<int>(shared.inputs.time) % 20;

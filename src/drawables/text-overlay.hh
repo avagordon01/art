@@ -1,5 +1,4 @@
 #include <string>
-#include "engine/shader.hh"
 #include "engine/font-atlas.hh"
 #include "engine/drawable.hh"
 
@@ -26,11 +25,9 @@ struct text_overlay {
             x += w;
         }
     }
-    shader shader;
     text_overlay(shared_uniforms& shared_uniforms, monospace_unicode_font_atlas& atlas_):
     atlas(atlas_),
-    drawable(),
-    shader(
+    drawable(
         R"foo(
 in vec2 vertex;
 in vec3 texcoords;
@@ -53,12 +50,11 @@ void main() {
 }
 )foo")
     {
-        drawable.vbo.bind(shader.program_vertex, "vertex", &char_vertex::vertex);
-        drawable.vbo.bind(shader.program_vertex, "texcoords", &char_vertex::texcoords);
-        atlas.bind(shader.program_fragment);
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex", &char_vertex::vertex);
+        drawable.vbo.bind(drawable.shader.program_vertex, "texcoords", &char_vertex::texcoords);
+        atlas.bind(drawable.shader.program_fragment);
     }
     void draw() {
-        shader.draw();
         drawable.draw(GL_TRIANGLES);
     }
 };

@@ -1,13 +1,10 @@
 #include <string>
-#include "engine/shader.hh"
 #include "engine/drawable.hh"
 
 struct juliaset {
     drawable<> drawable;
-    shader shader;
     juliaset(std::string shared_uniforms):
-        drawable(),
-        shader(
+        drawable(
         drawable.quad.vertex_shader,
         shared_uniforms + R"foo(
 layout(origin_upper_left) in vec4 gl_FragCoord;
@@ -52,7 +49,6 @@ void main() {
 )foo")
     {}
     void draw() {
-        shader.draw();
         drawable.draw(GL_QUADS);
     }
 };

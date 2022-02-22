@@ -1,5 +1,4 @@
 #include "engine/drawable.hh"
-#include "engine/shader.hh"
 #include "drawables/grid-bezier-evaluator.hh"
 
 struct grid_bezier {

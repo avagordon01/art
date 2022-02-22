@@ -3,7 +3,6 @@
 #include <utility>
 #include <random>
 #include "engine/drawable.hh"
-#include "engine/shader.hh"
 #include "noise.hh"
 
 struct noise_flow_particles {
@@ -16,7 +15,6 @@ struct noise_flow_particles {
     drawable<point> drawable;
     storage_buffer<point> sbo;
 
-    shader shader;
     compute_shader compute_shader;
 
     static constexpr size_t num_points = 1000000;
@@ -45,7 +43,6 @@ struct noise_flow_particles {
         shared{shared_},
         drawable(),
         sbo{gen_points(), GL_DYNAMIC_COPY},
-        shader(),
         compute_shader(noise_header_text + R"foo(
 struct point {
     vec4 position;
@@ -76,7 +73,7 @@ void main() {
 )foo", {num_points, 1, 1})
     {
         drawable.vbo = {std::vector<point>{num_points}, GL_DYNAMIC_COPY};
-        drawable.vbo.bind(shader.program_vertex, "vertex", &point::position);
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex", &point::position);
         sbo.bind(compute_shader.program, "vertices_buffer");
     }
     void draw() {
@@ -89,7 +86,6 @@ void main() {
         );
         shared.draw();
 
-        shader.draw();
         drawable.draw(GL_POINTS);
         compute_shader.draw();
         glCopyBufferSubData(GL_SHADER_STORAGE_BUFFER, GL_ARRAY_BUFFER, 0, 0, sizeof(point) * num_points);

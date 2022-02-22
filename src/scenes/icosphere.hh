@@ -1,5 +1,4 @@
 #include "engine/drawable.hh"
-#include "engine/shader.hh"
 #include "engine/rigid-body.hh"
 #include "util/misc.hh"
 #include "util/glm.hh"
@@ -9,13 +8,11 @@
 struct icosphere {
     shared_uniforms& shared;
     drawable<> drawable;
-    shader shader;
     rigid_body camera;
 
     icosphere(shared_uniforms& shared_):
         shared{shared_},
-        drawable{},
-        shader{}
+        drawable{}
     {
         using std::numbers::pi;
         const float h_angle = pi / 180 * 72;
@@ -71,7 +68,7 @@ struct icosphere {
 
         drawable.vbo.data = vertices;
         drawable.ibo.data = indices;
-        drawable.vbo.bind(shader.program_vertex, "vertex");
+        drawable.vbo.bind(drawable.shader.program_vertex, "vertex");
 
         camera.angular_position = quaternionRand();
         camera.angular_velocity = quaternionRand() * 0.1f;
@@ -86,7 +83,6 @@ struct icosphere {
 
         shared.draw();
 
-        shader.draw();
         drawable.draw(GL_TRIANGLES, true, [](){
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         });
