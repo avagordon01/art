@@ -53,7 +53,6 @@ void main() {
 }
 )foo")
     {
-        shared_uniforms.bind(shader.program_fragment);
         drawable.vbo.bind(shader.program_vertex, "vertex", &char_vertex::vertex);
         drawable.vbo.bind(shader.program_vertex, "texcoords", &char_vertex::texcoords);
         atlas.bind(shader.program_fragment);

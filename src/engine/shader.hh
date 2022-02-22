@@ -100,6 +100,9 @@ struct shared_uniforms {
     }
 };
 
+glfw_t glfw;
+shared_uniforms shared{glfw};
+
 GLuint create_program(GLenum type, std::string shader_text) {
     shader_text = std::string("#version 450\n") + shader_text;
     const char* s[] = {
@@ -138,6 +141,8 @@ struct shader {
         program_fragment = create_program(GL_FRAGMENT_SHADER, shared_header_shader_text + fragment_source);
         glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, program_vertex);
         glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, program_fragment);
+        shared.bind(program_vertex);
+        shared.bind(program_fragment);
     }
     void draw() {
         glBindProgramPipeline(pipeline);

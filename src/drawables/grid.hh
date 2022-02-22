@@ -25,9 +25,7 @@ void main() {
     colour += vec4(1) * float(x_plus || y_plus);
 }
 )foo")
-    {
-        shared_uniforms.bind(shader.program_fragment);
-    }
+    {}
     void draw() {
         shader.draw();
         drawable.draw(GL_QUADS);

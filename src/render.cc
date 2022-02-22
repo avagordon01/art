@@ -15,8 +15,6 @@
 #include "engine/render-to-file.hh"
 
 int main() {
-    glfw_t glfw;
-    shared_uniforms shared{glfw};
     {
         brain scene{shared};
         //noise_flow_particles scene{shared};

@@ -50,7 +50,6 @@ struct grid_bezier_renderer {
         shader(),
         n(n_), m(m_)
     {
-        shared_uniforms.bind(shader.program_vertex);
         drawable.vbo.bind(shader.program_vertex, "vertex");
     }
     std::array<float, 2> grid_cvt(std::array<size_t, 2> x) {

@@ -84,7 +84,6 @@ void main() {
             }
         }
 
-        shared.bind(shader.program_vertex);
         drawable.vbo.bind(shader.program_vertex, "vertex", &point::position);
         drawable.vbo.bind(shader.program_vertex, "timestamp", &point::timestamp);
         drawable.vbo.bind(shader.program_vertex, "stage", &point::stage);

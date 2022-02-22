@@ -75,8 +75,6 @@ void main() {
 }
 )foo", {num_points, 1, 1})
     {
-        shared.bind(shader.program_vertex);
-        shared.bind(compute_shader.program);
         drawable.vbo = {std::vector<point>{num_points}, GL_DYNAMIC_COPY};
         drawable.vbo.bind(shader.program_vertex, "vertex", &point::position);
         sbo.bind(compute_shader.program, "vertices_buffer");

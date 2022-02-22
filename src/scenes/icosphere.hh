@@ -72,7 +72,6 @@ struct icosphere {
         drawable.vbo.data = vertices;
         drawable.ibo.data = indices;
         drawable.vbo.bind(shader.program_vertex, "vertex");
-        shared.bind(shader.program_vertex);
 
         camera.angular_position = quaternionRand();
         camera.angular_velocity = quaternionRand() * 0.1f;

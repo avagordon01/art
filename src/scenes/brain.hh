@@ -63,8 +63,6 @@ void main() {
         drawable.vbo.data = mesh.vertices;
         drawable.ibo.data = mesh.indices;
         drawable.vbo.bind(shader.program_vertex, "vertex");
-        shared.bind(shader.program_vertex);
-        shared.bind(shader.program_fragment);
     }
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
