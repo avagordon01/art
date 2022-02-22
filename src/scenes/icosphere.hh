@@ -1,6 +1,5 @@
 #include "engine/drawable.hh"
 #include "engine/shader.hh"
-#include "engine/shared-uniforms.hh"
 #include "engine/rigid-body.hh"
 #include "util/misc.hh"
 #include "util/glm.hh"
@@ -16,7 +15,7 @@ struct icosphere {
     icosphere(shared_uniforms& shared_):
         shared{shared_},
         drawable{},
-        shader{shared.header_shader_text + shared.passthrough_vertex, shared.passthrough_fragment}
+        shader{}
     {
         using std::numbers::pi;
         const float h_angle = pi / 180 * 72;

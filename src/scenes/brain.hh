@@ -3,7 +3,6 @@
 #include <utility>
 #include <random>
 #include "engine/shader.hh"
-#include "engine/shared-uniforms.hh"
 #include "engine/drawable.hh"
 #include "engine/assimp.hh"
 #include "drawables/ticks.hh"
@@ -33,7 +32,7 @@ struct brain {
             "data/ftp.bigbrainproject.org/BigBrainRelease.2015/3D_Surfaces/Apr7_2016/wavefront-obj/white_right_rsl_327680.obj",
         }, "brain"},
         drawable(),
-        shader(shared.header_shader_text + R"foo(
+        shader(R"foo(
 in vec3 vertex;
 out vec4 vertex_position;
 
@@ -45,7 +44,7 @@ void main() {
     vertex_position = projection * view * vec4(vertex, 1.0f);
 }
 )foo",
-        shared.header_shader_text + R"foo(
+        R"foo(
 in vec4 vertex_position;
 in vec4 gl_FragCoord;
 out vec4 colour;

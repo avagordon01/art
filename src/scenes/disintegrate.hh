@@ -4,7 +4,6 @@
 #include <random>
 #include "engine/drawable.hh"
 #include "engine/shader.hh"
-#include "engine/shared-uniforms.hh"
 #include "noise.hh"
 
 struct disintegrate {
@@ -49,8 +48,8 @@ struct disintegrate {
         points_data{gen_points()},
         drawable(),
         sbo{points_data, GL_DYNAMIC_COPY},
-        shader(shared.header_shader_text + shared.passthrough_vertex, shared.passthrough_fragment),
-        compute_shader(shared.header_shader_text + noise_header_text + R"foo(
+        shader(),
+        compute_shader(noise_header_text + R"foo(
 struct point {
     vec4 position;
     vec4 velocity;

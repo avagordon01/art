@@ -41,7 +41,7 @@ struct text_wanikani {
     drawable(),
     extra_buffer({}, GL_DYNAMIC_DRAW),
     shader(
-        shared_uniforms.header_shader_text + R"foo(
+        R"foo(
 in vec2 vertex;
 in vec3 texcoords;
 out vec3 texcoords_f;
@@ -75,7 +75,7 @@ void main() {
     }
 }
 )foo",
-        shared_uniforms.header_shader_text + atlas.header_shader_text + R"foo(
+        atlas.header_shader_text + R"foo(
 in vec3 texcoords_f;
 in vec4 colour_f;
 out vec4 colour;

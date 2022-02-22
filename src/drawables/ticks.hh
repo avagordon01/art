@@ -8,7 +8,7 @@ struct ticks {
     drawable(),
     shader(
         drawable.quad.vertex_shader,
-        shared_uniforms.header_shader_text + R"foo(
+        R"foo(
 layout(pixel_center_integer) in vec4 gl_FragCoord;
 out vec4 colour;
 

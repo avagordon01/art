@@ -2,7 +2,103 @@
 
 #include <optional>
 #include <string>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include "buffers.hh"
 #include "util/misc.hh"
+
+std::string shared_header_shader_text = R"foo(
+layout(std140) uniform inputs {
+    mat4 view, projection;
+    vec2 mouse;
+    vec2 resolution;
+    uint framerate;
+    float time;
+};
+)foo";
+std::string shared_passthrough_vertex = R"foo(
+in vec3 vertex;
+
+out gl_PerVertex {
+    vec4 gl_Position;
+};
+void main() {
+    gl_Position = projection * view * vec4(vertex, 1.0f);
+}
+)foo";
+std::string shared_passthrough_fragment = R"foo(
+in vec4 gl_FragCoord;
+out vec4 colour;
+
+void main() {
+    colour = vec4(1);
+}
+)foo";
+
+struct shared_uniforms {
+    struct inputs {
+        glm::mat4 view, projection;
+        float mouse_x, mouse_y;
+        float resolution_x, resolution_y;
+        GLuint framerate;
+        float time;
+    };
+
+    glfw_t& glfw;
+    uniform_buffer<inputs> ubo;
+    inputs& inputs;
+    size_t frame = 0;
+    shared_uniforms(glfw_t &glfw_):
+        glfw(glfw_),
+        ubo({{
+            glm::identity<glm::mat4>(),
+            glm::identity<glm::mat4>(),
+            0, 0,
+            0, 0,
+            0,
+            0,
+        }}, GL_DYNAMIC_DRAW),
+        inputs(ubo.data.front())
+    {
+        int interval = 1;
+        glfwSwapInterval(interval);
+        const GLFWvidmode *vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        inputs.framerate = vidmode->refreshRate / interval;
+        glfwSetTime(0);
+
+        int w, h;
+        glfwGetWindowSize(glfw.window, &w, &h);
+        inputs.resolution_x = w;
+        inputs.resolution_y = h;
+    }
+    void bind(GLuint program) {
+        ubo.bind(program, "inputs");
+    }
+    void draw(bool perspective = true) {
+        double mx, my;
+        glfwGetCursorPos(glfw.window, &mx, &my);
+        inputs.mouse_x = mx;
+        inputs.mouse_y = my;
+
+        int w, h;
+        glfwGetWindowSize(glfw.window, &w, &h);
+        inputs.resolution_x = w;
+        inputs.resolution_y = h;
+        if (perspective) {
+            inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
+        } else {
+            inputs.projection = glm::ortho(0.0f, static_cast<float>(w), 0.0f, static_cast<float>(h), 0.0f, 200.0f);
+        }
+
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(inputs), &inputs);
+
+        frame++;
+        inputs.time = static_cast<float>(frame) / inputs.framerate;
+    }
+    ~shared_uniforms() {
+        std::cout << frame / glfwGetTime() << " average fps" << std::endl;
+    }
+};
 
 GLuint create_program(GLenum type, std::string shader_text) {
     shader_text = std::string("#version 450\n") + shader_text;
@@ -33,10 +129,13 @@ GLuint create_program(GLenum type, std::string shader_text) {
 
 struct shader {
     GLuint pipeline, program_vertex, program_fragment;
-    shader(std::string vertex_source, std::string fragment_source) {
+    shader(
+        std::string vertex_source = shared_passthrough_vertex,
+        std::string fragment_source = shared_passthrough_fragment
+    ) {
         glGenProgramPipelines(1, &pipeline);
-        program_vertex = create_program(GL_VERTEX_SHADER, vertex_source);
-        program_fragment = create_program(GL_FRAGMENT_SHADER, fragment_source);
+        program_vertex = create_program(GL_VERTEX_SHADER, shared_header_shader_text + vertex_source);
+        program_fragment = create_program(GL_FRAGMENT_SHADER, shared_header_shader_text + fragment_source);
         glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, program_vertex);
         glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, program_fragment);
     }
@@ -53,7 +152,7 @@ struct compute_shader {
         dimensions(dimensions_)
     {
         glGenProgramPipelines(1, &pipeline);
-        program = create_program(GL_COMPUTE_SHADER, compute_source);
+        program = create_program(GL_COMPUTE_SHADER, shared_header_shader_text + compute_source);
         glUseProgramStages(pipeline, GL_COMPUTE_SHADER_BIT, program);
         std::array<GLint, 3> workgroup_dimensions;
         glGetProgramiv(program, GL_COMPUTE_WORK_GROUP_SIZE, workgroup_dimensions.data());

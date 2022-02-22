@@ -1,6 +1,5 @@
 #include "engine/drawable.hh"
 #include "engine/shader.hh"
-#include "engine/shared-uniforms.hh"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -25,7 +24,7 @@ struct wanikani_review_time_grid {
         drawable(),
         //extra_buffer({}, GL_DYNAMIC_DRAW),
         shader(
-            shared.header_shader_text + R"foo(
+            R"foo(
 in vec2 vertex;
 in float timestamp;
 in uint stage;

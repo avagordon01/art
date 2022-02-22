@@ -31,7 +31,7 @@ struct text_overlay {
     atlas(atlas_),
     drawable(),
     shader(
-        shared_uniforms.header_shader_text + R"foo(
+        R"foo(
 in vec2 vertex;
 in vec3 texcoords;
 out vec3 texcoords_f;
@@ -44,7 +44,7 @@ void main() {
     texcoords_f = texcoords;
 }
 )foo",
-        shared_uniforms.header_shader_text + atlas.header_shader_text + R"foo(
+        atlas.header_shader_text + R"foo(
 in vec3 texcoords_f;
 out vec4 colour;
 

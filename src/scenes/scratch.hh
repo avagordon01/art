@@ -1,6 +1,5 @@
 #include "engine/drawable.hh"
 #include "engine/shader.hh"
-#include "engine/shared-uniforms.hh"
 #include "drawables/text-overlay.hh"
 
 struct scratch {
@@ -23,7 +22,7 @@ struct scratch {
         },
         text{shared, atlas},
         drawable(),
-        shader(shared.header_shader_text + shared.passthrough_vertex, shared.passthrough_fragment)
+        shader()
     {
         drawable.vbo.data = {};
         drawable.vbo.bind(shader.program_vertex, "vertex");
