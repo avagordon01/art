@@ -54,8 +54,8 @@ void main() {
 }
 )foo")
     {
-        drawable.vbo.data = mesh.vertices;
-        drawable.ibo.data = mesh.indices;
+        drawable.vbo.data = std::move(mesh.vertices);
+        drawable.ibo.data = std::move(mesh.indices);
         drawable.vbo.bind(drawable.shader.program_vertex, "vertex");
     }
     void draw() {
