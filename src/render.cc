@@ -30,9 +30,12 @@ int main() {
         //render_to_file rtf("test.mp4");
 
         for (size_t tick = 0; tick < 60 * 3 && !glfwWindowShouldClose(glfw.window); tick++) {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             scene.draw();
             glfw.draw();
             //rtf.draw();
+            shared.tick();
+            shared.draw();
         }
     }
     {

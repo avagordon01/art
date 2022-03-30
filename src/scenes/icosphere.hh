@@ -73,8 +73,6 @@ struct icosphere {
     }
 
     void draw() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         camera.tick();
         auto translate = glm::translate(glm::identity<glm::mat4>(), glm::vec3(0, 0, -4));
         shared.inputs.view = translate * glm::mat4_cast(camera.angular_position);

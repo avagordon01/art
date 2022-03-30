@@ -82,8 +82,6 @@ void main() {
         drawable.vbo.bind(drawable.shader.program_vertex, "stage", &point::stage);
     }
     void draw() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         shared.inputs.view = glm::identity<glm::mat4>();
         shared.draw(false);
 

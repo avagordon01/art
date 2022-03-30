@@ -22,8 +22,6 @@ struct grid_bezier {
         };
     }
     void draw() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         shared.inputs.view = glm::lookAt(
             glm::vec3(0, 0, 20),
             glm::vec3(0, 0, -10),

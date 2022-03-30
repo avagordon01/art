@@ -23,7 +23,6 @@ void main() {
     {
     }
     void draw() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shared.draw();
         drawable.draw(GL_QUADS);
     }

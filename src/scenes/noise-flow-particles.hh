@@ -74,8 +74,6 @@ void main() {
         sbo.bind(compute_shader.program, "vertices_buffer");
     }
     void draw() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         shared.inputs.view = glm::lookAt(
             glm::vec3(0.0f, 0.0f, -100.0f),
             glm::vec3(),

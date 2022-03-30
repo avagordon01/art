@@ -59,8 +59,6 @@ void main() {
         drawable.vbo.bind(drawable.shader.program_vertex, "vertex");
     }
     void draw() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         float angle = 2 * M_PI * shared.inputs.time / 60;
         float distance = -100.0f;
         shared.inputs.view = glm::lookAt(

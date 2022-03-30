@@ -91,7 +91,8 @@ struct shared_uniforms {
         }
 
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(inputs), &inputs);
-
+    }
+    void tick() {
         frame++;
         inputs.time = static_cast<float>(frame) / inputs.framerate;
     }

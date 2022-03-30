@@ -33,8 +33,6 @@ struct grid_3d {
         camera.angular_velocity = quaternionRand() * 0.1f;
     }
     void draw() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         camera.angular_velocity *= 0.999;
         camera.velocity *= 0.999;
         camera.tick();
