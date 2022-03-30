@@ -47,9 +47,6 @@ struct glfw_t {
 
     void draw(){
         glfwSwapBuffers(window);
-        int width, height;
-        glfwGetWindowSize(window, &width, &height);
-        glViewport(0, 0, width, height);
         glfwPollEvents();
     }
 

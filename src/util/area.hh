@@ -65,16 +65,22 @@ struct aabb_t {
                 y1 += amount;
                 break;
             case direction::all:
-                int x_mid = (x.x0 + x.x1) / 2;
-                int y_mid = (x.y0 + x.y1) / 2;
-                x.x0 = x_mid - amount / 2;
-                x.x1 = x_mid + amount / 2;
-                x.y0 = y_mid - amount / 2;
-                x.y1 = y_mid + amount / 2;
+                x.x0 = x0 + amount;
+                x.y0 = y0 + amount;
+                x.x1 = x1 - amount;
+                x.y1 = y1 - amount;
                 break;
         }
         assert(!x.inverted());
         assert(!inverted());
         return x;
+    }
+
+    void viewport() {
+        glViewport(xpos(), ypos(), width(), height());
+    }
+    void scissor() {
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(xpos(), ypos(), width(), height());
     }
 };

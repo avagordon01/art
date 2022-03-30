@@ -15,6 +15,8 @@
 
 #include "engine/render-to-file.hh"
 
+#include "util/area.hh"
+
 int main() {
     {
         brain scene{};
@@ -30,6 +32,13 @@ int main() {
         //render_to_file rtf("test.mp4");
 
         for (size_t tick = 0; tick < 60 * 3 && !glfwWindowShouldClose(glfw.window); tick++) {
+            glClearColor(0.1, 0.1, 0.1, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            aabb_t box(0, 0, 1920, 1080);
+            box = box.chop(aabb_t::direction::all, 64);
+            box.viewport();
+            box.scissor();
+            glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             scene.draw();
             glfw.draw();

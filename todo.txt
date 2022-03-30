@@ -21,11 +21,6 @@ unicode support
 
 variable length rects
 
-scissor test for borders/padding
-    glEnable(GL_SCISSOR_TEST);
-    size_t padding = 512;
-    glScissor(padding, padding, 1920 - 2 * padding, 1080 - 2 * padding);
-
 use c++20 modules for fast compile times without separate header/impl files
 
 smooth (s)lerp camera animation
