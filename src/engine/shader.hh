@@ -85,7 +85,7 @@ struct shared_uniforms {
         inputs.resolution_x = w;
         inputs.resolution_y = h;
         if (perspective) {
-            inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
+            inputs.projection = glm::perspective(glm::radians(30.0f), static_cast<float>(w) / h, 10.0f, 2 * 1.8e6f);
         } else {
             inputs.projection = glm::ortho(0.0f, static_cast<float>(w), 0.0f, static_cast<float>(h), 0.0f, 200.0f);
         }
