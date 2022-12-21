@@ -1,3 +1,17 @@
+categorise things based on input arity (everything produces one output: pixels)
+    generator
+        (ideally) completely reusable
+        generally dont setup a view matrix
+        no pixel inputs
+    filter/transformer
+        must have pixel inputs
+            e.g. inverter, sorter, subgrid, layout
+    consumer
+        only reusable in filters, hardcoded pipeline
+        generally setup a view matrix
+        no pixel inputs
+    main must have at least one consumer
+
 use the japanese data
     time-series of subjects
         brightness : srs stage
@@ -6,10 +20,6 @@ use the japanese data
     time-series of levels
         network of subjects
     network of vocabulary to kanji
-
-pixel-based things
-    pixels turn into particles
-    pixel sorting
 
 decoration
     dot grid flashes every day
@@ -24,6 +34,7 @@ variable length rects
 use c++20 modules for fast compile times without separate header/impl files
 
 smooth (s)lerp camera animation
+    slerp between random positions/orientations, chosen every 10 seconds
 
 scene/keyframe animation
 
@@ -38,3 +49,9 @@ vulkan examples
     calling resize immediately causes a segfault
 
 synchronised audio
+
+imgui/camera controller interaction
+    for finding good view matrix parameters
+    any other parameters need choosing?
+    speed/time
+    subset of data
