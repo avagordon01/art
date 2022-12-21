@@ -4,7 +4,7 @@ set -o errexit
 
 if [ ! -d out ]; then
     CXX=clang++ \
-    meson out
+    meson setup out
 fi
 meson install -C out
 
