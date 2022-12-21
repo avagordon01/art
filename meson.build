@@ -31,32 +31,3 @@ executable(
   ],
   install: true,
 )
-
-#vulkan_deps = [
-#  meson.get_compiler('cpp').find_library('dl', required: false),
-#  declare_dependency(
-#    link_args: ['-lglslang'],
-#  ),
-#  declare_dependency(
-#    link_args: ['-lSPIRV'],
-#  ),
-#  dependency('vulkan'),
-#  dependency('xcb'),
-#]
-#
-#executable(
-#  'vulkan',
-#  'src/vulkan/vulkan.cc',
-#  'subprojects/utils/math.cpp',
-#  'subprojects/utils/shaders.cpp',
-#  'subprojects/utils/utils.cpp',
-#  include_directories: [
-#    'subprojects/raii_utils',
-#    'subprojects/utils',
-#  ],
-#  cpp_args: [
-#    '-DVULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1',
-#  ],
-#  dependencies: common_deps + vulkan_deps,
-#  install: true,
-#)
