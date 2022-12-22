@@ -48,9 +48,6 @@ struct lola_rdr_format {
     uint16_t EARTH_PULSE; //unit PICOSECOND
     uint16_t EARTH_ENERGY; //unit ATTOJOULE
 };
-static_assert(sizeof(lola_rdr_format) == 256);
-static_assert(offsetof(lola_rdr_format, TRANSMIT_WIDTH) == 20);
-static_assert(offsetof(lola_rdr_format, EARTH_ENERGY) == 254);
 
 template<typename A>
 std::span<A> span_cast(std::span<std::byte> x) {
@@ -83,7 +80,6 @@ struct geospatial {
         for (auto& filename: filenames) {
             mmap_file mf{filename};
             std::span<lola_rdr_format> records = span_cast<lola_rdr_format>(mf.data);
-            //assert(records.size() == 190120);
             std::vector<uint32_t> energies;
             size_t j = 0;
             for (auto& record: records) {
@@ -93,7 +89,7 @@ struct geospatial {
                 }
                 orbiter_positions.push_back(LLR_to_XYZ(record.SC_LATITUDE, record.SC_LONGITUDE, record.SC_RADIUS));
 
-                for (size_t i = 0; i < 1; i++) {
+                for (size_t i = 0; i < 5; i++) {
                     auto& spot = record.spots[i];
                     if ((spot.SHOT_FLAG & 1) == 0) {
                         //this never seems to be hit
