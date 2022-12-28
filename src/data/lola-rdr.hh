@@ -4,8 +4,9 @@
 #include <array>
 #include <algorithm>
 
+#include "serialisation.hh"
 #include "util/profiler.hh"
-#include "mmap.hh"
+#include "engine/mmap.hh"
 
 struct lola_rdr_format {
     int32_t MET_SECONDS;
@@ -49,14 +50,6 @@ struct lola_rdr_format {
     uint16_t EARTH_ENERGY; //unit ATTOJOULE
 };
 
-template<typename A>
-std::span<A> span_cast(std::span<std::byte> x) {
-    return std::span<A>(
-        reinterpret_cast<A*>(x.data()),
-        x.size() / sizeof(A)
-    );
-}
-
 template<typename A, typename B, typename C>
 std::array<float, 3> LLR_to_XYZ(A latitude, B longitude, C radius) {
     double lon = (static_cast<double>(longitude) / 1e7) / (180 / std::numbers::pi);
@@ -84,7 +77,7 @@ struct geospatial {
             size_t j = 0;
             for (auto& record: records) {
                 j++;
-                if (j % 10 > 1) {
+                if (j % 10 > 2) {
                     continue;
                 }
                 orbiter_positions.push_back(LLR_to_XYZ(record.SC_LATITUDE, record.SC_LONGITUDE, record.SC_RADIUS));

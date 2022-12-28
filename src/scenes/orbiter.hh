@@ -1,5 +1,5 @@
 #include "engine/drawable.hh"
-#include "engine/lola-rdr.hh"
+#include "data/lola-rdr.hh"
 
 struct orbiter {
     drawable<> drawable;
@@ -7,8 +7,8 @@ struct orbiter {
     orbiter():
         drawable(),
         gs{{
-            //"/home/ava/repos/art/data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_co/lolardr_092581959.dat",
-            "/home/ava/repos/art/data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/concatenated.dat"
+            //"data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_co/lolardr_092581959.dat",
+            "data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/concatenated.dat"
         }}
     {
         std::cout << "num vertices " << gs.vertices.size() << std::endl;
