@@ -7,6 +7,7 @@
 #include "serialisation.hh"
 #include "util/profiler.hh"
 #include "engine/mmap.hh"
+#include "data/pds.hh"
 
 struct lola_rdr_format {
     int32_t MET_SECONDS;

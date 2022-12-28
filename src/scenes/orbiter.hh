@@ -1,6 +1,8 @@
 #include "engine/drawable.hh"
 #include "data/lola-rdr.hh"
 
+#include "util/profiler.hh"
+
 struct orbiter {
     drawable<> drawable;
     geospatial gs;
@@ -11,6 +13,11 @@ struct orbiter {
             "data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/concatenated.dat"
         }}
     {
+        profiler p{};
+        p.capture("before pds_load");
+        pds_load();
+        p.capture("after pds_load");
+
         std::cout << "num vertices " << gs.vertices.size() << std::endl;
         drawable.vbo.data = gs.vertices;
         drawable.vbo.bind(drawable.shader.program_vertex, "vertex");

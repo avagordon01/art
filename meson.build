@@ -18,6 +18,7 @@ common_deps = [
   dependency('glm'),
   dependency('freetype2'),
   dependency('assimp'),
+  dependency('range-v3'),
 ]
 
 executable(
