@@ -18,7 +18,7 @@
 
 int main() {
     {
-        //brain scene{};
+        brain scene{};
         //noise_flow_particles scene{};
         //wanikani_subject_grid scene{};
         //wanikani_review_time_grid scene{};
@@ -27,11 +27,11 @@ int main() {
         //vsync_test scene{};
         //icosphere scene{};
         //grid_3d scene{};
-        orbiter scene{};
+        //orbiter scene{};
 
         //render_to_file rtf("test.mp4");
 
-        for (size_t tick = 0; !glfwWindowShouldClose(glfw.window); tick++) {
+        while (!glfwWindowShouldClose(glfw.window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             scene.draw();
             glfw.draw();

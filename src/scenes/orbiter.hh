@@ -30,6 +30,7 @@ struct orbiter {
             glm::vec3(),
             glm::vec3(0, 0, 1)
         );
+        shared.inputs.projection = glm::perspective(glm::radians(4.0f), static_cast<float>(shared.inputs.resolution_x) / shared.inputs.resolution_y, 10.0f, 2 * 1.8e6f);
         //drawable.vbo.data = gs.vertices;
         //drawable.vbo.data.resize(i * 5);
         shared.draw();

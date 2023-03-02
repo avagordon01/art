@@ -118,7 +118,7 @@ std::unordered_map<std::string, pds_column_format> pds_fmt_parse(std::string fmt
                     }
                     std::cout << meas.value_as(u2) << std::endl;
                 }
-                std::exit(0);
+                //FIXME
             }
 
             std::cout << unit << std::endl;
@@ -307,7 +307,7 @@ std::vector<std::array<float, 3>> pds_load() {
             std::cout << columns["LONGITUDE_0"].unit.multiplier() << std::endl;
             std::cout << columns["LATITUDE_0"].unit.multiplier() << std::endl;
             std::cout << columns["RADIUS_0"].unit.multiplier() << std::endl;
-            exit(0);
+            //FIXME
             for (size_t i = 0; i < n; i++) {
                 if (i % 10 > 2) {
                     continue;
