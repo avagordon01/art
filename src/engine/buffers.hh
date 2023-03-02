@@ -7,7 +7,7 @@
 struct vertex_array_object {
     GLuint vao;
     vertex_array_object() {
-        glGenVertexArrays(1, &vao);
+        glCreateVertexArrays(1, &vao);
         glBindVertexArray(vao);
     }
     void draw() {
@@ -33,7 +33,7 @@ struct buffer {
         data(data_),
         hint(hint_)
     {
-        glGenBuffers(1, &buffer_id);
+        glCreateBuffers(1, &buffer_id);
         glBindBuffer(Target, buffer_id);
         glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), hint);
         previous_buffer = data.data();

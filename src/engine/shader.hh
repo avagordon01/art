@@ -137,7 +137,7 @@ struct shader {
         std::string vertex_source = shared_passthrough_vertex,
         std::string fragment_source = shared_passthrough_fragment
     ) {
-        glGenProgramPipelines(1, &pipeline);
+        glCreateProgramPipelines(1, &pipeline);
         program_vertex = create_program(GL_VERTEX_SHADER, shared_header_shader_text + vertex_source);
         program_fragment = create_program(GL_FRAGMENT_SHADER, shared_header_shader_text + fragment_source);
         glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, program_vertex);
@@ -157,7 +157,7 @@ struct compute_shader {
     compute_shader(std::string compute_source, std::array<size_t, 3> dimensions_):
         dimensions(dimensions_)
     {
-        glGenProgramPipelines(1, &pipeline);
+        glCreateProgramPipelines(1, &pipeline);
         program = create_program(GL_COMPUTE_SHADER, shared_header_shader_text + compute_source);
         glUseProgramStages(pipeline, GL_COMPUTE_SHADER_BIT, program);
         std::array<GLint, 3> workgroup_dimensions;
