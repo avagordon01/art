@@ -52,7 +52,7 @@ struct lola_rdr_format {
 };
 
 template<typename A, typename B, typename C>
-std::array<float, 3> LLR_to_XYZ(A latitude, B longitude, C radius) {
+std::array<float, 3> LLR_to_XYZ(A longitude, B latitude, C radius) {
     double lon = (static_cast<double>(longitude) / 1e7) / (180 / std::numbers::pi);
     double lat = (static_cast<double>(latitude) / 1e7) / (180 / std::numbers::pi);
     double r = static_cast<double>(radius) / 1e3;
@@ -77,20 +77,15 @@ struct geospatial {
             std::vector<uint32_t> energies;
             size_t j = 0;
             for (auto& record: records) {
-                j++;
-                if (j % 10 > 2) {
+                if (j++ % 10 > 2) {
                     continue;
                 }
-                orbiter_positions.push_back(LLR_to_XYZ(record.SC_LATITUDE, record.SC_LONGITUDE, record.SC_RADIUS));
+                orbiter_positions.push_back(LLR_to_XYZ(record.SC_LONGITUDE, record.SC_LATITUDE, record.SC_RADIUS));
 
                 for (size_t i = 0; i < 5; i++) {
                     auto& spot = record.spots[i];
-                    if ((spot.SHOT_FLAG & 1) == 0) {
-                        //this never seems to be hit
-                        continue;
-                    }
                     energies.push_back(spot.ENERGY);
-                    vertices.push_back(LLR_to_XYZ(spot.LATITUDE, spot.LONGITUDE, spot.RADIUS));
+                    vertices.push_back(LLR_to_XYZ(spot.LONGITUDE, spot.LATITUDE, spot.RADIUS));
                 }
             }
             uint32_t min_energy = *std::ranges::min_element(energies);

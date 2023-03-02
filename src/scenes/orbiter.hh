@@ -10,13 +10,12 @@ struct orbiter {
         drawable(),
         gs{{
             //"data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_co/lolardr_092581959.dat",
-            "data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/concatenated.dat"
+            //"data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/concatenated.dat"
+            "data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/lolardr_213490400.dat"
         }}
     {
-        profiler p{};
-        p.capture("before pds_load");
-        pds_load();
-        p.capture("after pds_load");
+        std::vector<std::array<float, 3>> n = pds_load();
+        //TODO replace gs with n
 
         std::cout << "num vertices " << gs.vertices.size() << std::endl;
         drawable.vbo.data = gs.vertices;
@@ -31,8 +30,8 @@ struct orbiter {
             glm::vec3(),
             glm::vec3(0, 0, 1)
         );
-        drawable.vbo.data = gs.vertices;
-        drawable.vbo.data.resize(i * 5);
+        //drawable.vbo.data = gs.vertices;
+        //drawable.vbo.data.resize(i * 5);
         shared.draw();
         drawable.draw(GL_POINTS);
     }

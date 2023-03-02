@@ -1,3 +1,6 @@
 [submodule "vendor/Vulkan-Hpp"]
 	path = vendor/Vulkan-Hpp
 	url = git@github.com:avagordon01/Vulkan-Hpp
+[submodule "subprojects/units"]
+	path = subprojects/units
+	url = git@github.com:LLNL/units
