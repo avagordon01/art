@@ -19,7 +19,9 @@ struct drawable {
         vbo({}, GL_DYNAMIC_DRAW),
         ibo({}, GL_DYNAMIC_DRAW),
         shader(vertex_source, fragment_source)
-    {}
+    {
+        vao.bind();
+    }
     void default_params() {
         glPointSize(1);
         glLineWidth(1);
@@ -32,13 +34,13 @@ struct drawable {
     }
 
     void draw(GLenum primitive = GL_POINTS, bool instanced = false, std::function<void(void)> custom_params = [](){}) {
+        vao.bind();
         shader.draw();
         if (!(primitive == GL_POINTS || primitive == GL_LINES || primitive == GL_TRIANGLES || primitive == GL_QUADS)) {
             throw std::runtime_error("error, primitive is not GL_POINTS, GL_LINES, GL_TRIANGLES, or GL_QUADS");
         }
         default_params();
         custom_params();
-        vao.draw();
         if (primitive != GL_QUADS) {
             vbo.draw();
             if (!instanced) {

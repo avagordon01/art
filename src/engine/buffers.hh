@@ -8,13 +8,11 @@ struct vertex_array_object {
     GLuint vao;
     vertex_array_object() {
         glCreateVertexArrays(1, &vao);
-        glBindVertexArray(vao);
     }
-    void draw() {
+    void bind() {
         glBindVertexArray(vao);
     }
     ~vertex_array_object() {
-        glBindVertexArray(0);
         glDeleteVertexArrays(1, &vao);
     }
 };
@@ -34,8 +32,7 @@ struct buffer {
         hint(hint_)
     {
         glCreateBuffers(1, &buffer_id);
-        glBindBuffer(Target, buffer_id);
-        glBufferData(Target, data.capacity() * sizeof(*data.data()), data.data(), hint);
+        glNamedBufferData(buffer_id, data.capacity() * sizeof(*data.data()), data.data(), hint);
         previous_buffer = data.data();
     }
 
@@ -76,8 +73,7 @@ struct buffer {
     }
 
     void bind(GLuint program, const GLchar* name) {
-        T d {};
-        bind(program, name, d);
+        bind(program, name, T{});
     }
 
     void draw() {
@@ -100,7 +96,6 @@ struct buffer {
     }
 
     ~buffer() {
-        glBindBuffer(Target, 0);
         glDeleteBuffers(1, &buffer_id);
     }
 };
