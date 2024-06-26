@@ -289,6 +289,18 @@ std::vector<std::array<float, 3>> pds_load() {
     };
     std::cout << "num data files found: " << data_files.size() << std::endl;
 
+    /*
+    lbl file interesting fields
+        FILE_RECORDS * RECORD_BYTES == ROWS * ROW_BYTES
+        COORDINATE_SYSTEM_NAME
+        MISSION_PHASE_NAME
+        ORBIT_NUMBER
+        START_TIME
+        STOP_TIME
+        SPACECRAFT_CLOCK_START_COUNT
+        SPACECRAFT_CLOCK_STOP_COUNT
+    */
+
     std::vector<std::array<float, 3>> xyz_positions;
     for (auto& data_file: data_files) {
         mmap_file mf{data_file};

@@ -1,3 +1,13 @@
+pointcloud rendering optimisations
+    octree for decimation
+    octree for culling
+    shuffled morton sorted points https://arxiv.org/pdf/2104.07526.pdf
+        "Points are first sorted by Morton code, then grouped into batches of 128 points, and finally the batches are shuffled, with points inside each batch remaining in order. Doing so preserves basic locality between points within each batch, but avoids excessive locality that might lead to contention or imbalanced workload."
+        "In opposition to these varied results, shuffled Morton order yields peak or close-to-peak performance over all rendering methods, regardless of viewpoint"
+        145 million points at 8ms on RTX 3090 (GL_POINTS morton shuffled)
+
+
+
 categorise things based on input arity (everything produces one output: pixels)
     generator
         (ideally) completely reusable
