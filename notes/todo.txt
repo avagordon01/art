@@ -1,3 +1,5 @@
+table class, load from pds4 Table_Binary, unordered_map of column names -> mdspan of rows (or byte offset, size, stride)
+
 pointcloud rendering optimisations
     octree for decimation
     octree for culling

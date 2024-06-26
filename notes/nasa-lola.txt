@@ -1,0 +1,51 @@
+how to get gdal to read the separate .fmt file?
+strace shows it doesn't even open it before "CORE_ITEM_BYTES of 0 is not supported in this gdal PDS reader."
+
+does it work if I manually concat the files?
+
+is it possible to supply a list of files to read concatenated together?
+
+start from the working test suite PDS files in gdal?
+or at least read them and see how they differ?
+
+read the code for the PDS driver?
+
+
+gdalinfo on their own test files gives CORE_ITEM_BYTES error
+
+why dont they support these files that are in their test suite?
+maybe actually run the test suite
+is there some difference between python and c++?
+the python bindings, at least the unit tests seem to work
+they call ogr.Open
+
+
+RDR files have PDS tables (time-series/pointcloud-like) rather than PDS raster images
+
+GDAL raster driver
+    reads PDS3, PDS4, JPEG, BMP, netCDF, PNG, XYZ (gridded)
+    not useful
+GDAL vector driver
+    reads CSV, GeoJSON, netCDF, PDS3, PDS4
+PDAL reads numpy, OBJ, PLY, PCD, text (csv/xyz)
+`transform` PDS3 to PDS4
+`rdr2*` PDS3 to CSV, XYZ, tab?, table?
+
+ogrinfo seems to work, finds the table at least, but seems empty?
+
+OGR always returns the field type GetType() as string??
+there are no GeomFields either
+
+OGR PDS3 driver only supports MSB fields, anything else is read as a string
+NASA LOLA RDR data is all LSB
+garbage
+
+linux on x86 is little endian
+MSB (first) is big endian
+LSB (first) is little endian
+
+
+honestly it's probably easier to just write a struct that matches the LOLARDR.FMT file
+does GDAL do any handy coordinate transforms for us?
+also it'd be zero copy and probably much faster
+also I can use span/ranges
