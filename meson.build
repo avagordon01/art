@@ -1,4 +1,4 @@
-project('render', 'cpp',
+project('render', ['c', 'cpp'],
   default_options: [
     'prefix=' + meson.global_source_root() / 'packaged',
     'buildtype=debugoptimized',
@@ -11,7 +11,7 @@ project('render', 'cpp',
 add_project_arguments(
   '-Wno-unused-parameter',
   '-Wno-documentation',
-  language: 'cpp',
+  language: ['c', 'cpp'],
 )
 
 cmake = import('cmake')
@@ -29,6 +29,20 @@ executable(
     dependency('assimp'),
     dependency('range-v3'),
     units_lib,
+  ],
+  include_directories: [
+    'src',
+  ],
+  install: true,
+)
+
+executable(
+  'testy',
+  'test.cc',
+  dependencies: [
+    dependency('gl'),
+    dependency('glfw3'),
+    dependency('glew'),
   ],
   include_directories: [
     'src',

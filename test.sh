@@ -10,3 +10,6 @@ fi
 meson install -C builddir
 
 ./packaged/bin/render
+
+export DRI_PRIME=1
+prime-run ./packaged/bin/render
