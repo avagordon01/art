@@ -14,7 +14,7 @@ struct orbiter {
             "data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/lolardr_213490400.dat"
         }}
     {
-        std::vector<std::array<float, 3>> n = pds_load();
+        std::vector<std::array<float, 3>> n = pds3_load();
         //TODO replace gs with n
 
         std::cout << "num vertices " << gs.vertices.size() << std::endl;

@@ -1,18 +1,20 @@
-#include <bit>
-#include <span>
 #include <algorithm>
+#include <bit>
+#include <complex>
 #include <filesystem>
 #include <iterator>
-#include <ranges>
 #include <range/v3/all.hpp>
-#include <variant>
-#include <complex>
+#include <ranges>
+#include <span>
 #include <typeinfo>
 #include <units/units.hpp>
+#include <variant>
+
+#include "engine/mmap.hh"
 #include "interleave.hpp"
 
 std::string strip_whitespace(std::string x) {
-    x.erase(std::remove_if(x.begin(), x.end(), [](unsigned char x){return std::isspace(x);}), x.end());
+    x.erase(std::remove_if(x.begin(), x.end(), [](unsigned char x) { return std::isspace(x); }), x.end());
     return x;
 }
 std::string strip_commas(std::string x) {
@@ -20,42 +22,30 @@ std::string strip_commas(std::string x) {
     return x;
 }
 std::string to_lower(std::string s) {
-    std::transform(s.begin(), s.end(), s.begin(),
-        [](unsigned char c){ return std::tolower(c); }
-    );
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
     return s;
 }
 
-struct pds_column_format {
+struct pds3_column_format {
     size_t start_byte;
     size_t bytes;
     size_t stride;
     std::endian endianness;
     std::variant<
-        int8_t,
-        int16_t,
-        int32_t,
-        uint8_t,
-        uint16_t,
-        uint32_t,
-        float,
-        double,
-        long double,
-        std::complex<float>,
-        std::complex<double>,
-        std::complex<long double>
-    > data_type;
+        int8_t, int16_t, int32_t, uint8_t, uint16_t, uint32_t, float, double, long double, std::complex<float>,
+        std::complex<double>, std::complex<long double>>
+        data_type;
     units::precise_unit unit;
 };
-std::unordered_map<std::string, pds_column_format> pds_fmt_parse(std::string fmt_path) {
-    std::unordered_map<std::string, pds_column_format> columns;
+std::unordered_map<std::string, pds3_column_format> pds3_fmt_parse(std::string fmt_path) {
+    std::unordered_map<std::string, pds3_column_format> columns;
 
     std::ifstream ifs(fmt_path, std::ios::in);
     if (!ifs) {
         throw std::runtime_error("couldn't open file " + fmt_path);
     }
 
-    pds_column_format column {};
+    pds3_column_format column{};
     std::string name = "";
     size_t record_size = 0;
     std::string data_type = "";
@@ -71,7 +61,7 @@ std::unordered_map<std::string, pds_column_format> pds_fmt_parse(std::string fmt
         if (key.empty() || value.empty()) {
             continue;
         }
-        
+
         if (key == "NAME") {
             name = value;
         } else if (key == "START_BYTE") {
@@ -100,11 +90,7 @@ std::unordered_map<std::string, pds_column_format> pds_fmt_parse(std::string fmt
                     std::cout << u.multiplier() << std::endl;
                 }
                 */
-                for (std::string s: {
-                    "DEGREES*(10**7)",
-                    "RADIANS*20000",
-                    "MILLIMETERS"
-                }) {
+                for (std::string s: {"DEGREES*(10**7)", "RADIANS*20000", "MILLIMETERS"}) {
                     std::string measurement = s;
                     std::string toUnits = "degrees*1000000";
                     auto meas = units::measurement_from_string(measurement);
@@ -169,7 +155,7 @@ std::unordered_map<std::string, pds_column_format> pds_fmt_parse(std::string fmt
                     column.data_type = std::complex<long double>{};
                 }
             } else {
-                throw std::runtime_error("unimplemented PDS data type " + data_type);
+                throw std::runtime_error("unimplemented pds3 data type " + data_type);
             }
             columns[name] = column;
             column = {};
@@ -184,60 +170,43 @@ std::unordered_map<std::string, pds_column_format> pds_fmt_parse(std::string fmt
     return columns;
 }
 
-template<typename T>
-struct pds_column_cursor {
+template <typename T>
+struct pds3_column_cursor {
     struct mixin;
 
     T& read() const {
         //TODO fix endianness
         return *reinterpret_cast<T*>(_ptr);
     }
-    bool equal(const pds_column_cursor& other) const {
-        return _ptr == other._ptr;
-    }
-    void advance(std::ptrdiff_t n) {
-        _ptr += n * _stride;
-    }
-    void next() {
-        advance(1);
-    }
-    void prev() {
-        advance(-1);
-    }
-    std::ptrdiff_t distance_to(const pds_column_cursor& other) const {
-        return (other._ptr - this->_ptr) / _stride;
-    }
+    bool equal(const pds3_column_cursor& other) const { return _ptr == other._ptr; }
+    void advance(std::ptrdiff_t n) { _ptr += n * _stride; }
+    void next() { advance(1); }
+    void prev() { advance(-1); }
+    std::ptrdiff_t distance_to(const pds3_column_cursor& other) const { return (other._ptr - this->_ptr) / _stride; }
 
-    pds_column_cursor() noexcept = default;
-    pds_column_cursor(size_t stride, std::byte* ptr):
-        _stride(stride),
-        _ptr(ptr)
-    {}
+    pds3_column_cursor() noexcept = default;
+    pds3_column_cursor(size_t stride, std::byte* ptr): _stride(stride), _ptr(ptr) {}
 
     size_t _stride;
     std::byte* _ptr;
 };
-template<typename T>
-struct pds_column_cursor<T>::mixin : ranges::basic_mixin<pds_column_cursor<T>> {
-    using ranges::basic_mixin<pds_column_cursor<T>>::basic_mixin;
- 
-    mixin(size_t stride, std::byte* ptr):
-        mixin{pds_column_cursor(stride, ptr)}
-    {}
+template <typename T>
+struct pds3_column_cursor<T>::mixin: ranges::basic_mixin<pds3_column_cursor<T>> {
+    using ranges::basic_mixin<pds3_column_cursor<T>>::basic_mixin;
+
+    mixin(size_t stride, std::byte* ptr): mixin{pds3_column_cursor(stride, ptr)} {}
 };
 
-template<typename T>
-using pds_column_iterator = ranges::basic_iterator<pds_column_cursor<T>>;
-static_assert(std::random_access_iterator<pds_column_iterator<uint32_t>>);
+template <typename T>
+using pds3_column_iterator = ranges::basic_iterator<pds3_column_cursor<T>>;
+static_assert(std::random_access_iterator<pds3_column_iterator<uint32_t>>);
 
-template<typename T>
-struct pds_column_container {
-    pds_column_format& column;
+template <typename T>
+struct pds3_column_container {
+    pds3_column_format& column;
     std::span<std::byte> data_file;
-    pds_column_container(pds_column_format& _column, std::span<std::byte> _data_file):
-        column(_column),
-        data_file(_data_file)
-    {
+    pds3_column_container(pds3_column_format& _column, std::span<std::byte> _data_file):
+        column(_column), data_file(_data_file) {
         assert(std::holds_alternative<T>(column.data_type));
         if (data_file.size() % column.stride != 0) {
             std::cout << "warning, data file size is not an exact multiple of the record format size" << std::endl;
@@ -246,23 +215,21 @@ struct pds_column_container {
             data_file = data_file.subspan(0, data_file.size() - to_drop);
         }
     }
-    pds_column_iterator<T> begin() {
-        return pds_column_iterator<T>(column.stride, data_file.data() + column.start_byte);
+    pds3_column_iterator<T> begin() {
+        return pds3_column_iterator<T>(column.stride, data_file.data() + column.start_byte);
     }
-    pds_column_iterator<T> end() {
-        return pds_column_iterator<T>(column.stride, data_file.data() + data_file.size() + column.start_byte);
+    pds3_column_iterator<T> end() {
+        return pds3_column_iterator<T>(column.stride, data_file.data() + data_file.size() + column.start_byte);
     }
-    size_t size() {
-        return data_file.size() / column.stride;
-    }
+    size_t size() { return data_file.size() / column.stride; }
 };
-static_assert(std::ranges::sized_range<pds_column_container<int32_t>>);
-static_assert(std::ranges::random_access_range<pds_column_container<int32_t>>);
+static_assert(std::ranges::sized_range<pds3_column_container<int32_t>>);
+static_assert(std::ranges::random_access_range<pds3_column_container<int32_t>>);
 
-template<typename A, typename B, typename C>
+template <typename A, typename B, typename C>
 std::array<float, 3> LLR_to_XYZ(A longitude, B latitude, C radius);
 
-std::vector<std::array<float, 3>> pds_load() {
+std::vector<std::array<float, 3>> pds3_load() {
     std::string data_directory = "data/lola/pds-geosciences.wustl.edu";
     std::string fmt_path = "";
     for (auto& x: std::filesystem::recursive_directory_iterator(data_directory)) {
@@ -274,7 +241,7 @@ std::vector<std::array<float, 3>> pds_load() {
         throw std::runtime_error("no label (.fmt) file found");
     }
 
-    auto columns = pds_fmt_parse(fmt_path);
+    auto columns = pds3_fmt_parse(fmt_path);
 
     std::vector<std::string> data_files;
     for (auto& x: std::filesystem::recursive_directory_iterator(data_directory)) {
@@ -285,7 +252,8 @@ std::vector<std::array<float, 3>> pds_load() {
     std::sort(data_files.begin(), data_files.end());
     data_files = {
         //"data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/concatenated.dat"
-        "data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/lolardr_213490400.dat"
+        "data/lola/pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_rdr/lro_es_110/"
+        "lolardr_213490400.dat"
     };
     std::cout << "num data files found: " << data_files.size() << std::endl;
 
@@ -304,18 +272,20 @@ std::vector<std::array<float, 3>> pds_load() {
     std::vector<std::array<float, 3>> xyz_positions;
     for (auto& data_file: data_files) {
         mmap_file mf{data_file};
-        auto a = pds_column_container<int32_t>{columns["SC_LONGITUDE"], mf.data};
-        auto b = pds_column_container<int32_t>{columns["SC_LATITUDE"], mf.data};
-        auto c = pds_column_container<uint32_t>{columns["SC_RADIUS"], mf.data};
+        auto a = pds3_column_container<int32_t>{columns["SC_LONGITUDE"], mf.data};
+        auto b = pds3_column_container<int32_t>{columns["SC_LATITUDE"], mf.data};
+        auto c = pds3_column_container<uint32_t>{columns["SC_RADIUS"], mf.data};
         for (auto [sc_longitude, sc_latitude, sc_radius]: ranges::views::zip(a, b, c)) {
             LLR_to_XYZ(sc_longitude, sc_latitude, sc_radius);
         }
 
-        size_t n = pds_column_container<int32_t>{columns["MET_SECONDS"], mf.data}.size();
+        size_t n = pds3_column_container<int32_t>{columns["MET_SECONDS"], mf.data}.size();
         for (size_t spot = 1; spot <= 5; spot++) {
-            auto longitude = pds_column_container<int32_t>{columns["LONGITUDE_" + std::to_string(spot)], mf.data}.begin();
-            auto latitude = pds_column_container<int32_t>{columns["LATITUDE_" + std::to_string(spot)], mf.data}.begin();
-            auto radius = pds_column_container<int32_t>{columns["RADIUS_" + std::to_string(spot)], mf.data}.begin();
+            auto longitude =
+                pds3_column_container<int32_t>{columns["LONGITUDE_" + std::to_string(spot)], mf.data}.begin();
+            auto latitude =
+                pds3_column_container<int32_t>{columns["LATITUDE_" + std::to_string(spot)], mf.data}.begin();
+            auto radius = pds3_column_container<int32_t>{columns["RADIUS_" + std::to_string(spot)], mf.data}.begin();
             std::cout << columns["LONGITUDE_0"].unit.multiplier() << std::endl;
             std::cout << columns["LATITUDE_0"].unit.multiplier() << std::endl;
             std::cout << columns["RADIUS_0"].unit.multiplier() << std::endl;
@@ -332,39 +302,39 @@ std::vector<std::array<float, 3>> pds_load() {
     }
     return xyz_positions;
 
-        /*
-        std::vector<int> spots = {1, 2, 3, 4, 5};
-        std::cerr << "good 1" << std::endl;
-        std::cerr << "mf: " << mf.data.data() << ", " << mf.data.data() + mf.data.size() << std::endl;
-        std::vector<std::tuple<int32_t, int32_t, uint32_t>> all_spots_all_fields = spots |
-            ranges::views::transform([&](int spot) {
-                auto longitude = pds_column_container<int32_t>{columns["LONGITUDE_" + std::to_string(spot)], mf.data};
-                auto latitude = pds_column_container<int32_t>{columns["LATITUDE_" + std::to_string(spot)], mf.data};
-                auto radius = pds_column_container<int32_t>{columns["RADIUS_" + std::to_string(spot)], mf.data};
-                return ranges::views::zip(longitude, latitude, radius);
-            }) |
-            ranges::views::take(10) |
-            ranges::views::join |
-            //interleave() |
-            ranges::to<std::vector<std::tuple<int32_t, int32_t, uint32_t>>>();
-        std::cerr << "good 2" << std::endl;
-        for (auto [a, b, c]: all_spots_all_fields) {
-            std::cerr << a << ", " << b << ", " << c << std::endl;
-        }
-        std::cerr << "good 3" << std::endl;
-        exit(0);
-        ranges::views::iota(1, 6) |
-            ranges::views::transform([&](int spot){
-                std::cerr << spot << std::endl;
-                auto longitude = pds_column_container<int32_t>{columns["LONGITUDE" + std::to_string(spot)], mf.data};
-                auto latitude = pds_column_container<int32_t>{columns["LATITUDE" + std::to_string(spot)], mf.data};
-                auto radius = pds_column_container<uint32_t>{columns["RADIUS" + std::to_string(spot)], mf.data};
-                return ranges::views::zip(longitude, latitude, radius);
-            }) |
-            interleave_view() |
-            ranges::views::for_each([&](auto tied){
-                auto [longitude, latitude, radius] = tied;
-                LLR_to_XYZ(longitude, latitude, radius);
-            });
-        */
+    /*
+    std::vector<int> spots = {1, 2, 3, 4, 5};
+    std::cerr << "good 1" << std::endl;
+    std::cerr << "mf: " << mf.data.data() << ", " << mf.data.data() + mf.data.size() << std::endl;
+    std::vector<std::tuple<int32_t, int32_t, uint32_t>> all_spots_all_fields = spots |
+        ranges::views::transform([&](int spot) {
+            auto longitude = pds3_column_container<int32_t>{columns["LONGITUDE_" + std::to_string(spot)], mf.data};
+            auto latitude = pds3_column_container<int32_t>{columns["LATITUDE_" + std::to_string(spot)], mf.data};
+            auto radius = pds3_column_container<int32_t>{columns["RADIUS_" + std::to_string(spot)], mf.data};
+            return ranges::views::zip(longitude, latitude, radius);
+        }) |
+        ranges::views::take(10) |
+        ranges::views::join |
+        //interleave() |
+        ranges::to<std::vector<std::tuple<int32_t, int32_t, uint32_t>>>();
+    std::cerr << "good 2" << std::endl;
+    for (auto [a, b, c]: all_spots_all_fields) {
+        std::cerr << a << ", " << b << ", " << c << std::endl;
+    }
+    std::cerr << "good 3" << std::endl;
+    exit(0);
+    ranges::views::iota(1, 6) |
+        ranges::views::transform([&](int spot){
+            std::cerr << spot << std::endl;
+            auto longitude = pds3_column_container<int32_t>{columns["LONGITUDE" + std::to_string(spot)], mf.data};
+            auto latitude = pds3_column_container<int32_t>{columns["LATITUDE" + std::to_string(spot)], mf.data};
+            auto radius = pds3_column_container<uint32_t>{columns["RADIUS" + std::to_string(spot)], mf.data};
+            return ranges::views::zip(longitude, latitude, radius);
+        }) |
+        interleave_view() |
+        ranges::views::for_each([&](auto tied){
+            auto [longitude, latitude, radius] = tied;
+            LLR_to_XYZ(longitude, latitude, radius);
+        });
+    */
 }
