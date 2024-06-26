@@ -2,10 +2,11 @@
 
 set -o errexit
 
-if [ ! -d out ]; then
-    CXX=clang++ \
-    meson setup out
+export CC=clang
+export CXX=clang++
+if [ ! -d builddir ]; then
+    meson setup builddir
 fi
-meson install -C out
+meson install -C builddir
 
-prime-run ./packaged/bin/render
+./packaged/bin/render

@@ -1,9 +1,9 @@
 project('render', 'cpp',
   default_options: [
-    'prefix=' + meson.source_root() / 'packaged',
+    'prefix=' + meson.global_source_root() / 'packaged',
     'buildtype=debugoptimized',
     'warning_level=3',
-    'werror=true',
+    'werror=false',
     'cpp_std=c++20',
   ]
 )
@@ -29,9 +29,6 @@ executable(
     dependency('assimp'),
     dependency('range-v3'),
     units_lib,
-  ],
-  cpp_args: [
-    '-Wno-documentation',
   ],
   include_directories: [
     'src',

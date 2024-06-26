@@ -1,9 +1,9 @@
+#include <glm/ext.hpp>
+
 #include "engine/drawable.hh"
 #include "engine/rigid-body.hh"
-#include "util/misc.hh"
 #include "util/glm.hh"
-#include <glm/ext.hpp>
-#include <glm/gtx/string_cast.hpp>
+#include "util/misc.hh"
 
 struct icosphere {
     drawable<> drawable;

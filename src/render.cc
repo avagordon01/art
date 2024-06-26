@@ -18,7 +18,7 @@
 
 int main() {
     {
-        brain scene{};
+        //brain scene{};
         //noise_flow_particles scene{};
         //wanikani_subject_grid scene{};
         //wanikani_review_time_grid scene{};
@@ -26,7 +26,7 @@ int main() {
         //scratch scene{};
         //vsync_test scene{};
         //icosphere scene{};
-        //grid_3d scene{};
+        grid_3d scene{};
         //orbiter scene{};
 
         //render_to_file rtf("test.mp4");
