@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "assimp",
+    "freetype",
+    "glfw3",
+    "glm",
+    "llnl-units",
+    "nlohmann-json",
+    "range-v3",
+    "pugixml"
+  ]
+}

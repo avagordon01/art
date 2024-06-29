@@ -5,8 +5,9 @@ set -o errexit
 export CC=clang
 export CXX=clang++
 if [ ! -d builddir ]; then
-    meson setup builddir
+    cmake -G Ninja -S . -B builddir
 fi
-meson install -C builddir
+cmake --build builddir
+cmake --install builddir --prefix packaged
 
 ./packaged/bin/render
