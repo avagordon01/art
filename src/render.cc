@@ -26,8 +26,8 @@ int main() {
         //scratch scene{};
         //vsync_test scene{};
         //icosphere scene{};
-        grid_3d scene{};
-        //orbiter scene{};
+        //grid_3d scene{};
+        orbiter scene{};
 
         //render_to_file rtf("test.mp4");
 

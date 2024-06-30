@@ -1,5 +1,8 @@
 table class, load from pds4 Table_Binary, unordered_map of column names -> mdspan of rows (or byte offset, size, stride)
 
+could be cool to try using curlftpfs fuse filesystem to stream LOLA data rather than downloading TBs
+maybe with some way of rendering / visualising the whole structure of mission phases / orbits
+
 pointcloud rendering optimisations
     octree for decimation
     octree for culling

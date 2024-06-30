@@ -7,6 +7,8 @@
     "llnl-units",
     "nlohmann-json",
     "range-v3",
-    "pugixml"
+    "pugixml",
+    "mdspan",
+    "libassert"
   ]
 }

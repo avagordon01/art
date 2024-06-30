@@ -5,9 +5,11 @@ set -o errexit
 export CC=clang
 export CXX=clang++
 if [ ! -d builddir ]; then
-    cmake -G Ninja -S . -B builddir
+    cmake -G Ninja -S . -B builddir \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
 fi
 cmake --build builddir
 cmake --install builddir --prefix packaged
 
-./packaged/bin/render
+gdb -ex run --args \
+    ./packaged/bin/render

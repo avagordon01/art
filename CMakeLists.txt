@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS FALSE)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Wno-error -Wno-unused-parameter -Wno-documentation)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -Wno-documentation)
 
 find_package(llnl-units CONFIG REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
@@ -20,8 +20,10 @@ find_package(assimp CONFIG REQUIRED)
 find_package(range-v3 CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(pugixml CONFIG REQUIRED)
+find_package(mdspan CONFIG REQUIRED)
+find_package(libassert CONFIG REQUIRED)
 
 add_executable(render src/render.cc)
 target_include_directories(render PRIVATE src)
-target_link_libraries(render PRIVATE llnl-units::units OpenGL::OpenGL glfw glm::glm Freetype::Freetype assimp::assimp range-v3 nlohmann_json pugixml)
+target_link_libraries(render PRIVATE llnl-units::units OpenGL::OpenGL glfw glm::glm Freetype::Freetype assimp::assimp range-v3 nlohmann_json pugixml std::mdspan libassert::assert)
 install(TARGETS render)
