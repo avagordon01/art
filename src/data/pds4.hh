@@ -122,7 +122,7 @@ pds4_table_binary pds4_load(std::filesystem::path filename) {
     for (const auto field_binary: record_binary.children("Field_Binary")) {
         const auto name = field_binary.child("name").child_value();
         ASSERT("byte"sv == field_binary.child("field_location").attribute("unit").value());
-        const auto offset = field_binary.child("field_location").text().as_ullong();
+        const auto offset = field_binary.child("field_location").text().as_ullong() - 1;
         const auto data_type = field_binary.child("data_type").child_value();
         //ASSERT(!data_type.contains("MSB"));
         ASSERT("byte"sv == field_binary.child("field_length").attribute("unit").value());
