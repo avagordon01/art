@@ -1,5 +1,7 @@
-/out/
+/builddir/
 /packaged/
+/data/
 /fonts/
 /cache/
+/vcpkg/
 secrets*
