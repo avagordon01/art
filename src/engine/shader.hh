@@ -35,6 +35,12 @@ void main() {
 }
 )foo";
 
+enum class projection_mode {
+    none,
+    perspective,
+    orthogonal,
+};
+
 struct shared_uniforms {
     struct inputs {
         glm::mat4 view, projection;
@@ -74,7 +80,7 @@ struct shared_uniforms {
     void bind(GLuint program) {
         ubo.bind(program, "inputs");
     }
-    void draw(bool perspective = true) {
+    void draw(projection_mode proj_mode = projection_mode::perspective) {
         double mx, my;
         glfwGetCursorPos(glfw.window, &mx, &my);
         inputs.mouse_x = mx;
@@ -84,9 +90,9 @@ struct shared_uniforms {
         glfwGetWindowSize(glfw.window, &w, &h);
         inputs.resolution_x = w;
         inputs.resolution_y = h;
-        if (perspective) {
+        if (proj_mode == projection_mode::perspective) {
             inputs.projection = glm::perspective(glm::radians(75.0f), static_cast<float>(w) / h, 0.1f, 200.f);
-        } else {
+        } else if (proj_mode == projection_mode::orthogonal) {
             inputs.projection = glm::ortho(0.0f, static_cast<float>(w), 0.0f, static_cast<float>(h), 0.0f, 200.0f);
         }
 
@@ -126,7 +132,7 @@ GLuint create_program(GLenum type, std::string shader_text) {
     GLint info_log_length = 0;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
     std::string info_log(info_log_length, '\0');
-    glGetProgramInfoLog(program, info_log.size(), NULL, info_log.data());
+    glGetProgramInfoLog(program, info_log.size(), nullptr, info_log.data());
     std::cerr << info_log << std::endl;
     throw std::runtime_error("shader stuff");
 }

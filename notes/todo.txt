@@ -1,3 +1,9 @@
+solar system asteroids / bodies rendering
+
+add other planets orbiters and altimeter data
+    earth, moon, mars, venus, mercury
+    rendered side-by-side in synchronised time
+
 table class, load from pds4 Table_Binary, unordered_map of column names -> mdspan of rows (or byte offset, size, stride)
 
 could be cool to try using curlftpfs fuse filesystem to stream LOLA data rather than downloading TBs

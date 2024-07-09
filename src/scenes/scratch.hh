@@ -22,7 +22,7 @@ struct scratch {
     }
     void draw() {
         shared.inputs.view = glm::identity<glm::mat4>();
-        shared.draw(false);
+        shared.draw(projection_mode::orthogonal);
 
         {
             text.drawable.vbo.data.clear();

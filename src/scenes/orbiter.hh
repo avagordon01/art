@@ -44,7 +44,7 @@ struct orbiter {
                     }
                 }
             }
-            if (orbiter_positions.size() > 1e6) {
+            if (orbiter_positions.size() > 1e5) {
                 break;
             }
             std::cout << ">>>> loading... positions.size() = " << orbiter_positions.size() << std::endl;
@@ -55,6 +55,12 @@ struct orbiter {
         //check the all the <Table_Binary> nodes exactly match?
         //concat the dat files directly?
         //should check that they all have an exact number of bytes
+
+        //TODO sort and cut-off vertices by timestamp
+        //only render one minute or one hour of points before current time
+
+        //TODO
+        //move orbiter in real-time
 
         drawable.vbo.data = vertices;
         drawable.vbo.bind(drawable.shader.program_vertex, "vertex");
@@ -68,10 +74,11 @@ struct orbiter {
             glm::vec3(),
             glm::vec3(0, 0, 1)
         );
-        shared.inputs.projection = glm::perspective(glm::radians(4.0f), static_cast<float>(shared.inputs.resolution_x) / shared.inputs.resolution_y, 10.0f, 2 * 1.8e6f);
-        //drawable.vbo.data = vertices;
-        //drawable.vbo.data.resize(i * 5);
-        shared.draw();
+        shared.inputs.projection = glm::perspective(
+            glm::radians(4.0f), static_cast<float>(shared.inputs.resolution_x) / shared.inputs.resolution_y, 10.0f,
+            2 * 1.8e6f
+        );
+        shared.draw(projection_mode::none);
         drawable.draw(GL_POINTS);
     }
 };
