@@ -1,5 +1,7 @@
 #include <cstdio>
 
+#include "engine/shader.hh"
+
 struct render_to_file {
     std::vector<uint8_t> buffer;
     FILE* ffmpeg = NULL;

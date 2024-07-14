@@ -1,5 +1,6 @@
 #include "engine/drawable.hh"
 #include "engine/rigid-body.hh"
+#include "util/glm.hh"
 
 struct grid_3d {
     drawable<> drawable;

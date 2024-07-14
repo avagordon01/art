@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 template<typename T>
 T wrap(T x, T max, T min = 0) {
     return ((x - min) % (max - min)) + min;

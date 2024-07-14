@@ -1,20 +1,18 @@
 #include <iostream>
 
 #include "engine/glfw.hh"
-
-#include "scenes/noise-flow-particles.hh"
+#include "engine/render-to-file.hh"
 #include "scenes/brain.hh"
-#include "scenes/wanikani-subject-grid.hh"
-#include "scenes/wanikani-review-time-grid.hh"
-#include "scenes/grid-bezier.hh"
-#include "scenes/scratch.hh"
-#include "scenes/vsync-test.hh"
-#include "scenes/icosphere.hh"
 #include "scenes/disintegrate.hh"
 #include "scenes/grid-3d.hh"
+#include "scenes/grid-bezier.hh"
+#include "scenes/icosphere.hh"
+#include "scenes/noise-flow-particles.hh"
 #include "scenes/orbiter.hh"
-
-#include "engine/render-to-file.hh"
+#include "scenes/scratch.hh"
+#include "scenes/vsync-test.hh"
+#include "scenes/wanikani-review-time-grid.hh"
+#include "scenes/wanikani-subject-grid.hh"
 
 int main() {
     {

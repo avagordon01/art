@@ -107,8 +107,8 @@ struct shared_uniforms {
     }
 };
 
-glfw_t glfw;
-shared_uniforms shared{glfw};
+static glfw_t glfw;
+static shared_uniforms shared{glfw};
 
 GLuint create_program(GLenum type, std::string shader_text) {
     shader_text = std::string("#version 450\n") + shader_text;
