@@ -2,6 +2,13 @@
 
 set -o errexit
 
+#downloading all .xml (pds4) files for all missions/bodies
+lftp -c mirror \
+    --continue --only-missing --parallel=64 --use-cache \
+    -I *.xml \
+    ftp://pds-geosciences.wustl.edu/
+exit
+
 #download all text and metadata
 #lftp is much faster than wget because it is parallel and there are many small files
 #takes about half an hour, downloads abour 4GB
