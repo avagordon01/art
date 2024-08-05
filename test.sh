@@ -2,8 +2,9 @@
 
 set -o errexit
 
-export CC=clang
-export CXX=clang++
+export PATH=$PATH:/opt/intel/oneapi/compiler/2024.1/bin/
+export CC=icx
+export CXX=icpx
 if [ ! -d builddir ]; then
     cmake -G Ninja -S . -B builddir \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
@@ -11,5 +12,4 @@ fi
 cmake --build builddir
 cmake --install builddir --prefix packaged
 
-gdb -ex run --args \
-    ./packaged/bin/render
+./packaged/bin/test-sycl

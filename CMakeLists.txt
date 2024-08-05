@@ -12,6 +12,8 @@ add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-document
 
 #system deps
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+set(IntelSYCL_DIR "/opt/intel/oneapi/compiler/2024.1/lib/cmake/IntelSYCL/")
+find_package(IntelSYCL REQUIRED)
 
 #vcpkg deps
 find_package(llnl-units CONFIG REQUIRED)
@@ -30,3 +32,7 @@ target_compile_options(render PRIVATE -Werror)
 target_include_directories(render PRIVATE src)
 target_link_libraries(render PRIVATE llnl-units::units OpenGL::OpenGL glfw glm::glm Freetype::Freetype range-v3 nlohmann_json pugixml std::mdspan libassert::assert)
 install(TARGETS render)
+
+add_executable(test-sycl test-sycl.cpp)
+add_sycl_to_target(TARGET test-sycl SOURCES test-sycl.cpp)
+install(TARGETS test-sycl)
