@@ -146,13 +146,13 @@ pds4_table_binary pds4_load(std::filesystem::path filename) {
     return tb;
 }
 
-std::vector<pds4_table_binary> pds4_load_all() {
+std::vector<pds4_table_binary> pds4_load_all(size_t& total) {
     std::filesystem::path directory = "data/lola/lrolol_1xxx/data/lola_rdr";
     const auto xml_files = all_files_with_extension_sorted_by_filename(directory, ".xml");
     //TODO check all Record_Binary tags are the same
 
     std::vector<pds4_table_binary> tables;
-    size_t total = 0;
+    total = 0;
     for (const auto& xml_file: xml_files) {
         auto table = pds4_load(xml_file);
         if (table.file) {
@@ -160,7 +160,6 @@ std::vector<pds4_table_binary> pds4_load_all() {
         }
         total += table.count;
     }
-    std::cout << ">>>> total records in dataset = " << total << std::endl;
     return tables;
 }
 

@@ -25,7 +25,8 @@ struct orbiter {
         Emission_Angle
         */
 
-        for (auto& table: pds4_load_all()) {
+        size_t total = 0;
+        for (auto& table: pds4_load_all(total)) {
             {
                 const auto lon = table.field<int32_t>("Scaled_Spacecraft_Longitude");
                 const auto lat = table.field<int32_t>("Scaled_Spacecraft_Latitude");
